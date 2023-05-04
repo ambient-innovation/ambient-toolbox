@@ -30,7 +30,7 @@ def test_closes_file(mocker, test_func):
 @pytest.mark.parametrize(
     'content, crc_result, md5_result',
     [
-        ('The answer to life, the universe, and everything.\n', '984AA68B', 'd9d35398d9d2b0169071ba5f0878b3a6'),
+        ('The answer to life, the universe, and everything.', '31F49620', 'f81ab2f7fb6cacf50f973b0dc8faff44'),
         ('The quick brown fox jumps over the lazy dog', '414FA339', '9e107d9d372bb6826bd81d3542a419d6'),
         ('', '00000000', 'd41d8cd98f00b204e9800998ecf8427e'),
     ],

@@ -21,7 +21,7 @@ def get_filename_without_ending(file_path: str) -> str:
 def crc(file_path: str) -> str:
     """Calculates the cyclic redundancy checksum (CRC) of the given file.
 
-    See ``open`` for all the exceptins that can be raised.
+    See ``open`` for all the exceptions that can be raised.
 
     :param file_path: the file for which the CRC checksum should be calculated.
     :return: returns the CRC checksum of the file in hexadecimal format (8 characters).
