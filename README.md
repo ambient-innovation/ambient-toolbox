@@ -9,7 +9,20 @@ Lots of helper functions and useful widgets
 * [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
 * Creator & Maintainer: [Ambient Digital](https://ambient.digital)
 
-None
+## Features
+
+* Useful classes and mixins for Django admin
+* Coverage script for GitLab
+* Extensions for DRF and GraphQL
+* Mailing backends for Django
+* Management commands for validating a projects test structure
+* Object ownership tracking with timestamping
+* Pattern for improved workflow with Django ORM
+* Helper and util functions for many different use-cases
+* Sentry plugins
+* django-scrubber wrapper class
+* Mixins and test classes for django (class-based) views
+
 
 ## Installation
 

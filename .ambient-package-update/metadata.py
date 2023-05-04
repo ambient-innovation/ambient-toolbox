@@ -15,7 +15,20 @@ METADATA = PackageMetadata(
     development_status='5 - Production/Stable',
     readme_content=ReadmeContent(
         tagline='Lots of helper functions and useful widgets',
-        # todo add content
+        content="""## Features
+
+* Useful classes and mixins for Django admin
+* Coverage script for GitLab
+* Extensions for DRF and GraphQL
+* Mailing backends for Django
+* Management commands for validating a projects test structure
+* Object ownership tracking with timestamping
+* Pattern for improved workflow with Django ORM
+* Helper and util functions for many different use-cases
+* Sentry plugins
+* django-scrubber wrapper class
+* Mixins and test classes for django (class-based) views
+"""
     ),
     dependencies=[
         'Django>=2.2.28',
