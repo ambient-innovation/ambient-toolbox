@@ -28,7 +28,7 @@ METADATA = PackageMetadata(
 * Sentry plugins
 * django-scrubber wrapper class
 * Mixins and test classes for django (class-based) views
-"""
+""",
     ),
     dependencies=[
         'Django>=2.2.28',
