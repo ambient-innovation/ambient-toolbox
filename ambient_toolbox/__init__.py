@@ -1,3 +1,3 @@
-"""Lots of helper functions and useful widgets"""
+"""Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."""
 
-__version__ = '8.0.0'
+__version__ = '8.0.1'

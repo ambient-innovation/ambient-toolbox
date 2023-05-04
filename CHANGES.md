@@ -1,5 +1,8 @@
 # Changelog
 
+**8.0.1** (2023-05-04)
+  * Added migration guide to docs
+
 **8.0.0** (2023-05-01)
   * Rename and re-release package as "ambient-toolbox"
   * Extracted class-based mails as [django-pony-express](https://test.pypi.org/project/django-pony-express/)

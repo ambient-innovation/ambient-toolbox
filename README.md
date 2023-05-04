@@ -2,7 +2,7 @@
 [![Downloads](https://pepy.tech/badge/ambient-toolbox)](https://pepy.tech/project/ambient-toolbox)
 [![Documentation Status](https://readthedocs.org/projects/ambient-toolbox/badge/?version=latest)](https://ambient-toolbox.readthedocs.io/en/latest/?badge=latest)
 
-Lots of helper functions and useful widgets
+Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.
 
 * [PyPI](https://pypi.org/project/ambient-toolbox/)
 * [GitHub](https://github.com/ambient-innovation/ambient-toolbox)
@@ -22,6 +22,16 @@ Lots of helper functions and useful widgets
 * Sentry plugins
 * django-scrubber wrapper class
 * Mixins and test classes for django (class-based) views
+
+# Migration from "ai_django_core"
+
+This package was previously known as [ai_django_core](https://pypi.org/project/ai-django-core/). Due to the
+misleading nature of the name, we chose to rename it with something more meaningful.
+
+The migration is really simple, just:
+
+* Install ambient-toolbox and remove the dependency to ai-django-core
+* Search and replace all usages of from `ai_django_core...` to `from ambient_toolbox...`
 
 
 ## Installation
