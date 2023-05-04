@@ -1,4 +1,4 @@
-from ai_django_core.selectors.permission import GloballyVisibleSelector
+from ambient_toolbox.selectors.permission import GloballyVisibleSelector
 
 
 class ModelWithSelectorGloballyVisibleSelector(GloballyVisibleSelector):

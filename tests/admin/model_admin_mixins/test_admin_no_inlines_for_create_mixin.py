@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from ai_django_core.admin.model_admins.mixins import AdminNoInlinesForCreateMixin
-from ai_django_core.tests.mixins import RequestProviderMixin
+from ambient_toolbox.admin.model_admins.mixins import AdminNoInlinesForCreateMixin
+from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import ForeignKeyRelatedModel, MySingleSignalModel
 
 

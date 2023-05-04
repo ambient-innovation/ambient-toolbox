@@ -1,6 +1,6 @@
 from django.views import generic
 
-from ai_django_core.view_layer.views import UserInFormKwargsMixin
+from ambient_toolbox.view_layer.views import UserInFormKwargsMixin
 from testapp.forms import CommonInfoBasedModelTestForm
 
 

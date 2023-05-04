@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.test import TestCase
 
-from ai_django_core.tests.mixins import DjangoMessagingFrameworkTestMixin, RequestProviderMixin
+from ambient_toolbox.tests.mixins import DjangoMessagingFrameworkTestMixin, RequestProviderMixin
 
 
 class DjangoMessagingFrameworkTestMixinTest(RequestProviderMixin, DjangoMessagingFrameworkTestMixin, TestCase):

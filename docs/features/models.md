@@ -12,7 +12,7 @@ If you want to keep track of the creator, creation time, last modificator and la
 you can use the abstract class `CommonInfo` like this:
 
 ````python
-from ai_django_core.models import CommonInfo
+from ambient_toolbox.models import CommonInfo
 
 
 class MyFancyModel(CommonInfo):
@@ -36,7 +36,7 @@ Just make sure, you'll insert it **after** djangos `AuthenticationMiddleware`:
 MIDDLEWARE = (
     ...
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'ai_django_core.middleware.current_user.CurrentUserMiddleware',
+    'ambient_toolbox.middleware.current_user.CurrentUserMiddleware',
 )
 ````
 

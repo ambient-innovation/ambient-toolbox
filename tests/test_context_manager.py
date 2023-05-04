@@ -2,7 +2,7 @@ from django.core import mail
 from django.db.models import signals
 from django.test import TestCase
 
-from ai_django_core.context_manager import TempDisconnectSignal
+from ambient_toolbox.context_manager import TempDisconnectSignal
 from testapp.models import (
     MyMultipleSignalModel,
     MySingleSignalModel,

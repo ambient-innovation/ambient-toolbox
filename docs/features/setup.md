@@ -3,15 +3,15 @@
 ## Default installation
 
 Setting up and getting started with this toolbox is very simple. At first make sure you are installing the latest
-version of `ai-django-core`:
+version of `ambient-toolbox`:
 
 * Installation via pip:
 
-  `pip install -U ai-django-core`
+  `pip install -U ambient-toolbox`
 
 * Installation via pipenv:
 
-  `pipenv install ai-django-core`
+  `pipenv install ambient-toolbox`
 
 Afterwards, include the package in your ``INSTALLED_APPS`` within your main
 [django settings file](https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-INSTALLED_APPS):
@@ -19,7 +19,7 @@ Afterwards, include the package in your ``INSTALLED_APPS`` within your main
 ````
 INSTALLED_APPS = (
     ...
-    'ai_django_core',
+    'ambient_toolbox',
 )
  ````
 
@@ -30,11 +30,11 @@ toolbox with the desired extension:
 
 * Installation via pip:
 
-  `pip install -U ai-django-core[drf]`
+  `pip install -U ambient-toolbox[drf]`
 
 * Installation via pipenv:
 
-  `pipenv install ai-django-core[drf]`
+  `pipenv install ambient-toolbox[drf]`
 
 ## Installing the GraphQL extension
 
@@ -43,11 +43,11 @@ toolbox with the desired extension:
 
 * Installation via pip:
 
-  `pip install -U ai-django-core[graphql]`
+  `pip install -U ambient-toolbox[graphql]`
 
 * Installation via pipenv:
 
-  `pipenv install ai-django-core[graphql]`
+  `pipenv install ambient-toolbox[graphql]`
 
 # Installing multiple extensions
 
@@ -55,8 +55,8 @@ In the case that you want to install more than one extension, just chain the ext
 
 * Installation via pip:
 
-  `pip install -U ai-django-core[drf,graphql]`
+  `pip install -U ambient-toolbox[drf,graphql]`
 
 * Installation via pipenv:
 
-  `pipenv install ai-django-core[drf,graphql]`
+  `pipenv install ambient-toolbox[drf,graphql]`

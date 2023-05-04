@@ -1,13 +1,13 @@
-ai-django-core
+ambient-toolbox
 ==============
 
-Welcome to the Ambient Toolbox ``ai-django-core``!
+Welcome to the Ambient Toolbox ``ambient-toolbox``!
 
-Since 2012 we are gathering tools and useful code snippets to share them across projects. The toolbox ``ai-django-core``
+Since 2012 we are gathering tools and useful code snippets to share them across projects. The toolbox ``ambient-toolbox``
 provides utilities for a wide range of applications. Please have a look at the following chapters to familiarise
 yourself with them.
 
-The package is published at pypi under the following link: `https://pypi.org/project/ai-django-core/ <https://pypi.org/project/ai-django-core/>`_
+The package is published at pypi under the following link: `https://pypi.org/project/ambient-toolbox/ <https://pypi.org/project/ambient-toolbox/>`_
 
 
 .. toctree::

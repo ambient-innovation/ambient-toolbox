@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from django.http import HttpResponse
 from django.test import TestCase
 
-from ai_django_core.middleware.current_user import CurrentUserMiddleware
+from ambient_toolbox.middleware.current_user import CurrentUserMiddleware
 
 
 class CurrentUserMiddlewareTest(TestCase):

@@ -13,7 +13,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 ...
-                'ai_django_core.context_processors.server_settings',
+                'ambient_toolbox.context_processors.server_settings',
             ]
 
 ````

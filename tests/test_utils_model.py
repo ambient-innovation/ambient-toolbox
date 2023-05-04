@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ai_django_core.utils import object_to_dict
+from ambient_toolbox.utils import object_to_dict
 from testapp.models import MySingleSignalModel
 
 

@@ -75,7 +75,7 @@ For this reason we implemented an abstract class called AbstractScrubbingService
 ````
 # services.py
 
-from ai_django_core.services.custom_scrubber import AbstractScrubbingService
+from ambient_toolbox.services.custom_scrubber import AbstractScrubbingService
 
 class MyScrubbingService(AbstractScrubbingService):
     pre_scrub_functions = [

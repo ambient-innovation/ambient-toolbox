@@ -3,8 +3,6 @@ name: Unit tests
 on:
   push:
     branches: [ '**' ]
-  pull_request:
-    branches: [ '**' ]
 
 jobs:
   linting:
@@ -18,13 +16,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install required packages
-        run: pip install black ruff
+        run: pip install pre-commit
 
-      - name: Run ruff
-        run: ruff .
-
-      - name: Run black
-        run: black .
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files --hook-stage push
 
   build:
     name: Python ${{ matrix.python-version }}, django ${{ matrix.django-version }}

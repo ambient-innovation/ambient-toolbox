@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 from django.test import TestCase
 
-from ai_django_core.utils import get_key_from_tuple_by_value, get_namedtuple_choices, get_value_from_tuple_by_key
+from ambient_toolbox.utils import get_key_from_tuple_by_value, get_namedtuple_choices, get_value_from_tuple_by_key
 
 
 class UtilsNamedTupleTest(TestCase):

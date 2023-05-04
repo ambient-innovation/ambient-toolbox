@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from freezegun import freeze_time
 
-from ai_django_core.utils.date import (
+from ambient_toolbox.utils.date import (
     add_days,
     add_minutes,
     add_months,

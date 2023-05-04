@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.test import TestCase
 from django.views import generic
 
-from ai_django_core.tests.mixins import RequestProviderMixin
-from ai_django_core.view_layer.mixins import DjangoPermissionRequiredMixin
+from ambient_toolbox.tests.mixins import RequestProviderMixin
+from ambient_toolbox.view_layer.mixins import DjangoPermissionRequiredMixin
 
 
 class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
@@ -31,7 +31,7 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.user = User.objects.create(username='test_user', email='test.user@ai-django-core.com')
+        self.user = User.objects.create(username='test_user', email='test.user@ambient-toolbox.com')
 
     def test_get_login_url(self):
         self.assertEqual(self.TestViewMultiplePerms().get_login_url(), 'login/')

@@ -63,4 +63,4 @@ EMAIL_BACKEND_REDIRECT_ADDRESS = ''
 
 TIME_ZONE = 'UTC'
 
-LOCALE_PATHS = [str(BASE_PATH) + '/ai_django_core/locale']
+LOCALE_PATHS = [str(BASE_PATH) + '/ambient_toolbox/locale']

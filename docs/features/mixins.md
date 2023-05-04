@@ -86,7 +86,7 @@ clean place to start from.
 
 ````python
 from django.db import models
-from ai_django_core.mixins.models import PermissionModelMixin
+from ambient_toolbox.mixins.models import PermissionModelMixin
 
 class ComparisonMyModelAndOtherModelPermission(PermissionModelMixin, models.Model):
     class Meta:
@@ -106,17 +106,17 @@ possible to use inheritance here, explained in this [Django ticket](https://code
 When working with Django signals, you might run into the conceptual problem, that signals are being triggered on
 `.save()` calls although you wish for them not to be called, or that you run into racing-conditions where one signal
 edits data before another signal was supposed to prepare the data.
-This might happen in large, ever-growing projects where it is wiser, to work with a quickfix, 
+This might happen in large, ever-growing projects where it is wiser, to work with a quickfix,
 instead of rethinking your projects whole architecture.
 
-For this use-case, you can use the `SaveWithoutSignalsMixin` from which your model can inherit, 
-which will add a `.save_without_signals()` method to your models, disconnecting all signals, 
+For this use-case, you can use the `SaveWithoutSignalsMixin` from which your model can inherit,
+which will add a `.save_without_signals()` method to your models, disconnecting all signals,
 saving the instance and then reconnecting the signals.
 
 ```python
 # models.py
 from django.db import models
-from ai_django_core.mixins.models import SaveWithoutSignalsMixin
+from ambient_toolbox.mixins.models import SaveWithoutSignalsMixin
 
 class MyModelWithAnnoyingSignals(SaveWithoutSignalsMixin, models.Model):
     pass
@@ -140,7 +140,7 @@ on every save. Note that it won't be called on bulk operations not targeting mod
 
 ````python
 from django.db import models
-from ai_django_core.mixins.validation import CleanOnSaveMixin
+from ambient_toolbox.mixins.validation import CleanOnSaveMixin
 
 class ModelWithCleanMixin(CleanOnSaveMixin, models.Model):
     def clean(self):

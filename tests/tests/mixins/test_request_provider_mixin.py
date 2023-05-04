@@ -4,7 +4,7 @@ from django.contrib.sessions.backends.base import SessionBase
 from django.http import HttpRequest
 from django.test import TestCase
 
-from ai_django_core.tests.mixins import RequestProviderMixin
+from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MySingleSignalModel
 
 

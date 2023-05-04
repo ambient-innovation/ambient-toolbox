@@ -20,7 +20,7 @@ WORKDIR $AI_CORE_SRVHOME
 
 # Install Python dependencies
 COPY pyproject.toml README.md $AI_CORE_SRVHOME
-COPY ai_django_core/__init__.py $AI_CORE_SRVHOME/ai_django_core/
+COPY ambient_toolbox/__init__.py $AI_CORE_SRVHOME/ambient_toolbox/
 RUN pip install -U pip flit
 RUN flit install --deps all --extras all
 # Install dev dependencies - it's ok to do it here because we never deploy this image

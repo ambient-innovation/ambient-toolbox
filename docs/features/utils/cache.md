@@ -10,7 +10,7 @@ line:
 # my_app/management/commands/clear_cache.py
 
 from django.core.management.base import BaseCommand
-from ai_django_core.utils import clear_cache
+from ambient_toolbox.utils import clear_cache
 
 
 class Command(BaseCommand):

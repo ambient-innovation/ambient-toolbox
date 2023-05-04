@@ -21,7 +21,7 @@ Install the latest `sentry-sdk` client from pypi.
 
 Adjust in your main `settings.py` your sentry setup as follows:
 
-    from ai_django_core.sentry.helpers import strip_sensitive_data_from_sentry_event
+    from ambient_toolbox.sentry.helpers import strip_sensitive_data_from_sentry_event
 
     sentry_sdk.init(
         ...

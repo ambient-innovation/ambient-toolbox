@@ -19,7 +19,7 @@ Take care that you have to set up Gitalb to recognise your coverage before you c
 * Create a file called `scripts/validate_coverage.py` and add the following:
 
 ```python
-from ai_django_core.gitlab.coverage import CoverageService
+from ambient_toolbox.gitlab.coverage import CoverageService
 
 service = CoverageService()
 service.process()
@@ -41,7 +41,7 @@ check coverage:
     - develop
     - master
   before_script:
-    - pip install -U pip httpx ai_django_core
+    - pip install -U pip httpx ambient_toolbox
   script:
     - python scripts/validate_coverage.py
 ```

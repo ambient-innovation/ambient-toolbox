@@ -5,7 +5,7 @@
 Returns a list of unique entries from `not_distinct_list`.
 
 ````
-from ai_django_core.utils.string import distinct
+from ambient_toolbox.utils.string import distinct
 
 not_distinct_list = ['Beer', 'Wine', 'Whiskey', 'Beer']
 distinct_list = distinct(not_distinct_list)
@@ -20,7 +20,7 @@ Note that the order might change due to internal casting to a set.
 Turns a string into a nice slugified filename.
 
 ````
-from ai_django_core.utils.string import slugify_file_name
+from ambient_toolbox.utils.string import slugify_file_name
 
 filename = 'hola and hello.txt'
 slug = slugify_file_name(filename)
@@ -30,7 +30,7 @@ slug = slugify_file_name(filename)
 You can pass a parameter to control how many characters the slug is supposed to have.
 
 ````
-from ai_django_core.utils.string import slugify_file_name
+from ambient_toolbox.utils.string import slugify_file_name
 
 filename = 'a very long filename.txt'
 slug = slugify_file_name(filename, 6)
@@ -43,7 +43,7 @@ This helper cuts a string at a word-boundary and therefore keeps words intact. S
 default-filter `truncatechars`, you can pass the desired string length.
 
 ````
-from ai_django_core.utils.string import smart_truncate
+from ambient_toolbox.utils.string import smart_truncate
 
 my_sentence = 'I am a very interesting sentence.'
 truncated_str = smart_truncate(my_sentence, 10)
@@ -53,7 +53,7 @@ truncated_str = smart_truncate(my_sentence, 10)
 By default, after cutting the string, it will append "..." which can be configured as follows:
 
 ````
-from ai_django_core.utils.string import smart_truncate
+from ambient_toolbox.utils.string import smart_truncate
 
 my_sentence = 'I am a very interesting sentence.'
 truncated_str = smart_truncate(my_sentence, 10, '[...]')
@@ -65,7 +65,7 @@ truncated_str = smart_truncate(my_sentence, 10, '[...]')
 If you have a float which you like to convert to a properly formatted string (German format), then you can do this:
 
 ````
-from ai_django_core.utils.string import float_to_string
+from ambient_toolbox.utils.string import float_to_string
 
 float_str = float_to_string(1234.56)
 # Result: "1234,56"
@@ -75,7 +75,7 @@ If you are not sure your float value will always be set, you can either use the 
 something custom.
 
 ````
-from ai_django_core.utils.string import float_to_string
+from ambient_toolbox.utils.string import float_to_string
 
 value = None
 
@@ -94,7 +94,7 @@ If you want to easily convert a date object to a string in the given format, jus
 
 ````
 import datetime
-from ai_django_core.utils.string import date_to_string
+from ambient_toolbox.utils.string import date_to_string
 
 # Default format (German)
 date_str = date_to_string(datetime.date(2020, 9, 19))
@@ -109,7 +109,7 @@ Again, you can set a replacement if the date object is `None`:
 
 ````
 import datetime
-from ai_django_core.utils.string import date_to_string
+from ambient_toolbox.utils.string import date_to_string
 
 # Default fallback
 date_str = date_to_string(None)
@@ -126,7 +126,7 @@ If you want to easily convert a datetime object to a string in the given format,
 
 ````
 import datetime
-from ai_django_core.utils.string import datetime_to_string
+from ambient_toolbox.utils.string import datetime_to_string
 
 # Default format (German)
 datetime_str = datetime_to_string(datetime.datetime(2020, 9, 19, 8))
@@ -141,7 +141,7 @@ Again, you can set a replacement if the datetime object is `None`:
 
 ````
 import datetime
-from ai_django_core.utils.string import datetime_to_string
+from ambient_toolbox.utils.string import datetime_to_string
 
 # Default fallback
 datetime_str = datetime_to_string(None)
@@ -157,7 +157,7 @@ datetime_str = datetime_to_string(None, 'no datetime')
 If you have a float or int variable which you like to convert to a properly formatted string, then you can do this:
 
 ````
-from ai_django_core.utils.string import number_to_string
+from ambient_toolbox.utils.string import number_to_string
 
 number_str = number_to_string(1234.56, decimal_digits=2)
 # Result: "1,234.56"
@@ -167,7 +167,7 @@ If you are not sure your float value will always be set, you can either use the 
 something custom.
 
 ````
-from ai_django_core.utils.string import number_to_string
+from ambient_toolbox.utils.string import number_to_string
 
 value = None
 
@@ -185,11 +185,11 @@ result will NOT be localised!
 
 ### Getting a value or a default
 
-Similar to django filter `default`, this method will return the value if it is not equal to `None` and 
+Similar to django filter `default`, this method will return the value if it is not equal to `None` and
 will return the fallback value otherwise.
 
 ````
-from ai_django_core.utils.string import string_or_none_to_string
+from ambient_toolbox.utils.string import string_or_none_to_string
 
 value = 'I am a string.'
 
@@ -211,7 +211,7 @@ result = string_or_none_to_string(None, replacement='empty')
 If you want a simple transformer from XML to HTML(-entities), you can use this helper:
 
 ````
-from ai_django_core.utils.string import encode_to_xml
+from ambient_toolbox.utils.string import encode_to_xml
 
 value = '<tag>Something with an ampersand (&)</tag>'
 result = encode_to_xml(value)

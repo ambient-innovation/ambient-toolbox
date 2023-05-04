@@ -3,8 +3,10 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "ai-django-core"
-authors = [{name = "Ambient Innovation: GmbH", email = "hello@ambient.digital"}]
+name = "ambient-toolbox"
+authors = [
+    {'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital'},
+]
 readme = "README.md"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -33,43 +35,44 @@ dependencies = [
     'Django>=2.2.28',
     'bleach>=1.4,<6',
     'python-dateutil>=2.5.3',
-    'html2text>=2020.1.16',
 ]
+
 
 [project.optional-dependencies]
 dev = [
-    'freezegun',
-    'gevent',
-    'pre-commit',
-    'pytest-cov',
-    'pytest-django',
-    'pytest-mock',
-]
-docs = [
-    'sphinx==4.2.0',
-    'sphinx-rtd-theme==1.0.0',
-    'm2r2==0.3.1',
-    'mistune<2.0.0', # fixes a problem mit m2r2
+   'freezegun~=1.2',
+   'pytest-django~=4.5',
+   'pytest-mock~=3.10',
+   'pre-commit~=3.2',
+   'black~=23.3',
+   'Django~=3.2',
+   'sphinx==4.2.0',
+   'sphinx-rtd-theme==1.0.0',
+   'm2r2==0.3.1',
+   'mistune<2.0.0',
+   'ambient-package-update~=23.5.1',
+   'gevent~=22.10',
 ]
 drf = [
-    'djangorestframework>=3.8.2',
+   'djangorestframework>=3.8.2',
 ]
 graphql = [
-    'graphene-django>=2.2.0',
-    'django-graphql-jwt>=0.2.1',
+   'graphene-django>=2.2.0',
+   'django-graphql-jwt>=0.2.1',
 ]
-view-layer= [
-    'django-crispy-forms>=1.4.0',
+view-layer = [
+   'django-crispy-forms>=1.4.0',
 ]
 
 [tool.flit.module]
-name = "ai_django_core"
+name = "ambient_toolbox"
 
 [project.urls]
-'Documentation' = 'https://ai-django-core.readthedocs.io/en/latest/index.html'
+'Documentation' = 'https://ambient-toolbox.readthedocs.io/en/latest/index.html'
 'Maintained by' = 'https://ambient.digital/'
-'Bugtracker' = 'https://github.com/ambient-innovation/ai-django-core/issues'
-'Changelog' = 'https://ai-django-core.readthedocs.io/en/latest/features/changelog.html'
+'Bugtracker' = 'https://github.com/ambient-innovation/ambient-toolbox/issues'
+'Changelog' = 'https://ambient-toolbox.readthedocs.io/en/latest/features/changelog.html'
+
 
 [tool.black]
 line-length = 120
@@ -81,12 +84,12 @@ include_trailing_comma = true
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
 select = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ"]
 ignore = [
-    'N999',     # Project name contains underscore, not fixable
-    'A003',     # Django attributes shadow python builtins
-    'DJ001',    # Django model text-based fields shouldn't be nullable
-    'B905',     # Can be enabled when Python <=3.9 support is dropped
-    'DTZ001',   # TODO will affect "tz_today()" method
-    'DTZ005',   # TODO will affect "tz_today()" method
+    'N999', # Project name contains underscore, not fixable
+    'A003', # Django attributes shadow python builtins
+    'DJ001', # Django model text-based fields shouldn't be nullable
+    'B905', # Can be enabled when Python <=3.9 support is dropped
+    'DTZ001', # TODO will affect "tz_today()" method
+    'DTZ005', # TODO will affect "tz_today()" method
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -123,7 +126,7 @@ line-length = 120
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.10.
+# Assume Python 3.11
 target-version = "py311"
 
 [tool.tox]
@@ -140,7 +143,7 @@ deps =
     django32: Django>=3.2,<3.3
     django40: Django>=4.0,<4.1
     django41: Django>=4.1,<4.2
-extras = dev,drf,graphql,view-layer
+extras = dev,drf,graphql,view-layer,
 commands =
     pytest --ds settings tests
 

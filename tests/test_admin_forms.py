@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.test import TestCase
 
-from ai_django_core.admin.views.forms import AdminCrispyForm
+from ambient_toolbox.admin.views.forms import AdminCrispyForm
 
 
 class AdminFormTest(TestCase):

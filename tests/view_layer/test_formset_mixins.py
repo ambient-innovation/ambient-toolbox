@@ -2,7 +2,7 @@ from django import forms
 from django.forms import BaseInlineFormSet, inlineformset_factory
 from django.test import TestCase
 
-from ai_django_core.view_layer.formset_mixins import CountChildrenFormsetMixin
+from ambient_toolbox.view_layer.formset_mixins import CountChildrenFormsetMixin
 from testapp.models import ForeignKeyRelatedModel, MySingleSignalModel
 
 

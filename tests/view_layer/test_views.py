@@ -3,8 +3,8 @@ from django.test import TestCase
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 
-from ai_django_core.tests.mixins import RequestProviderMixin
-from ai_django_core.view_layer.views import ToggleView
+from ambient_toolbox.tests.mixins import RequestProviderMixin
+from ambient_toolbox.view_layer.views import ToggleView
 from testapp.views import UserInFormKwargsMixinView
 
 

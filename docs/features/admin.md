@@ -1,9 +1,9 @@
 # Django Admin
 
 This toolbox provides an abundance of useful helpers for the django admin site. Please note that you need to install
-the `view-layer` extension of `ai-django-core` to use any form-related helpers:
+the `view-layer` extension of `ambient-toolbox` to use any form-related helpers:
 
-    pip install ai-django-core[view-layer]
+    pip install ambient-toolbox[view-layer]
 
 ## Admin classes
 

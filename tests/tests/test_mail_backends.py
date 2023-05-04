@@ -1,11 +1,11 @@
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase, override_settings
 
-from ai_django_core.mail.backends.whitelist_smtp import WhitelistEmailBackend
+from ambient_toolbox.mail.backends.whitelist_smtp import WhitelistEmailBackend
 
 
 @override_settings(
-    EMAIL_BACKEND='ai_django_core.mail.backends.whitelist_smtp.WhitelistEmailBackend',
+    EMAIL_BACKEND='ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend',
     EMAIL_BACKEND_DOMAIN_WHITELIST=['valid.domain'],
     EMAIL_BACKEND_REDIRECT_ADDRESS='%s@testuser.valid.domain',
 )

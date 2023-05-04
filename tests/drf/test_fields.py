@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework import serializers
 from rest_framework.serializers import ListSerializer
 
-from ai_django_core.drf.fields import RecursiveField
+from ambient_toolbox.drf.fields import RecursiveField
 from testapp.models import ModelWithFkToSelf, ModelWithOneToOneToSelf
 
 

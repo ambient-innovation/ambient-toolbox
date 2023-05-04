@@ -1,4 +1,4 @@
-from ai_django_core.utils import log_whodid
+from ambient_toolbox.utils import log_whodid
 
 
 def test_log_who_did_new_object(mocker):

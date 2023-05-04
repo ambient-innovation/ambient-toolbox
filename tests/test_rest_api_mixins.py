@@ -3,7 +3,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from ai_django_core.drf.tests import BaseViewSetTestMixin
+from ambient_toolbox.drf.tests import BaseViewSetTestMixin
 from testapp.api import views
 from testapp.models import MySingleSignalModel
 

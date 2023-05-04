@@ -3,7 +3,7 @@ import datetime
 import pytz
 from django.test import TestCase
 
-from ai_django_core.utils.string import (
+from ambient_toolbox.utils.string import (
     date_to_string,
     datetime_to_string,
     distinct,

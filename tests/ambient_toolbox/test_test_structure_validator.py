@@ -3,7 +3,7 @@ from pathlib import Path
 from django.conf import settings
 from django.test import TestCase, override_settings
 
-from ai_django_core.tests.structure_validator.test_structure_validator import TestStructureValidator
+from ambient_toolbox.tests.structure_validator.test_structure_validator import TestStructureValidator
 
 
 class TestStructureValidatorTest(TestCase):
@@ -149,23 +149,23 @@ class TestStructureValidatorTest(TestCase):
         self.assertEqual(len(service.issue_list), 1)
 
     @override_settings(
-        TEST_STRUCTURE_VALIDATOR_BASE_DIR=Path('/src/ai_django_core/'),
+        TEST_STRUCTURE_VALIDATOR_BASE_DIR=Path('/src/ambient_toolbox/'),
         TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME='my_project',
     )
     def test_build_path_to_test_package_with_settings_path(self):
         service = TestStructureValidator()
         path = service._build_path_to_test_package(app='my_project.my_app')
 
-        self.assertEqual(path, Path('/src/ai_django_core/my_project/my_app/tests'))
+        self.assertEqual(path, Path('/src/ambient_toolbox/my_project/my_app/tests'))
 
     @override_settings(
-        TEST_STRUCTURE_VALIDATOR_BASE_DIR='/src/ai_django_core/', TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME='my_project'
+        TEST_STRUCTURE_VALIDATOR_BASE_DIR='/src/ambient_toolbox/', TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME='my_project'
     )
     def test_build_path_to_test_package_with_settings_str(self):
         service = TestStructureValidator()
         path = service._build_path_to_test_package(app='my_project.my_app')
 
-        self.assertEqual(path, Path('/src/ai_django_core/my_project/my_app/tests'))
+        self.assertEqual(path, Path('/src/ambient_toolbox/my_project/my_app/tests'))
 
     def test_build_path_to_test_package_with_defaults(self):
         service = TestStructureValidator()

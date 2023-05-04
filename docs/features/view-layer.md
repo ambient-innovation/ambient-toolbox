@@ -7,11 +7,11 @@ requirement.
 
 Just install the package like this:
 
-``pip install ai-django-core[view-layer]``
+``pip install ambient-toolbox[view-layer]``
 
 If you are using ``pipenv``, you can add the following line to your `Pipfile`:
 
-``ai-django-core = {extras = ["view-layer"],version = "*"}``
+``ambient-toolbox = {extras = ["view-layer"],version = "*"}``
 
 ## Forms
 
@@ -146,7 +146,7 @@ The HTMX docs are very brief about the [HX-Redirect header](https://htmx.org/doc
 make a call to your backend and in response to this reload your page, you can achieve this as follows:
 
 ````python
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -163,7 +163,7 @@ If you need a more elaborate way to set up your redirect url, you can overwrite 
 
 ````python
 # views.py
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 from django.urls import reverse
 from django.views import generic
 
@@ -190,7 +190,7 @@ defined component.
 The `updateNotificationMenu` is the javascript event, which will be sent from the backend.
 
 ````python
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 from django.views import generic
 
 
@@ -206,7 +206,7 @@ you can directly send the along with the event.
 
 ````python
 # views.py
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 from django.views import generic
 
 
@@ -234,7 +234,7 @@ context.
 
 ````python
 # views.py
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 from django.views import generic
 
 
@@ -247,7 +247,7 @@ If you need a more elaborate way to set up your triggers, you can overwrite the 
 
 ````python
 # views.py
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 from django.views import generic
 
 
@@ -270,7 +270,7 @@ using* `UserInFormKwargsMixin` *instead of this mixin.*
 Just add the mixin to your class-based view:
 
 ````python
-from ai_django_core.view_layer.views import RequestInFormKwargsMixin
+from ambient_toolbox.view_layer.views import RequestInFormKwargsMixin
 from django.views import generic
 
 
@@ -297,7 +297,7 @@ use-case would be to set the ownership of the to-be-created object or store the 
 Just add the mixin to your class-based view:
 
 ````python
-from ai_django_core.view_layer.views import UserInFormKwargsMixin
+from ambient_toolbox.view_layer.views import UserInFormKwargsMixin
 from django import forms
 from django.views import generic
 
@@ -345,7 +345,7 @@ tedious and error-prone. Therefore, we implemented a neat mixin which ensures by
 that the user needs to be logged in and has the defined permissions.
 
 ````python
-from ai_django_core.view_layer.mixins import DjangoPermissionRequiredMixin
+from ambient_toolbox.view_layer.mixins import DjangoPermissionRequiredMixin
 from django.views import generic
 
 
@@ -361,7 +361,7 @@ Note, that you have to define the url to your login view, so the mixin can redir
 correctly. It defaults to `redirect('login-view')`.
 
 ````python
-from ai_django_core.view_layer.mixins import DjangoPermissionRequiredMixin
+from ambient_toolbox.view_layer.mixins import DjangoPermissionRequiredMixin
 from django.views import generic
 
 
@@ -378,7 +378,7 @@ class MyModelListView(DjangoPermissionRequiredMixin, generic.ListView):
 If you require an open view endpoint, just set the class flag `login_required` to False.
 
 ````python
-from ai_django_core.view_layer.mixins import DjangoPermissionRequiredMixin
+from ambient_toolbox.view_layer.mixins import DjangoPermissionRequiredMixin
 from django.views import generic
 
 
@@ -403,7 +403,7 @@ provides a test mixin to ensure the following things:
 The following test case will create a bunch of default test cases covering the points 1-3.
 
 ````python
-from ai_django_core.view_layer.tests.mixins import BaseViewPermissionTestMixin
+from ambient_toolbox.view_layer.tests.mixins import BaseViewPermissionTestMixin
 from django.test import TestCase
 from my_project.my_app import views
 
@@ -444,7 +444,7 @@ sent, like toggling a flag or updating a timestamp. For these cases, just use th
 same as the `UpdateView` - except that "POST" is required and that no form has to be defined.
 
 ```python
-from ai_django_core.view_layer.views import ToggleView
+from ambient_toolbox.view_layer.views import ToggleView
 
 
 class ToggleActiveStateView(ToggleView):

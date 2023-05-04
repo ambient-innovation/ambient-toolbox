@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ai_django_core.selectors.permission import AbstractUserSpecificSelectorMixin
+from ambient_toolbox.selectors.permission import AbstractUserSpecificSelectorMixin
 from testapp.models import ModelWithSelector
 
 

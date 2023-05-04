@@ -1,5 +1,9 @@
 # Changelog
 
+* **8.0.0** (2023-05-01)
+  * Rename and re-release package as "ambient-toolbox"
+  * Extracted class-based mails as (django-pony-express)[https://test.pypi.org/project/django-pony-express/]
+
 * **7.0.0** (2023-03-28)
   * *Breaking change:* Dropped Python 3.7 support due to end of lifetime
   * Added `ALWAYS_UPDATE_FIELDS` flag to `CommonInfo` model
@@ -338,7 +342,7 @@
 
 * **3.5.0** (2020-11-10)
     * Merged package ``graphene-django-ai`` into this package and enabled graphql-specific installation
-      with `pip install ai_django_core[graphql]`
+      with `pip install ambient_toolbox[graphql]`
     * Added some files for readthedocs.io and updated Readme
 
 * **3.4.0** (2020-10-30)
@@ -348,7 +352,7 @@
 
 * **3.3.0** (2020-10-30)
     * Merged package ``ai-drf-core`` into this package and enabled djangorestframework-specific installation
-      with `pip install ai_django_core[drf]`
+      with `pip install ambient_toolbox[drf]`
     * Added ``BaseModelSerializer`` and ``CommonInfoSerializer``
     * Incremented dependencies django and bleach to previous versions latest bugfix release
 
@@ -371,7 +375,7 @@
     * Added missing ``__init__.py`` file to package mail.services
 
 * **3.0.0** (2020-09-09)
-    * *Breaking change:*  Renamed package from `ai` to `ai_django_core` to clarify dependencies for usages
+    * *Breaking change:*  Renamed package from `ai` to `ambient_toolbox` to clarify dependencies for usages
     * Finished code linting
     * Removed unused imports in antivirus util package
 

@@ -34,7 +34,7 @@ defined within `UserQuerySet` which is registered in the `UserManager`.
 ```python
 # my_app/selectors/user.py
 
-from ai_django_core.selectors.base import Selector
+from ambient_toolbox.selectors.base import Selector
 
 
 class UserSelector(Selector):
@@ -111,8 +111,8 @@ with a mixin `AbstractUserSpecificSelectorMixin`. This mixin provides three meth
 ```python
 # my_app/selector/mymodel.py
 
-from ai_django_core.selectors.base import Selector
-from ai_django_core.selectors.permission import AbstractUserSpecificSelectorMixin
+from ambient_toolbox.selectors.base import Selector
+from ambient_toolbox.selectors.permission import AbstractUserSpecificSelectorMixin
 
 class MyModelSelector(AbstractUserSpecificSelectorMixin, Selector):
 

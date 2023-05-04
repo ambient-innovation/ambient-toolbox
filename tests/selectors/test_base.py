@@ -1,7 +1,7 @@
 from django.db.models import manager
 from django.test import TestCase
 
-from ai_django_core.selectors.base import Selector
+from ambient_toolbox.selectors.base import Selector
 from testapp.models import ModelWithSelector
 
 

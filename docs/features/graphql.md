@@ -214,8 +214,8 @@ Usage:
 # urls.py
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
-from ai_django_core.graphql.views import SentryGraphQLView
-from ai_django_core.graphql.utils import ignore_graphene_logger
+from ambient_toolbox.graphql.views import SentryGraphQLView
+from ambient_toolbox.graphql.utils import ignore_graphene_logger
 
 ignore_graphene_logger()    # <-- add this line at global level
 

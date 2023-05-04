@@ -1,6 +1,6 @@
 import pytest
 
-from ai_django_core.utils.file import crc, md5_checksum
+from ambient_toolbox.utils.file import crc, md5_checksum
 
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def test_closes_file(mocker, test_func):
     Tests if the CRC and MD5 checksum functions use a context manager to open the file, to guarantee that the opened
     file descriptor is closed.
     """
-    open_mock = mocker.patch('ai_django_core.utils.file.open')
+    open_mock = mocker.patch('ambient_toolbox.utils.file.open')
     open_mock.return_value.__enter__.return_value.read.return_value = None  # to make f.read() return None.
     file_mock = mocker.Mock()
     test_func(file_mock)
@@ -30,7 +30,7 @@ def test_closes_file(mocker, test_func):
 @pytest.mark.parametrize(
     'content, crc_result, md5_result',
     [
-        ('The answer to life, the universe, and everything.\n', '0988D2CD', '4efb6393969f501be5c1ba7571f0c09f'),
+        ('The answer to life, the universe, and everything.\n', '984AA68B', 'd9d35398d9d2b0169071ba5f0878b3a6'),
         ('The quick brown fox jumps over the lazy dog', '414FA339', '9e107d9d372bb6826bd81d3542a419d6'),
         ('', '00000000', 'd41d8cd98f00b204e9800998ecf8427e'),
     ],

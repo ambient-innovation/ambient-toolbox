@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from ai_django_core.admin.model_admins.mixins import FetchObjectMixin
-from ai_django_core.tests.mixins import RequestProviderMixin
+from ambient_toolbox.admin.model_admins.mixins import FetchObjectMixin
+from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MySingleSignalModel
 
 
@@ -40,7 +40,7 @@ class FetchObjectMixinTest(RequestProviderMixin, TestCase):
 
         return_obj = MockResolverResponse()
         return_obj.kwargs = {'object_id': obj.id}
-        with mock.patch('ai_django_core.admin.model_admins.mixins.resolve', return_value=return_obj):
+        with mock.patch('ambient_toolbox.admin.model_admins.mixins.resolve', return_value=return_obj):
             obj_from_request = model_admin.get_object_from_request(request)
 
         self.assertEqual(obj_from_request, obj)

@@ -4,15 +4,15 @@ from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.views import generic
 
-from ai_django_core.admin.views.mixins import AdminViewMixin
-from ai_django_core.tests.mixins import RequestProviderMixin
+from ambient_toolbox.admin.views.mixins import AdminViewMixin
+from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MySingleSignalModel
 
 
 class TestView(AdminViewMixin, generic.TemplateView):
     model = MySingleSignalModel
     admin_page_title = 'My fancy title'
-    template_name = 'test_email.html'
+    template_name = 'testapp/test_template.html'
 
 
 class AdminViewMixinTest(RequestProviderMixin, TestCase):

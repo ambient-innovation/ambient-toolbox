@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ai_django_core.utils import clear_cache
+from ambient_toolbox.utils import clear_cache
 
 
 class CacheUtilTest(TestCase):

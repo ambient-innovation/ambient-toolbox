@@ -1,0 +1,73 @@
+# Translations for ambient-toolbox package
+# Copyright (C) 2021 Ambient Innovation: GmbH
+# This file is distributed under the same license as the PACKAGE package.
+# Ronny Vedrilla, 2021
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-03 16:03+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\ambient_toolbox\admin\views\forms.py:12
+msgid "No title defined"
+msgstr "Kein Titel gesetzt"
+
+#: .\ambient_toolbox\admin\views\forms.py:13
+#: .\ambient_toolbox\view_layer\form_mixins.py:16
+msgid "Save"
+msgstr "Speichern"
+
+#: .\ambient_toolbox\apps.py:7
+msgid "Ambient Toolbox"
+msgstr "Ambient toolbox"
+
+#: .\ambient_toolbox\models.py:10
+msgid "Created at"
+msgstr "Erstellt am"
+
+#: .\ambient_toolbox\models.py:28
+msgid "Created by"
+msgstr "Erstellt von"
+
+#: .\ambient_toolbox\models.py:34
+msgid "Last modified at"
+msgstr "Zuletzt geändert am"
+
+#: .\ambient_toolbox\models.py:37
+msgid "Last modified by"
+msgstr "Zuletzt geändert von"
+
+#: .\ambient_toolbox\tests\mixins.py:94
+msgid "Please pass a user object to RequestProviderMixin."
+msgstr "Bitte ein User-Objekt an RequestProviderMixin übergeben."
+
+#: .\ambient_toolbox\utils\date.py:74
+msgid "Seconds must be positive."
+msgstr "Sekunden müssen eine positive Zahl sein."
+
+#: .\ambient_toolbox\view_layer\mixins.py:20
+msgid ""
+"Class-based view using DjangoPermissionRequiredMixin without defining a "
+"permission list."
+msgstr ""
+"Klassen-basierter View verwendet DjangoPermissionRequiredMixin ohne "
+"definierte Berechtigungen."
+
+#: .\ambient_toolbox\view_layer\tests\mixins.py:33
+msgid "BaseViewPermissionTestMixin used without setting a \"view_class\"."
+msgstr ""
+"BaseViewPermissionTestMixin verwendet ohne eine View-Klasse gesetzt zu haben."
+
+#: .\testapp\templates\403.html:53
+msgid "Error 403"
+msgstr "Fehler 403"

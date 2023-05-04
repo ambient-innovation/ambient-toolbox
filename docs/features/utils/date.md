@@ -22,7 +22,7 @@ MyModel.objects.exclude(my_date__week_day__in[DateHelper.ORM_SATURDAY, DateHelpe
 The function ``add_months(source_date)`` provides a simple way to add any number of months to a given date:
 
 ````
-from ai_django_core.utils import add_months
+from ambient_toolbox.utils import add_months
 
 new_date = add_months(datetime.date(year=2020, month=9, day=19), 2)
 # new_date = datetime.date(2020, 11, 19)
@@ -35,7 +35,7 @@ You can also use a negative number to subtract months.
 The function ``add_days(source_date)`` provides a simple way to add any number of months to a given date:
 
 ````
-from ai_django_core.utils import add_days
+from ambient_toolbox.utils import add_days
 
 new_date = add_days(datetime.date(year=2020, month=9, day=19), 2)
 # new_date = datetime.date(2020, 9, 21)
@@ -48,7 +48,7 @@ You can also use a negative number to subtract days.
 The function ``add_minutes(source_datetime)`` provides a simple way to add any number of months to a given date:
 
 ````
-from ai_django_core.utils import add_days
+from ambient_toolbox.utils import add_days
 
 new_datetime = add_minutes(datetime.datetime(year=2020, month=9, day=19, hour=8), 60)
 # new_datetime = add_minutes.date(2020, 9, 19, 9)
@@ -65,7 +65,7 @@ The function ``get_next_month()`` is a wrapper for ``add_months()`` and will ret
 The function ``first_day_of_month(source_date)`` will return the first of month for any given date:
 
 ````
-from ai_django_core.utils import first_day_of_month
+from ambient_toolbox.utils import first_day_of_month
 
 new_date = first_day_of_month(datetime.date(year=2020, month=9, day=19))
 # new_date = datetime.date(2020, 9, 1)
@@ -76,7 +76,7 @@ new_date = first_day_of_month(datetime.date(year=2020, month=9, day=19))
 The function ``get_formatted_date_str(source_date)`` will return the string representation in the German format ("d.m.Y"):
 
 ````
-from ai_django_core.utils import get_formatted_date_str
+from ambient_toolbox.utils import get_formatted_date_str
 
 date_str = get_formatted_date_str(datetime.date(year=2020, month=9, day=19))
 # date_str = "19.09.2020"
@@ -89,7 +89,7 @@ The function ``get_time_from_seconds(seconds)`` will create a string representat
 in the format "HH:mm:ss":
 
 ````
-from ai_django_core.utils import get_formatted_date_str
+from ambient_toolbox.utils import get_formatted_date_str
 
 time_str = get_time_from_seconds(3661)
 # time_str = "01:01:01"
@@ -119,7 +119,7 @@ The function ``get_start_and_end_date_from_calendar_week(year, calendar_week)`` 
 and Sunday of a given calendar week:
 
 ````
-from ai_django_core.utils import get_start_and_end_date_from_calendar_week
+from ambient_toolbox.utils import get_start_and_end_date_from_calendar_week
 
 monday, sunday = get_start_and_end_date_from_calendar_week(2020, 38)
 # monday = datetime.date(2020, 09, 14); sunday = datetime.date(2020, 9, 20)
@@ -132,7 +132,7 @@ The function ``get_next_calendar_week(compare_date)`` will return the the calend
 
 ````
 import datetime
-from ai_django_core.utils import get_next_calendar_week
+from ambient_toolbox.utils import get_next_calendar_week
 
 next_calendar_week = get_next_calendar_week(datetime.date(year=2020, month=9, day=19))
 # next_calendar_week = 39
@@ -145,7 +145,7 @@ The function ``next_weekday(given_date, weekday)`` will return a date object of 
 ````
 import calendar
 import datetime
-from ai_django_core.utils import next_weekday
+from ambient_toolbox.utils import next_weekday
 
 next_friday = next_weekday(datetime.date(year=2020, month=9, day=19), calendar.FRIDAY)
 # next_friday = datetime.date(year=2020, month=9, day=25)
@@ -160,7 +160,7 @@ float. So from April 15th to May 1st it's 0.5 months. Attention: The `end_date` 
 ````
 import calendar
 import datetime
-from ai_django_core.utils import date_month_delta
+from ambient_toolbox.utils import date_month_delta
 
 months = date_month_delta(datetime.date(year=2020, month=8, day=1), datetime.date(year=2020, month=10, day=1))
 # months = 2.0
@@ -173,7 +173,7 @@ The month is either the current month (if no date_object is passed), or the mont
 Dates passed need to be datetime.date objects (not datetime.datetime)!
 
 ````
-from ai_django_core.utils import get_first_and_last_of_month
+from ambient_toolbox.utils import get_first_and_last_of_month
 
 # Today is 04.04.2022
 first_of_month, last_of_month = get_first_and_last_of_month()
@@ -195,7 +195,7 @@ You can optionally use the argument ``str_format``, then the current date will b
 function will return a string. Please provide a ``strftime``-compatible value.
 
 ````
-from ai_django_core.utils import next_weekday
+from ambient_toolbox.utils import next_weekday
 
 # Here we'll get an object
 current_date = tz_today()
@@ -210,7 +210,7 @@ The function ``log_whodid`` provides a simple way to ensure object ownership is 
 which is derived from ``CommonInfo``:
 
 ````
-from ai_django_core.models import CommonInfo
+from ambient_toolbox.models import CommonInfo
 
 class MyModel(CommonInfo):
     pass

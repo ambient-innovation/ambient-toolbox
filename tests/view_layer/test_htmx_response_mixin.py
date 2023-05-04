@@ -2,8 +2,8 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.views import generic
 
-from ai_django_core.tests.mixins import RequestProviderMixin
-from ai_django_core.view_layer.htmx_mixins import HtmxResponseMixin
+from ambient_toolbox.tests.mixins import RequestProviderMixin
+from ambient_toolbox.view_layer.htmx_mixins import HtmxResponseMixin
 
 
 class HtmxResponseMixinTest(RequestProviderMixin, TestCase):

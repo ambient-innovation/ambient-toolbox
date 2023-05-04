@@ -16,7 +16,7 @@ import sys
 import django
 from django.conf import settings
 
-sys.path.insert(0, os.path.abspath('..'))  # so that we can access the ai_django_core package
+sys.path.insert(0, os.path.abspath('..'))  # so that we can access the "ambient_toolbox" package
 settings.configure(
     INSTALLED_APPS=[
         'django.contrib.admin',
@@ -25,19 +25,18 @@ settings.configure(
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'ai_django_core',
+        'ambient_toolbox',
     ],
-    EMAIL_BACKEND_REDIRECT_ADDRESS='',
     SECRET_KEY='ASDFjklö123456890',
 )
 django.setup()
 
-from ai_django_core import __version__  # noqa: E402
+from ambient_toolbox import __version__  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 
-project = 'ai-django-core'
-copyright = '2022, Ambient Innovation: GmbH'  # noqa
+project = 'ambient-toolbox'
+copyright = '2023, Ambient Innovation: GmbH'  # noqa
 author = 'Ambient Innovation: GmbH <hello@ambient.digital>'
 version = __version__
 release = __version__

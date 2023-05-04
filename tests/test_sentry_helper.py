@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ai_django_core.sentry.helpers import strip_sensitive_data_from_sentry_event
+from ambient_toolbox.sentry.helpers import strip_sensitive_data_from_sentry_event
 
 
 class SentryHelperTest(TestCase):

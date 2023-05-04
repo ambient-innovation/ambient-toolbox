@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ai_django_core.utils.math import round_to_decimal, round_up_decimal
+from ambient_toolbox.utils.math import round_to_decimal, round_up_decimal
 
 
 class MathTest(TestCase):
