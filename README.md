@@ -91,15 +91,15 @@ gettext_lazy (`from django.utils.translation import gettext_lazy as _`).
 
 How to create translation file:
 
-* Navigate to `ambient-toolbox` (the inner directory!)
+* Navigate to `ambient-toolbox`
 * `python manage.py makemessages -l de`
-* Have a look at the new/changed files within `ambient-toolbox/locale`
+* Have a look at the new/changed files within `ambient_toolbox/locale`
 
 How to compile translation files:
 
-* Navigate to `ambient-toolbox` (the inner directory!)
+* Navigate to `ambient-toolbox`
 * `python manage.py compilemessages`
-* Have a look at the new/changed files within `ambient-toolbox/locale`
+* Have a look at the new/changed files within `ambient_toolbox/locale`
 
 ### Publish to ReadTheDocs.io
 
