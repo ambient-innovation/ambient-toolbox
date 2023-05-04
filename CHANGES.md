@@ -1,5 +1,8 @@
 # Changelog
 
+**8.0.2** (2023-05-04)
+  * Bugfix in documentation
+
 **8.0.1** (2023-05-04)
   * Added migration guide to docs
 

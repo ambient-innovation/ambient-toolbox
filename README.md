@@ -31,7 +31,7 @@ misleading nature of the name, we chose to rename it with something more meaning
 The migration is really simple, just:
 
 * Install ambient-toolbox and remove the dependency to ai-django-core
-* Search and replace all usages of from `ai_django_core...` to `from ambient_toolbox...`
+* Search and replace all usages of `from ai_django_core...` to `from ambient_toolbox...`
 
 
 ## Installation
