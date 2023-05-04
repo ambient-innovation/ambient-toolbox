@@ -29,14 +29,13 @@ on your model to disable this behavior.
 
 ### Automatic object ownership
 
-If you want to keep track of object ownership automatically, you can use the `CurrentUserMiddleware`.
-Just make sure, you'll insert it **after** djangos `AuthenticationMiddleware`:
+If you want to keep track of object ownership automatically, you can use the `CurrentRequestMiddleware`:
 
 ````python
 MIDDLEWARE = (
     ...
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'ambient_toolbox.middleware.current_user.CurrentUserMiddleware',
+    'ambient_toolbox.middleware.current_user.CurrentRequestMiddleware',
+    ...
 )
 ````
 
