@@ -19,13 +19,17 @@ class SentryEventScrubber:
         * standard_denylist: By default certain keys are already scrubbed from the event.
         """
         self.denylist = [] if denylist is None else denylist
-        self.standard_denylist = [
-            'username',
-            'email',
-            'ip_address',
-            'serializer',
-            'admin',
-        ] if standard_denylist else []
+        self.standard_denylist = (
+            [
+                'username',
+                'email',
+                'ip_address',
+                'serializer',
+                'admin',
+            ]
+            if standard_denylist
+            else []
+        )
 
     def scrub_sensitive_data_from_sentry_event(self, event, _hint):
         EventScrubber(denylist=list(set(DEFAULT_DENYLIST + self.standard_denylist + self.denylist))).scrub_event(event)
