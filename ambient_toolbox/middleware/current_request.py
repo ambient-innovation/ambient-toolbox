@@ -1,25 +1,29 @@
-from threading import local
+from contextvars import ContextVar
+from typing import Callable, Optional
 
-_threadlocal = local()
+from django.http import HttpRequest, HttpResponse
+
+_request_cv: ContextVar[Optional[HttpRequest]] = ContextVar('request', default=None)
 
 
 class CurrentRequestMiddleware:
     """
-    Middleware which stores the current request in a threadlocal variable.
+    Middleware which stores the current request in a thread-safe manner.
     """
 
-    def __init__(self, get_response):
+    def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]):
         self.get_response = get_response
 
-    def __call__(self, request):
-        _threadlocal.request = request
+    def __call__(self, request: HttpRequest) -> HttpResponse:
+        token = _request_cv.set(request)
         response = self.get_response(request)
-        del _threadlocal.request
+        _request_cv.reset(token)
         return response
 
     @staticmethod
     def get_current_user():
+        request = _request_cv.get()
         try:
-            return _threadlocal.request.user
+            return request.user
         except AttributeError:
             return None
