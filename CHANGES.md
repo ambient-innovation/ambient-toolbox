@@ -1,5 +1,8 @@
 # Changelog
 
+**8.1.1** (2023-05-04)
+  * Updated migration docs
+
 **8.1.0** (2023-05-04)
   * Support for Django 4.2 added
 

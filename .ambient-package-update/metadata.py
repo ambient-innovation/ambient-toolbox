@@ -38,6 +38,8 @@ The migration is really simple, just:
 
 * Install ambient-toolbox and remove the dependency to ai-django-core
 * Search and replace all usages of `from ai_django_core...` to `from ambient_toolbox...`
+* The class-based mail functionality was moved to a separate package called
+[django-pony-express](https://pypi.org/project/django-pony-express/).
 """,
     ),
     dependencies=[
