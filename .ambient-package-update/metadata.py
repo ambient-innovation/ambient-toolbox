@@ -59,6 +59,9 @@ The migration is really simple, just:
             'graphene-django>=2.2.0',
             'django-graphql-jwt>=0.2.1',
         ],
+        'sentry': [
+            'sentry-sdk>=1.19.1',
+        ],
         'view-layer': [
             'django-crispy-forms>=1.4.0',
         ],

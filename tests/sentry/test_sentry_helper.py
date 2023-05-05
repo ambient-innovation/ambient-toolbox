@@ -1,6 +1,9 @@
+import copy
+
 from django.test import TestCase
 
-from ambient_toolbox.sentry.helpers import strip_sensitive_data_from_sentry_event
+from ambient_toolbox.sentry.helpers import strip_sensitive_data_from_sentry_event, SentryEventScrubber
+from tests.sentry.mock_data import SCRUBBED_SENTRY_EVENT, SENTRY_EVENT
 
 
 class SentryHelperTest(TestCase):
@@ -23,3 +26,10 @@ class SentryHelperTest(TestCase):
         event = {'user': {'email': 'mymail@example.com', 'ip_address': '127.0.0.1'}}
 
         self.assertIsInstance(strip_sensitive_data_from_sentry_event(event, None), dict)
+
+    def test_sentry_event_scrubber_on_a_regular_sentry_event(self):
+        event = copy.deepcopy(SENTRY_EVENT)
+        self.assertEqual(
+            SCRUBBED_SENTRY_EVENT,
+            SentryEventScrubber().scrub_sensitive_data_from_sentry_event(event, None),
+        )

@@ -1,5 +1,9 @@
 # Changelog
 
+**8.2.0** (2023-05-05)
+  * Add sentry event scrubber
+  * Add optional dependency sentry-sdk
+
 **8.1.1** (2023-05-04)
   * Updated migration docs
 
