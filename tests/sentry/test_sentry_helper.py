@@ -2,7 +2,7 @@ import copy
 
 from django.test import TestCase
 
-from ambient_toolbox.sentry.helpers import strip_sensitive_data_from_sentry_event, SentryEventScrubber
+from ambient_toolbox.sentry.helpers import SentryEventScrubber, strip_sensitive_data_from_sentry_event
 from tests.sentry.mock_data import SCRUBBED_SENTRY_EVENT, SENTRY_EVENT
 
 

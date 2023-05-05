@@ -1,4 +1,4 @@
-from sentry_sdk.scrubber import EventScrubber, DEFAULT_DENYLIST
+from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
 from sentry_sdk.serializer import serialize
 
 
