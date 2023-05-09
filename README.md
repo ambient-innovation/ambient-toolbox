@@ -61,7 +61,7 @@ The migration is really simple, just:
 
 - Create a Python virtualenv and activate it
 - Install "pip-tools" with `pip install pip-tools`
-- Compile the requirements with `pip-compile --extra dev,drf,graphql,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
+- Compile the requirements with `pip-compile --extra dev,drf,graphql,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
 - Sync the dependencies with your virtualenv with `pip-sync`
 
 ### Add functionality
@@ -153,3 +153,12 @@ How to compile translation files:
   ```
   flit publish --repository testpypi
   ```
+
+### Maintenance
+
+Please note that this package supports the [ambient-package-update](https://pypi.org/project/ambient-package-update/).
+So you don't have to worry about the maintenance of this package. All important configuration and setup files are
+being rendered by this updater. It works similar to well-known updaters like `pyupgrade` or `django-upgrade`.
+
+To run an update, refer to the [documentation page](https://pypi.org/project/ambient-package-update/)
+of the "ambient-package-update".

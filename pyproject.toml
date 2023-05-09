@@ -51,7 +51,7 @@ dev = [
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.5.5',
+   'ambient-package-update~=23.5.7',
    'gevent~=22.10',
 ]
 drf = [
@@ -60,6 +60,9 @@ drf = [
 graphql = [
    'graphene-django>=2.2.0',
    'django-graphql-jwt>=0.2.1',
+]
+sentry = [
+   'sentry-sdk>=1.19.1',
 ]
 view-layer = [
    'django-crispy-forms>=1.4.0',
@@ -146,7 +149,7 @@ deps =
     django40: Django>=4.0,<4.1
     django41: Django>=4.1,<4.2
     django42: Django>=4.2,<4.3
-extras = dev,drf,graphql,view-layer,
+extras = dev,drf,graphql,sentry,view-layer,
 commands =
     pytest --ds settings tests
 
