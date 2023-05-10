@@ -1,5 +1,9 @@
 # Changelog
 
+**8.2.1** (2023-05-10)
+  * Updated package linters
+  * Added release scripts for windows and UNIX
+
 **8.2.0** (2023-05-05)
   * Add sentry event scrubber
   * Add optional dependency sentry-sdk
