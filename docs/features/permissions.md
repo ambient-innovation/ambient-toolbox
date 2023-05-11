@@ -53,6 +53,16 @@ You create an instance of `GroupPermissionDeclaration` for every group. Then you
 
 The permission declaration is per model to save you some characters and to reduce the size of the file.
 
+When you've declared all your groups as described, you have to register them within your Django settings.
+
+````python
+# Improved fixtures (provided by "ambient-toolbox")
+GROUP_PERMISSION_FIXTURES = (
+    'account.permissions.editor.GroupEditor',
+    ...
+)
+````
+
 ### Separating your apps
 
 Having a huge file per group integrating model permissions from all over your application will increase the coupling
