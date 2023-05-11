@@ -1,5 +1,8 @@
 # Changelog
 
+**8.3.1** (2023-05-11)
+  * Updated docs about permission feature limitations
+
 **8.3.0** (2023-05-11)
   * Added improved Django group permission fixtures
 

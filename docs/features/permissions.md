@@ -155,3 +155,8 @@ If you want to validate that you didn't make any mistakes, you can run the same 
 
 > python ./manage.py install_permission_fixtures --dry-run
 
+### Limitations
+
+Please note that new groups will be created but the service won't **delete** any groups. The simple reason is that if
+you rename a group, this would count as a "delete" and a "create" operation. The new group would have all permissions
+but all user assignment would be lost on deleting the previous group.
