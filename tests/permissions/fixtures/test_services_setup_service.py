@@ -24,7 +24,7 @@ class PermissionSetupServiceTest(TestCase):
         service = PermissionSetupService(group_declaration=group_declaration)
 
         self.assertEqual(service.group_declaration, group_declaration)
-        self.assertTrue(service.dry_run)
+        self.assertFalse(service.dry_run)
 
     def test_process_add_permission(self):
         group_declaration = GroupPermissionDeclaration(
