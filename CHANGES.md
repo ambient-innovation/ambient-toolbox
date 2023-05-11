@@ -1,5 +1,8 @@
 # Changelog
 
+**8.3.0** (2023-05-11)
+  * Added improved Django group permission fixtures
+
 **8.2.1** (2023-05-10)
   * Updated package linters
   * Added release scripts for windows and UNIX

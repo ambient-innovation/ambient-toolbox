@@ -26,6 +26,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
    features/mail.md
    features/models.md
    features/mixins.md
+   features/permissions.md
    features/selectors.md
    features/sentry.md
    features/services.md
