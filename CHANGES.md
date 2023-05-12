@@ -1,5 +1,8 @@
 # Changelog
 
+**8.3.3** (2023-05-12)
+  * Fixed Python 3.8 compat
+
 **8.3.2** (2023-05-11)
   * Updated docs about permission settings setup
 
