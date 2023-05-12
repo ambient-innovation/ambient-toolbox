@@ -165,6 +165,24 @@ If you want to validate that you didn't make any mistakes, you can run the same 
 
 > python ./manage.py install_permission_fixtures --dry-run
 
+### Testing
+
+To ensure that your setup is correct, and you use only valid and existing permissions, you can write a quick integration
+test. Note that removing a Django permission code-wise won't result in removing it in the database. So having a
+non-existing permission in your permission fixtures might not necessarily lead to an error. The test database on the
+other hand is created from scratch and therefore only contains valid permissions.
+
+````python
+from django.core.management import call_command
+from django.test import TestCase
+
+
+class PermissionFixturesIntegrationTest(TestCase):
+
+    def test_integration_regular(self):
+        call_command('install_permission_fixtures', '--dry-run')
+````
+
 ### Limitations
 
 Please note that new groups will be created but the service won't **delete** any groups. The simple reason is that if

@@ -1,5 +1,8 @@
 # Changelog
 
+**8.3.4** (2023-05-12)
+  * Added docs about integration testing for permission fixtures
+
 **8.3.3** (2023-05-12)
   * Fixed Python 3.8 compat
 
