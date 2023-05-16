@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
 from sentry_sdk.serializer import serialize
 
 
@@ -34,6 +33,8 @@ class SentryEventScrubber:
         )
 
     def scrub_sensitive_data_from_sentry_event(self, event, _hint):
+        from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
+
         EventScrubber(denylist=list(set(DEFAULT_DENYLIST + self.standard_denylist + self.denylist))).scrub_event(event)
         return serialize(event)
 

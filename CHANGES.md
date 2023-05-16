@@ -1,5 +1,8 @@
 # Changelog
 
+**8.3.5** (2023-05-16)
+  * Moved sentry import for sentry helper inside of function to avoid problems with compatability
+
 **8.3.4** (2023-05-12)
   * Added docs about integration testing for permission fixtures
 
