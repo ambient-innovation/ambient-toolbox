@@ -29,16 +29,17 @@ on your model to disable this behavior.
 
 ### Automatic object ownership
 
-If you want to keep track of object ownership automatically, you can use the `CurrentUserMiddleware`.
-Just make sure, you'll insert it **after** djangos `AuthenticationMiddleware`:
+If you want to keep track of object ownership automatically, you can use the `CurrentRequestMiddleware`:
 
 ````python
 MIDDLEWARE = (
     ...
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'ambient_toolbox.middleware.current_user.CurrentUserMiddleware',
+    'ambient_toolbox.middleware.current_user.CurrentRequestMiddleware',
+    ...
 )
 ````
 
 Using this middleware will automatically and thread-safe keep track of the ownership of all models,
 which derive from `CommonInfo`.
+In asynchronous contexts, you may expect a small performance penalty as this
+middleware does not state being `async_capable` yet.

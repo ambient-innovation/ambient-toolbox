@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
-from ambient_toolbox.middleware.current_user import CurrentUserMiddleware
+from ambient_toolbox.middleware.current_request import CurrentRequestMiddleware
 
 
 class CreatedAtInfo(models.Model):
@@ -62,7 +62,7 @@ class CommonInfo(CreatedAtInfo, models.Model):
         Can be overwritten to use e.g. other middleware or additional functionality.
         :return: user instance
         """
-        return CurrentUserMiddleware.get_current_user()
+        return CurrentRequestMiddleware.get_current_user()
 
     def set_user_fields(self, user):
         """

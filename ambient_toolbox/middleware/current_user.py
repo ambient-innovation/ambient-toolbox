@@ -1,33 +1,28 @@
-from threading import local
+import warnings
+from typing import TYPE_CHECKING, Callable
 
-try:
-    # Mixin for compatible middleware (to be refactored when all projects use Django 2):
-    # https://docs.djangoproject.com/en/2.1/topics/http/middleware/#writing-your-own-middleware
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:
-    MiddlewareMixin = object
+from .current_request import CurrentRequestMiddleware
 
-_user = local()
+if TYPE_CHECKING:
+    from django.http import HttpRequest, HttpResponse
 
 
-class CurrentUserMiddleware(MiddlewareMixin):
+class CurrentUserMiddleware(CurrentRequestMiddleware):
     """
-    Middleware which stores request's user into global thread-safe variable.
-    Must be introduced AFTER `django.contrib.auth.middleware.AuthenticationMiddleware`.
+    Middleware which stores the current user in a thread-safe manner.
+
+    This middleware is deprecated, use CurrentRequestMiddleware instead.
     """
 
-    def process_request(self, request):
-        _user.value = request.user
+    # Tech Note: This class is now a mere alias for CurrentRequestMiddleware to
+    # provide backward compatibility. This whole module can be removed as part
+    # of one of the next major releases, then fully dropping support for
+    # CurrentUserMiddleware.
 
-    def process_response(self, request, response):
-        # this cleanup is required e.g. when running tests single-threaded
-        try:
-            del _user.value
-        except AttributeError:
-            pass
-        return response
-
-    @staticmethod
-    def get_current_user():
-        if hasattr(_user, 'value') and _user.value:
-            return _user.value
+    def __init__(self, get_response: Callable[['HttpRequest'], 'HttpResponse']):
+        warnings.warn(
+            "CurrentUserMiddleware is deprecated. Use CurrentRequestMiddleware instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        super().__init__(get_response)
