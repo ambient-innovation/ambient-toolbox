@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
+requires = ["flit_core>=3.4"]
 build-backend = "flit_core.buildapi"
 
 [project]
@@ -51,7 +51,7 @@ dev = [
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.5.10',
+   'ambient-package-update~=23.5.11',
    'gevent~=22.10',
 ]
 drf = [
@@ -80,6 +80,8 @@ name = "ambient_toolbox"
 
 
 [tool.black]
+# use force-exclude, so that black also applies exclude when run using pre-commit: https://github.com/psf/black/issues/395
+force-exclude = '''.*/migrations/.*'''
 line-length = 120
 multi_line_output = 3
 skip-string-normalization = true

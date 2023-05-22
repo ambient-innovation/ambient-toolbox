@@ -38,6 +38,7 @@ The migration is really simple, just:
 
 ## Installation
 
+
 - Install the package via pip:
 
   `pip install ambient-toolbox`
@@ -54,6 +55,7 @@ The migration is really simple, just:
         'ambient_toolbox',
     )
      ````
+
 
 ## Contribute
 

@@ -1,5 +1,9 @@
 # Changelog
 
+**8.4.0** (2023-05-22)
+  * Added improved `CurrentRequestMiddleware` in favour of deprecated `CurrentUserMiddleware`
+  * Some minor maintenance changes
+
 **8.3.5** (2023-05-16)
   * Moved sentry import for sentry helper inside of function to avoid problems with compatability
 
