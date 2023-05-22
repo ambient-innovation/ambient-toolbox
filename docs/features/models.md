@@ -41,3 +41,5 @@ MIDDLEWARE = (
 
 Using this middleware will automatically and thread-safe keep track of the ownership of all models,
 which derive from `CommonInfo`.
+In asynchronous contexts, you may expect a small performance penalty as this
+middleware does not state being `async_capable` yet.
