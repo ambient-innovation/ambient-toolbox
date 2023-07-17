@@ -13,7 +13,15 @@ class CommonInfoTest(TestCase):
         with freeze_time('2020-09-19'):
             obj = CommonInfoBasedModel.objects.create(value=1)
         obj.value = 2
-        obj.save(update_fields=('value',))
+
+        # Django's Model.save() can be called with positional args, so we should support this as well.
+        args = (
+            False,  # default for force_insert
+            False,  # default for force_update
+            None,  # default for using
+            (x for x in ['value']),  # update_fields is supposed to accept any Iterable[str]
+        )
+        obj.save(*args)
 
         obj.refresh_from_db()
         self.assertEqual(obj.value, 2)

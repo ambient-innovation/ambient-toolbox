@@ -12,14 +12,14 @@ class CreatedAtInfo(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         # just a fallback for old data
         if not self.created_at:
             self.created_at = now()
-        super().save(*args, **kwargs)
+        super().save(force_insert, force_update, using, update_fields)
 
 
-class CommonInfo(CreatedAtInfo, models.Model):
+class CommonInfo(CreatedAtInfo):
     # Automatically add the model's fields to the 'update_fields' list if specified on save()
     ALWAYS_UPDATE_FIELDS = True
 
@@ -44,16 +44,16 @@ class CommonInfo(CreatedAtInfo, models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.lastmodified_at = now()
         current_user = self.get_current_user()
         self.set_user_fields(current_user)
 
         # Handle case that somebody only wants to update some fields
-        if 'update_fields' in kwargs and self.ALWAYS_UPDATE_FIELDS:
-            kwargs['update_fields'] += ('lastmodified_at', 'lastmodified_by', 'created_at', 'created_by')
+        if update_fields is not None and self.ALWAYS_UPDATE_FIELDS:
+            update_fields = {'lastmodified_at', 'lastmodified_by', 'created_at', 'created_by'}.update(*update_fields)
 
-        super().save(*args, **kwargs)
+        super().save(force_insert, force_update, using, update_fields)
 
     @staticmethod
     def get_current_user():
