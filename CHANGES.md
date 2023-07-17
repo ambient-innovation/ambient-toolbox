@@ -1,5 +1,8 @@
 # Changelog
 
+**8.4.1** (2023-07-17)
+  * Improved `Model.save()` compatibility for `CommonInfo.save()`
+
 **8.4.0** (2023-05-22)
   * Added improved `CurrentRequestMiddleware` in favour of deprecated `CurrentUserMiddleware`
   * Some minor maintenance changes
