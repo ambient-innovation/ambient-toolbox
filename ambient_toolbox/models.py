@@ -51,7 +51,7 @@ class CommonInfo(CreatedAtInfo):
 
         # Handle case that somebody only wants to update some fields
         if update_fields is not None and self.ALWAYS_UPDATE_FIELDS:
-            update_fields = {'lastmodified_at', 'lastmodified_by', 'created_at', 'created_by'}.update(*update_fields)
+            update_fields = {'lastmodified_at', 'lastmodified_by', 'created_at', 'created_by'}.union(update_fields)
 
         super().save(force_insert, force_update, using, update_fields)
 
