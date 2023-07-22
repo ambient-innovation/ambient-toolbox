@@ -58,6 +58,7 @@ def send_email(sender, instance, **kwargs):
 
 class CommonInfoBasedModel(CommonInfo):
     value = models.PositiveIntegerField(default=0)
+    value_b = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return str(self.value)

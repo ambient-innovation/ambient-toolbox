@@ -11,8 +11,9 @@ class CommonInfoTest(TestCase):
     @freeze_time('2022-06-26 10:00')
     def test_save_update_fields_common_fields_set(self):
         with freeze_time('2020-09-19'):
-            obj = CommonInfoBasedModel.objects.create(value=1)
+            obj = CommonInfoBasedModel.objects.create(value=1, value_b=1)
         obj.value = 2
+        obj.value_b = 999
 
         # Django's Model.save() can be called with positional args, so we should support this as well.
         args = (
@@ -25,6 +26,7 @@ class CommonInfoTest(TestCase):
 
         obj.refresh_from_db()
         self.assertEqual(obj.value, 2)
+        self.assertEqual(obj.value_b, 1, "value_b should not have changed")
         self.assertEqual(obj.lastmodified_at, datetime.datetime(2022, 6, 26, 10))
 
     @patch('testapp.models.CommonInfoBasedModel.ALWAYS_UPDATE_FIELDS', new_callable=PropertyMock)

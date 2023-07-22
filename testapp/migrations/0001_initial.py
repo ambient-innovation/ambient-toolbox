@@ -123,6 +123,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ('value', models.PositiveIntegerField(default=0)),
+                ('value_b', models.PositiveIntegerField(default=0)),
                 (
                     'created_by',
                     models.ForeignKey(
