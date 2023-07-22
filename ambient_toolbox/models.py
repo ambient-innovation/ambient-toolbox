@@ -12,11 +12,17 @@ class CreatedAtInfo(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None, **kwargs):
         # just a fallback for old data
         if not self.created_at:
             self.created_at = now()
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+            **kwargs,
+        )
 
 
 class CommonInfo(CreatedAtInfo):
@@ -44,7 +50,7 @@ class CommonInfo(CreatedAtInfo):
     class Meta:
         abstract = True
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None, **kwargs):
         self.lastmodified_at = now()
         current_user = self.get_current_user()
         self.set_user_fields(current_user)
@@ -53,7 +59,13 @@ class CommonInfo(CreatedAtInfo):
         if update_fields is not None and self.ALWAYS_UPDATE_FIELDS:
             update_fields = {'lastmodified_at', 'lastmodified_by', 'created_at', 'created_by'}.union(update_fields)
 
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+            **kwargs,
+        )
 
     @staticmethod
     def get_current_user():
