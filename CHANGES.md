@@ -1,5 +1,8 @@
 # Changelog
 
+**8.4.2** (2023-07-24)
+  * Fixed a bug and a compatability issue with "django-safedelete" with `CommonInfo.save()`
+
 **8.4.1** (2023-07-17)
   * Improved `Model.save()` compatibility for `CommonInfo.save()`
 
