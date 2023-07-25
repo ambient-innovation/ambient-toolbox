@@ -1,5 +1,8 @@
 # Changelog
 
+**9.0.0** (2023-07-25)
+  * Dropped support for deprecated Django versions 2.2, 3.1 & 4.0
+
 **8.4.3** (2023-07-25)
   * Updated linting and metadata
 

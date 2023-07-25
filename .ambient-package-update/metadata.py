@@ -43,7 +43,7 @@ The migration is really simple, just:
 """,
     ),
     dependencies=[
-        'Django>=2.2.28',
+        'Django>=3.2.20',
         'bleach>=1.4,<6',
         'python-dateutil>=2.5.3',
     ],
