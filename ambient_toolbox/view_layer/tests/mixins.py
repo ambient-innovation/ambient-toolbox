@@ -50,8 +50,11 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
 
     def test_validate_login_view_name_is_correct(self):
         # This would fail if Django can't resolve the URL by name
-        self.assertIsInstance(reverse(self.view_class.login_view_name), str,
-                              msg=f"URL pattern \"{self.view_class.login_view_name}\" for login view not found.")
+        self.assertIsInstance(
+            reverse(self.view_class.login_view_name),
+            str,
+            msg=f"URL pattern \"{self.view_class.login_view_name}\" for login view not found.",
+        )
 
     def test_permissions_are_equal(self):
         # Sanity checks
