@@ -23,6 +23,10 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
         def get_login_url(self):
             return 'login/'
 
+    class TestDifferentLoginNameView(DjangoPermissionRequiredMixin, generic.View):
+        permission_list = ['auth.change_user']
+        login_view_name = 'other-login-view'
+
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -35,6 +39,9 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
 
     def test_get_login_url(self):
         self.assertEqual(self.TestViewMultiplePerms().get_login_url(), 'login/')
+
+    def test_get_custom_login_url(self):
+        self.assertEqual(self.TestDifferentLoginNameView().get_login_url(), '/other/login/')
 
     def test_permissions_are_set_validation(self):
         with self.assertRaises(RuntimeError):

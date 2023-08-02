@@ -373,6 +373,19 @@ class MyModelListView(DjangoPermissionRequiredMixin, generic.ListView):
         return reverse('my-login-view')
 ````
 
+Alternatively, you can configure your login endpoint, just set the class attribute `login_view_name`. This is the name of your login URL you
+have defined in your `urls.py`.
+
+````python
+from ambient_toolbox.view_layer.mixins import DjangoPermissionRequiredMixin
+from django.views import generic
+
+
+class MyModelListView(DjangoPermissionRequiredMixin, generic.ListView):
+    login_view_name = "account:login-view"
+    ...
+````
+
 #### Public endpoints
 
 If you require an open view endpoint, just set the class flag `login_required` to False.

@@ -4,6 +4,7 @@ from unittest import mock
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser, Permission
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from ambient_toolbox.tests.errors import TestSetupConfigurationError
@@ -47,10 +48,15 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
     def test_view_class_inherits_mixin(self):
         self.assertTrue(issubclass(self.view_class, DjangoPermissionRequiredMixin))
 
+    def test_validate_login_view_name_is_correct(self):
+        # This would fail if Django can't resolve the URL by name
+        self.assertIsInstance(reverse(self.view_class.login_view_name), str,
+                              msg=f"URL pattern \"{self.view_class.login_view_name}\" for login view not found.")
+
     def test_permissions_are_equal(self):
         # Sanity checks
-        self.assertIsNotNone(self.permission_list, msg='Missing permission list declaration in test')
-        self.assertIsNotNone(self.view_class.permission_list, msg='Missing permission list declaration in view')
+        self.assertIsNotNone(self.permission_list, msg='Missing permission list declaration in test.')
+        self.assertIsNotNone(self.view_class.permission_list, msg='Missing permission list declaration in view.')
 
         # Assert same amount of permissions
         self.assertEqual(len(self.permission_list), len(self.view_class.permission_list))

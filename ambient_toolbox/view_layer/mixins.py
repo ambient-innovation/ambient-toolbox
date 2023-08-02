@@ -11,6 +11,7 @@ class DjangoPermissionRequiredMixin:
 
     permission_list = None
     login_required = True
+    login_view_name = 'login-view'
 
     def __init__(self):
         super().__init__()
@@ -25,7 +26,7 @@ class DjangoPermissionRequiredMixin:
         Method that can be overwritten to define the login url. If a user has to be logged in but is not, he/she
         will be forwarded to the login view.
         """
-        return reverse('login-view')
+        return reverse(self.login_view_name)
 
     def passes_login_barrier(self, user) -> bool:
         """

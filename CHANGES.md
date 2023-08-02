@@ -1,5 +1,11 @@
 # Changelog
 
+**9.0.2** (2023-08-02)
+  * Added generic test case for new attribute from v9.0.1 to `BaseViewPermissionTestMixin`
+
+**9.0.1** (2023-08-02)
+  * Added customisation for custom login view name for `DjangoPermissionRequiredMixin`
+
 **9.0.0** (2023-07-25)
   * Dropped support for deprecated Django versions 2.2, 3.1 & 4.0
 
