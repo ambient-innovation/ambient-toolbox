@@ -1,5 +1,8 @@
 # Changelog
 
+**9.0.4** (2023-08-02)
+  * Improved `CommonInfoAdminMixin` documentation and implementation
+
 **9.0.3** (2023-08-02)
   * Reverted redundant generic test case (was already covered)
 

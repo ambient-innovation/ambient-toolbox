@@ -43,3 +43,24 @@ Using this middleware will automatically and thread-safe keep track of the owner
 which derive from `CommonInfo`.
 In asynchronous contexts, you may expect a small performance penalty as this
 middleware does not state being `async_capable` yet.
+
+### Django Admin integration
+
+For an easy and worry-free integration, set up your admin classes using `CommonInfoAdminMixin` to automatically take care of
+the ownership when adding or changing objects via the admin.
+
+It automatically sets the four fields (`created_by`, `created_at`, `lastmodified_by`, `lastmodified_at`) to read-only
+and ensures that on saving the current object, the creator and/or the last editor are stored correctly.
+
+
+````python
+from ambient_toolbox.admin.model_admins.mixins import CommonInfoAdminMixin
+
+@admin.register(MyModel)
+class MyModelAdmin(CommonInfoAdminMixin, admin.ModelAdmin):
+    pass
+````
+
+Note, that you can derive from this class and overwrite the `get_user_obj()` method if your ownership doesn't use the
+default Django user object. This might be the case if you work with a OneToOne relation between the default `User` and
+your custom one.

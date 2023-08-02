@@ -45,6 +45,11 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
         self.assertIn('lastmodified_by', model_admin.get_readonly_fields(self.request))
         self.assertIn('lastmodified_at', model_admin.get_readonly_fields(self.request))
 
+    def test_get_user_obj_regular(self):
+        model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+
+        self.assertEqual(self.request.user, model_admin.get_user_obj(request=self.request))
+
     def test_created_by_is_set_on_creation(self):
         model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 

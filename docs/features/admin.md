@@ -152,22 +152,6 @@ class MyModelAdmin(FetchObjectMixin, admin.ModelAdmin):
         ...
 ````
 
-### CommonInfoAdminMixin
-
-If you are deriving your models from our `CommonInfo` class to have creator, last editor and timestamps provided, you
-can register your model admin with this mixin.
-
-It automatically sets the four fields (`created_by`, `created_at`, `lastmodified_by`, `lastmodified_at`) to read-only
-and ensures that on saving the current object, the creator and/or the last editor are stored correctly.
-
-````
-from django.contrib import admin
-
-@admin.register(MyCommonInfoBasedModel)
-class MyCommonInfoBasedModelAdmin(CommonInfoAdminMixin, admin.ModelAdmin):
-    pass
-````
-
 ### DeactivatableChangeViewAdminMixin
 
 Sometimes when working with groups and permissions, it can happen that you want to show a certain user only the list

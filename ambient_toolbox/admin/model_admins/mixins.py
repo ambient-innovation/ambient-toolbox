@@ -1,3 +1,6 @@
+from typing import Optional
+
+from django.contrib.auth.models import AbstractUser
 from django.http import HttpResponseRedirect
 from django.urls import resolve, reverse
 
@@ -83,6 +86,9 @@ class CommonInfoAdminMixin:
     """
 
     def get_readonly_fields(self, request, obj=None):
+        """
+        Set the fields CommonInfo handles to readonly to avoid users fiddling around with them.
+        """
         return super().get_readonly_fields(request, obj) + (
             'created_by',
             'lastmodified_by',
@@ -90,11 +96,18 @@ class CommonInfoAdminMixin:
             'lastmodified_at',
         )
 
+    def get_user_obj(self, request) -> Optional[AbstractUser]:
+        """
+        Fetches the user object from the current request.
+        Can be overwritten when a different user object is required.
+        """
+        return request.user
+
     def save_form(self, request, form, change):
         if form.instance and request.user:
-            if not form.instance.id:
-                form.instance.created_by = request.user
-            form.instance.lastmodified_by = request.user
+            if not form.instance.pk:
+                form.instance.created_by = self.get_user_obj(request=request)
+            form.instance.lastmodified_by = self.get_user_obj(request=request)
 
         return super().save_form(request, form, change)
 
