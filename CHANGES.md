@@ -1,5 +1,8 @@
 # Changelog
 
+**9.0.3** (2023-08-02)
+  * Reverted redundant generic test case (was already covered)
+
 **9.0.2** (2023-08-02)
   * Added generic test case for new attribute from v9.0.1 to `BaseViewPermissionTestMixin`
 
