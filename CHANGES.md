@@ -1,5 +1,9 @@
 # Changelog
 
+**9.0.5** (2023-08-14)
+  * Fixed linting issues due to more strict ruff rules
+  * Added some tests
+
 **9.0.4** (2023-08-02)
   * Improved `CommonInfoAdminMixin` documentation and implementation
 

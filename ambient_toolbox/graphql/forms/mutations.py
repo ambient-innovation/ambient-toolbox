@@ -14,7 +14,7 @@ class DjangoValidatedModelFormMutation(DjangoModelFormMutation):
         abstract = True
 
     @classmethod
-    def mutate(cls, root, info, input):  # noqa A002
+    def mutate(cls, root, info, input):  # noqa: A002
         """
         Handle mutation logic.
         Most code derived one-to-one from base class.

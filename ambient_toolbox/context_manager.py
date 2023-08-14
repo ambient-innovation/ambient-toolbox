@@ -22,7 +22,7 @@ class TempDisconnectSignal:
             dispatch_uid=self.dispatch_uid,
         )
 
-    def __exit__(self, type, value, traceback):  # noqa A002
+    def __exit__(self, type, value, traceback):  # noqa: A002
         self.signal.connect(
             receiver=self.receiver,
             sender=self.sender,

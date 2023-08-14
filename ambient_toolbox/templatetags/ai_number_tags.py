@@ -13,8 +13,8 @@ def multiply(value, arg):
     :return:
     """
     if value:
-        value = "%s" % value
-        if type(value) is str and len(value) > 0:
+        value = f"{value}"
+        if isinstance(value, str) and len(value) > 0:
             return float(value.replace(",", ".")) * float(arg)
 
     return None

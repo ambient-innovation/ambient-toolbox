@@ -1,4 +1,4 @@
-[![pypi](https://img.shields.io/pypi/v/ambient-toolbox.svg)](https://pypi.python.org/pypi/ambient-toolbox/)
+[![PyPI release](https://img.shields.io/pypi/v/ambient-toolbox.svg)](https://img.shields.io/pypi/v/ambient-toolbox.svg)
 [![Downloads](https://pepy.tech/badge/ambient-toolbox)](https://pepy.tech/project/ambient-toolbox)
 [![Documentation Status](https://readthedocs.org/projects/ambient-toolbox/badge/?version=latest)](https://ambient-toolbox.readthedocs.io/en/latest/?badge=latest)
 

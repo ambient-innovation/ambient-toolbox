@@ -13,7 +13,7 @@ class _FormsetMixin:
 
     def get_formset_kwargs(self):
         # may be overridden or extended
-        return dict(instance=self.object)
+        return {'instance': self.object}
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -48,7 +48,7 @@ dev = [
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.7.2',
+   'ambient-package-update~=23.8.1',
    'gevent~=22.10',
 ]
 drf = [
@@ -86,7 +86,7 @@ include_trailing_comma = true
 
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
-select = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ"]
+select = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ", "RUF100", "YTT", "C4", "PIE", "INT", "PGH"]
 ignore = [
     'N999', # Project name contains underscore, not fixable
     'A003', # Django attributes shadow python builtins
@@ -97,7 +97,7 @@ ignore = [
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable =["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ"]
+fixable = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ", "RUF100", "YTT", "C4", "PIE", "INT", "PGH"]
 unfixable = []
 
 exclude = [
