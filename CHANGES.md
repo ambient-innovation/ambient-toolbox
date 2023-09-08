@@ -1,5 +1,8 @@
 # Changelog
 
+**9.0.6** (2023-09-08)
+  * Meta updates via ambient-package-update
+
 **9.0.5** (2023-08-14)
   * Fixed linting issues due to more strict ruff rules
   * Added some tests

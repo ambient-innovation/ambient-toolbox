@@ -1,11 +1,12 @@
 from ambient_package_update.metadata.author import PackageAuthor
-from ambient_package_update.metadata.constants import DEV_DEPENDENCIES
+from ambient_package_update.metadata.constants import DEV_DEPENDENCIES, LICENSE_MIT
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
 
 METADATA = PackageMetadata(
     package_name='ambient_toolbox',
+    company='Ambient Innovation: GmbH',
     authors=[
         PackageAuthor(
             name='Ambient Digital',
@@ -13,6 +14,8 @@ METADATA = PackageMetadata(
         ),
     ],
     development_status='5 - Production/Stable',
+    license=LICENSE_MIT,
+    license_year=2012,
     readme_content=ReadmeContent(
         tagline='Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.',
         content="""## Features

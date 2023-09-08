@@ -1,5 +1,6 @@
-[![PyPI release](https://img.shields.io/pypi/v/ambient-toolbox.svg)](https://img.shields.io/pypi/v/ambient-toolbox.svg)
-[![Downloads](https://pepy.tech/badge/ambient-toolbox)](https://pepy.tech/project/ambient-toolbox)
+[![PyPI release](https://img.shields.io/pypi/v/ambient-toolbox.svg)](https://pypi.org/project/ambient-toolbox/)
+[![Downloads](https://static.pepy.tech/badge/ambient-toolbox)](https://pepy.tech/project/ambient-toolbox)
+[![Coding Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![Documentation Status](https://readthedocs.org/projects/ambient-toolbox/badge/?version=latest)](https://ambient-toolbox.readthedocs.io/en/latest/?badge=latest)
 
 Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.
