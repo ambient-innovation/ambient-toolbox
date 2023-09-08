@@ -1,5 +1,8 @@
 # Changelog
 
+**9.0.7** (2023-09-08)
+  * Meta updates via ambient-package-update
+
 **9.0.6** (2023-09-08)
   * Meta updates via ambient-package-update
 
