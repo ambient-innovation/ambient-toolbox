@@ -2,7 +2,7 @@ import json
 import os
 import subprocess
 import sys
-from typing import Optional
+from difflib import ndiff
 
 import httpx
 
@@ -39,7 +39,7 @@ class CoverageService:
         )
         return result.stdout.decode("utf-8").strip()
 
-    def get_pipeline_id_by_commit_sha(self, sha: str) -> Optional[int]:
+    def get_pipeline_id_by_commit_sha(self, sha: str) -> int | None:
         pipeline_url = f'{self.pipelines_url_with_token}&sha={sha}'
         response = httpx.get(pipeline_url)
         status_code = response.status_code
@@ -70,7 +70,7 @@ class CoverageService:
 
         jobs = json.loads(jobs_response.content)
         coverages = {
-            job['name']: {'coverage': float(job['coverage']), 'web_url': job['web_url']}
+            job['name']: {'id': job['id'], 'coverage': float(job['coverage']), 'web_url': job['web_url']}
             for job in jobs
             if job.get('coverage')
         }
@@ -94,7 +94,25 @@ class CoverageService:
         coverage_job = coverages.get(job_name)
 
         print(f'Job-URL: {coverage_job["web_url"]}')
-        return coverage_job['coverage'] if coverage_job else 0.0, coverages_total
+
+        job_url = f'{self.base_api_url}/projects/{self.project_id}/jobs/{coverage_job["id"]}/trace'
+        job_with_token_url = f'{job_url}?private_token={self.token}'
+        job_response = httpx.get(job_with_token_url)
+        job_status_code = job_response.status_code
+
+        if job_status_code != 200:
+            raise ConnectionError(f'Call to job api endpoint failed with status code {job_status_code}')
+
+        print(f'Job-Log-URL: {job_url}')
+
+        job_log = re.search(
+            r'Name\s+Stmts\s+Miss\s+Branch\s+BrPart\s+Cover\s+Missing.*files skipped due to complete coverage\.',
+            job_response.content.decode('utf-8'),
+            re.DOTALL | re.MULTILINE,
+        )
+        # print(job_log.group())
+
+        return coverage_job['coverage'] if coverage_job else 0.0, coverages_total, job_log.group()
 
     @staticmethod
     def color_text(sign: int, prefix: str, target: float, current: float, diff: float):
@@ -120,6 +138,38 @@ class CoverageService:
             f'{change[sign]["color"]} {prefix} {change[sign]["text"]} '
             f'from {target:2.2f}% to {current:2.2f}% (Diff: {diff:2.2f}%).\033[0m'
         )
+
+    @staticmethod
+    def print_diff(target_job_log, current_job_log):
+        """
+        Print a diff between the coverage reports of Current and Target branch
+        """
+        diff = ndiff(target_job_log.splitlines(keepends=True), current_job_log.splitlines(keepends=True))
+        print('\n############################## Coverage Diff ##############################')
+        print('# \033[91m- Target Branch\033[0m                                                         #')
+        print('# \033[92m+ Current Branch\033[0m                                                        #')
+        print('###########################################################################')
+        for idx, line in enumerate(diff):
+            match = re.match(
+                r'^\s*-+\s*$|'
+                r'^\s*Name\s+Stmts\s+Miss\s+Branch\s+BrPart\s+Cover\s+Missing|'  # first line of the report
+                r'^.*files skipped due to complete coverage.$|'  # Final line of the report
+                r'^[+\-?]',  # Line starts with +,-,$ to indicate changes
+                line,
+            )
+            if match:
+                if line[0] == '-':
+                    print('\033[91m', end="")
+                if line[0] == '+':
+                    print('\033[92m', end="")
+                print(line, end="")
+                if line[0] in ['+', '-']:
+                    print('\033[0m', end="")
+
+        print('\n###########################################################################')
+        print('# \033[91m- Target Branch\033[0m                                                         #')
+        print('# \033[92m+ Current Branch\033[0m                                                        #')
+        print('############################## Coverage Diff ##############################\n')
 
     def process(self):
         """
@@ -163,13 +213,17 @@ class CoverageService:
 
         # Get coverage from target pipeline
         print(f'Target Pipeline ID: {target_pipeline_id}')
-        target_job_coverage, target_total_coverage = self.get_coverage_from_pipeline(target_pipeline_id, self.job_name)
+        target_job_coverage, target_total_coverage, target_job_log = self.get_coverage_from_pipeline(
+            target_pipeline_id, self.job_name
+        )
 
         # Get coverage from this pipeline
         print(f'Current pipeline ID: {self.current_pipeline_id}')
-        current_job_coverage, current_total_coverage = self.get_coverage_from_pipeline(
+        current_job_coverage, current_total_coverage, current_job_log = self.get_coverage_from_pipeline(
             self.current_pipeline_id, self.job_name
         )
+
+        self.print_diff(target_job_log, current_job_log)
 
         # numeric value of the coverage diff sign
         sign_job_coverage = (current_job_coverage > target_job_coverage) - (current_job_coverage < target_job_coverage)
@@ -198,8 +252,6 @@ class CoverageService:
             },
         }
 
-        print('\n###########################################################################\n')
-
         # Print results
         print(
             self.color_text(
@@ -219,5 +271,6 @@ class CoverageService:
                 coverage['job']['diff'],
             )
         )
+
         if coverage['job']['sign'] == -1:
             sys.exit(1)
