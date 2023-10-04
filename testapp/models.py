@@ -97,8 +97,6 @@ class ModelWithCleanMixin(CleanOnSaveMixin, models.Model):
 
 
 class MyPermissionModelMixin(PermissionModelMixin, models.Model):
-    pass
-
     def __str__(self):
         return str(self.id)
 

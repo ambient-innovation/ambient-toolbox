@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 import sys
 from difflib import ndiff
@@ -149,7 +150,7 @@ class CoverageService:
         print('# \033[91m- Target Branch\033[0m                                                         #')
         print('# \033[92m+ Current Branch\033[0m                                                        #')
         print('###########################################################################')
-        for idx, line in enumerate(diff):
+        for _idx, line in enumerate(diff):
             match = re.match(
                 r'^\s*-+\s*$|'
                 r'^\s*Name\s+Stmts\s+Miss\s+Branch\s+BrPart\s+Cover\s+Missing|'  # first line of the report

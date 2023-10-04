@@ -1,5 +1,10 @@
 # Changelog
 
+**9.1.0** (2023-10-04)
+  * Added coverage diff to pipeline
+  * Added Python 3.12 support
+  * Updated internal linter packages
+
 **9.0.7** (2023-09-08)
   * Meta updates via ambient-package-update
 
