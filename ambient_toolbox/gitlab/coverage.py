@@ -90,7 +90,10 @@ class CoverageService:
         print(f'Pipeline-URL: {pipeline["web_url"]}')
 
         if job_name == '':
-            return coverages_total, coverages_total
+            print(
+                '\033[91mATTN: No CI_COVERAGE_JOB_NAME provided, using Total Coverage and skipping Coverage Diff\033[0m'
+            )
+            return coverages_total, coverages_total, None
 
         coverage_job = coverages.get(job_name)
 
@@ -224,7 +227,12 @@ class CoverageService:
             self.current_pipeline_id, self.job_name
         )
 
-        self.print_diff(target_job_log, current_job_log)
+        if target_job_log is None or current_job_log is None:
+            print('\n\n\033[91m***************************************************************************\033[0m')
+            print('        \033[91m**/!\\** Coverage log not found. Skipping diff. **/!\\**\033[0m             ')
+            print('\033[91m***************************************************************************\033[0m\n\n')
+        else:
+            self.print_diff(target_job_log, current_job_log)
 
         # numeric value of the coverage diff sign
         sign_job_coverage = (current_job_coverage > target_job_coverage) - (current_job_coverage < target_job_coverage)
