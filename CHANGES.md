@@ -1,5 +1,8 @@
 # Changelog
 
+**9.1.1** (2023-10-04)
+  * Fixed bug with unset CI variable in GitLab coverage checker
+
 **9.1.0** (2023-10-04)
   * Added coverage diff to pipeline
   * Added Python 3.12 support
