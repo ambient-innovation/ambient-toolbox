@@ -8,6 +8,10 @@ from django.core.management import call_command
 from django.db import connections
 
 
+class ScrubbingError(RuntimeError):
+    pass
+
+
 class AbstractScrubbingService:
     DEFAULT_USER_PASSWORD = 'Admin0404!'
 
@@ -44,7 +48,7 @@ class AbstractScrubbingService:
         self._logger.info('Validating setup...')
         if not self._validation():
             self._logger.warning('Aborting process!')
-            return False
+            raise ScrubbingError('Scrubber Settings validation failed')
 
         # Custom pre-scrubbing
         for name in self.pre_scrub_functions:
