@@ -48,7 +48,7 @@ class AbstractScrubbingService:
         self._logger.info('Validating setup...')
         if not self._validation():
             self._logger.warning('Aborting process!')
-            raise ScrubbingError('Scrubber Settings validation failed')
+            raise ScrubbingError('Scrubber settings validation failed')
 
         # Custom pre-scrubbing
         for name in self.pre_scrub_functions:
