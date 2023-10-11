@@ -1,5 +1,8 @@
 # Changelog
 
+**9.1.3** (2023-10-11)
+  * Fixed scrubber tests
+
 **9.1.2** (2023-10-11)
   * Fixed bug in scrubber wrapper to raise an exception instead of returning only "False"
 
