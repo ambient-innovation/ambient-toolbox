@@ -1,5 +1,8 @@
 # Changelog
 
+**9.1.2** (2023-10-11)
+  * Fixed bug in scrubber wrapper to raise an exception instead of returning only "False"
+
 **9.1.1** (2023-10-04)
   * Fixed bug with unset CI variable in GitLab coverage checker
 
