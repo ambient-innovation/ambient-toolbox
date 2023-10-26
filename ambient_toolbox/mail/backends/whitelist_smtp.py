@@ -74,4 +74,4 @@ class WhitelistEmailBackend(SMTPEmailBackend):
         Uses regular smtp-sending afterwards.
         """
         email_messages = self._process_recipients(email_messages)
-        super().send_messages(email_messages)
+        return super().send_messages(email_messages)
