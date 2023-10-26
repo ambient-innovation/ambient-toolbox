@@ -1,5 +1,10 @@
 # Changelog
 
+**9.1.4** (2023-10-20)
+  * Added migration docs to Readme
+  * Added migration check to GitHub actions
+  * Updates from ambient updater
+
 **9.1.3** (2023-10-11)
   * Fixed scrubber tests
 

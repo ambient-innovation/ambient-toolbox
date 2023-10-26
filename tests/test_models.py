@@ -2,12 +2,21 @@ import datetime
 from unittest.mock import PropertyMock, patch
 
 from django.test import TestCase
+from django.utils import timezone
 from freezegun import freeze_time
 
 from testapp.models import CommonInfoBasedModel
 
 
 class CommonInfoTest(TestCase):
+    @freeze_time('2022-06-26 10:00')
+    def test_save_created_at_set(self):
+        obj = CommonInfoBasedModel.objects.create(value=1, value_b=1)
+        obj.created_at = None
+        obj.save()
+
+        self.assertEqual(obj.created_at, timezone.now())
+
     @freeze_time('2022-06-26 10:00')
     def test_save_update_fields_common_fields_set(self):
         with freeze_time('2020-09-19'):

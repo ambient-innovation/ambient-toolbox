@@ -61,6 +61,10 @@ class UtilsStringTest(TestCase):
         truncated_str = smart_truncate(my_sentence, 100, '---')
         self.assertEqual(truncated_str, my_sentence)
 
+    def test_smart_truncate_no_text(self):
+        truncated_str = smart_truncate(None, 100, '---')
+        self.assertEqual(truncated_str, "")
+
     def test_float_to_string_regular(self):
         self.assertEqual(float_to_string(5.61), '5,61')
 

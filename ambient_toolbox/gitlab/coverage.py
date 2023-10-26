@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 from difflib import ndiff
+from http import HTTPStatus
 
 import httpx
 
@@ -36,7 +37,7 @@ class CoverageService:
         Get the latest commit which is in the current branch and the target compare branch.
         """
         result = subprocess.run(
-            ['git', 'merge-base', '--fork-point', f'origin/{self.target_branch}'], stdout=subprocess.PIPE
+            ['git', 'merge-base', '--fork-point', f'origin/{self.target_branch}'], stdout=subprocess.PIPE, check=True
         )
         return result.stdout.decode("utf-8").strip()
 
@@ -45,7 +46,7 @@ class CoverageService:
         response = httpx.get(pipeline_url)
         status_code = response.status_code
 
-        if status_code == 200:
+        if status_code == HTTPStatus.OK:
             pipelines = json.loads(response.content)
             if pipelines and len(pipelines) > 0:
                 return pipelines[0].get('id', None)
@@ -66,7 +67,7 @@ class CoverageService:
         jobs_response = httpx.get(jobs_with_token_url)
         jobs_status_code = jobs_response.status_code
 
-        if jobs_status_code != 200:
+        if jobs_status_code != HTTPStatus.OK:
             raise ConnectionError(f'Call to jobs api endpoint failed with status code {jobs_status_code}')
 
         jobs = json.loads(jobs_response.content)
@@ -81,7 +82,7 @@ class CoverageService:
         pipeline_response = httpx.get(pipeline_with_token_url)
         pipeline_status_code = pipeline_response.status_code
 
-        if pipeline_status_code != 200:
+        if pipeline_status_code != HTTPStatus.OK:
             raise ConnectionError(f'Call to pipeline api endpoint failed with status code {pipeline_status_code}')
 
         pipeline = json.loads(pipeline_response.content)
@@ -104,7 +105,7 @@ class CoverageService:
         job_response = httpx.get(job_with_token_url)
         job_status_code = job_response.status_code
 
-        if job_status_code != 200:
+        if job_status_code != HTTPStatus.OK:
             raise ConnectionError(f'Call to job api endpoint failed with status code {job_status_code}')
 
         print(f'Job-Log-URL: {job_url}')
@@ -208,7 +209,7 @@ class CoverageService:
             print(f'Pipelines-API-URL: {self.pipelines_url}')
 
             # Ensure call did not go sideways
-            if status_code != 200:
+            if status_code != HTTPStatus.OK:
                 raise ConnectionError(f'Call to global pipeline api endpoint failed with status code {status_code}')
 
             # Read target pipeline ID from content

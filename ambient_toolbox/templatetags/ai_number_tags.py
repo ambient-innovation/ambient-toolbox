@@ -7,10 +7,6 @@ register = template.Library()
 def multiply(value, arg):
     """
     Multiplies the arg and the value
-
-    :param value:
-    :param arg:
-    :return:
     """
     if value:
         value = f"{value}"
@@ -24,13 +20,9 @@ def multiply(value, arg):
 def subtract(value, arg):
     """
     Subtracts the arg from the value
-
-    :param value:
-    :param arg:
-    :return:
     """
     value = value if value is not None else 0
-    arg = value if arg is not None else 0
+    arg = arg if arg is not None else 0
     return int(value) - int(arg)
 
 
@@ -38,10 +30,6 @@ def subtract(value, arg):
 def divide(value, arg):
     """
     Divides the value by the arg
-
-    :param value:
-    :param arg:
-    :return:
     """
     if value:
         return value / arg
@@ -53,11 +41,11 @@ def divide(value, arg):
 def to_int(value):
     """
     Parses a string to int value
-
-    :param value:
-    :return:
     """
-    return int(value) if value else 0
+    try:
+        return int(value)
+    except ValueError:
+        return 0
 
 
 @register.filter(name="currency")

@@ -18,7 +18,7 @@ class AdminCrispyForm(forms.Form):
         # Build fieldset
         fieldset_list = ['']
         for field in self.fields:
-            fieldset_list.append(Div(field, css_class='form-row field-name'))
+            fieldset_list.append(Div(field, css_class='form-row field-name'))  # noqa: PERF401
 
         # Crispy
         self.helper = FormHelper()

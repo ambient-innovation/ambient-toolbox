@@ -89,7 +89,7 @@ def get_namedtuple_choices(name, choices_tuple):
 
         def is_valid(self, selection):
             for val, _name, _desc in choices_tuple:
-                if val == selection or _name == selection or _desc == selection:
+                if selection in (val, _name, _desc):
                     return True
             return False
 

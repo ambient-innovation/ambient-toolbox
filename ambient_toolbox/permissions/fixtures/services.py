@@ -58,7 +58,7 @@ class PermissionSetupService:
         # Check which permissions were removed for the given group
         for existing_permission in group.permissions.all():
             if existing_permission not in defined_permission_list:
-                removed_permissions.append(existing_permission)
+                removed_permissions.append(existing_permission)  # noqa: PERF401
 
         if not self.dry_run:
             # Persist changes on removed permissions

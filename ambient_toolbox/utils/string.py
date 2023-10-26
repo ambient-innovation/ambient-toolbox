@@ -27,12 +27,12 @@ def slugify_file_name(file_name: str, length: int = 40) -> str:
     return result
 
 
-def smart_truncate(text: str, max_length: int = 100, suffix: str = '...') -> str:
+def smart_truncate(text: Optional[str], max_length: int = 100, suffix: str = '...') -> str:
     """
     Returns a string of at most `max_length` characters, cutting
     only at word-boundaries. If the string was truncated, `suffix`
     will be appended.
-    In comparison to Djangos default filter `truncatechars` this method does NOT break words and you
+    In comparison to Django's default filter `truncatechars` this method does NOT break words and you
     can choose a custom suffix.
     """
     if text is None:

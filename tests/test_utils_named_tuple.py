@@ -40,12 +40,11 @@ class UtilsNamedTupleTest(TestCase):
 
     def test_get_namedtuple_choices_get_all_regular(self):
         for index, color in enumerate(self.colors_choices.get_all()):
+            expected_tuple = "invalid_data"
             if index == 0:
                 expected_tuple = (1, 'black', 'Black')
             elif index == 1:
                 expected_tuple = (2, 'white', 'White')
-            else:
-                expected_tuple = 'invalid data'
             self.assertEqual(color, expected_tuple)
 
     def test_get_namedtuple_choices_get_choices_tuple_regular(self):

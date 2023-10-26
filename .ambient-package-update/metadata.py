@@ -1,5 +1,10 @@
 from ambient_package_update.metadata.author import PackageAuthor
-from ambient_package_update.metadata.constants import DEV_DEPENDENCIES, LICENSE_MIT
+from ambient_package_update.metadata.constants import (
+    DEV_DEPENDENCIES,
+    LICENSE_MIT,
+    SUPPORTED_DJANGO_VERSIONS,
+    SUPPORTED_PYTHON_VERSIONS,
+)
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
@@ -50,6 +55,9 @@ The migration is really simple, just:
         'bleach>=1.4,<6',
         'python-dateutil>=2.5.3',
     ],
+    supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
+    supported_python_versions=SUPPORTED_PYTHON_VERSIONS,
+    has_migrations=True,
     optional_dependencies={
         'dev': [
             *DEV_DEPENDENCIES,

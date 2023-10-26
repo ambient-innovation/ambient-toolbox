@@ -40,7 +40,7 @@ class BaseViewSetTestMixin:
 
         self.assertIn(response.status_code, [status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN])
 
-    def execute_request(
+    def execute_request(  # noqa: PLR0913
         self,
         *,
         url,

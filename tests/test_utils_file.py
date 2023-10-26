@@ -1,6 +1,14 @@
 import pytest
 
-from ambient_toolbox.utils.file import crc, md5_checksum
+from ambient_toolbox.utils.file import crc, get_filename_without_ending, md5_checksum
+
+
+def test_get_filename_without_ending_full_path():
+    assert get_filename_without_ending('path/to/my/text-file.txt') == "text-file"
+
+
+def test_get_filename_without_ending_only_filename():
+    assert get_filename_without_ending('text-file.txt') == "text-file"
 
 
 @pytest.fixture

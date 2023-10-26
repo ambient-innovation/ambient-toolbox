@@ -5,8 +5,6 @@ import zlib
 def get_filename_without_ending(file_path: str) -> str:
     """
     Returns the filename without extension
-    :param file_path:
-    :return:
     """
 
     # if filename has file_path parts

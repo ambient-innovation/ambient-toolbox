@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase, override_settings
@@ -192,3 +193,11 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertIn('__init__.py missing in', complaint_list[1])
         self.assertIn('testapp/tests/missing_init', complaint_list[1])
+
+    @mock.patch.object(TestStructureValidator, "_get_app_list", return_value=['invalidly_located_app'])
+    def test_process_invalidly_located_app(self, mocked_get_app_list):
+        service = TestStructureValidator()
+
+        service.process()
+
+        mocked_get_app_list.assert_called_once()
