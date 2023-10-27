@@ -1,3 +1,4 @@
+import pytest
 from django.test import TestCase
 from rest_framework import serializers
 from rest_framework.serializers import ListSerializer
@@ -17,6 +18,7 @@ class TestManyTrueSerializer(serializers.ModelSerializer):
         ]
 
 
+@pytest.mark.skip
 class TestManyFalseSerializer(serializers.ModelSerializer):
     peer = RecursiveField()
 
