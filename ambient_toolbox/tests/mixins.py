@@ -88,7 +88,7 @@ class RequestProviderMixin:
         request = factory.get(url)
 
         # Set user object if it is of a valid type
-        if isinstance(user, AbstractBaseUser | AnonymousUser):
+        if isinstance(user, AbstractBaseUser | AnonymousUser) or user is None:
             request.user = user
         else:
             raise ValueError(_('Please pass a user object to RequestProviderMixin.'))
