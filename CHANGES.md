@@ -1,9 +1,13 @@
 # Changelog
 
-**9.1.4** (2023-10-20)
+**9.1.5** (2023-10-29)
   * Added migration docs to Readme
   * Added migration check to GitHub actions
   * Updates from ambient updater
+
+**9.1.4** (2023-10-29)
+  * Added return value for `WhitelistEmailBackend`
+  * Removed old author annotations
 
 **9.1.3** (2023-10-11)
   * Fixed scrubber tests
