@@ -1,7 +1,9 @@
+from unittest import mock
+
 import pytest
 from django.test import TestCase
 from rest_framework import serializers
-from rest_framework.serializers import ListSerializer
+from rest_framework.serializers import ListSerializer, Serializer
 
 from ambient_toolbox.drf.fields import RecursiveField
 from testapp.models import ModelWithFkToSelf, ModelWithOneToOneToSelf
@@ -31,6 +33,20 @@ class TestManyFalseSerializer(serializers.ModelSerializer):
 
 
 class RecursiveFieldTest(TestCase):
+    @mock.patch.object(Serializer, "update")
+    def test_update_super_called(self, mocked_update):
+        field = RecursiveField()
+        field.update(instance=None, validated_data={})
+
+        mocked_update.assert_called_once_with(None, {})
+
+    @mock.patch.object(Serializer, "create")
+    def test_create_super_called(self, mocked_create):
+        field = RecursiveField()
+        field.create(validated_data={})
+
+        mocked_create.assert_called_once_with({})
+
     def test_many_true_regular(self):
         serializer = TestManyTrueSerializer()
 

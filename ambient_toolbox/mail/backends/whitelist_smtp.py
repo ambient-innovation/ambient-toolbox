@@ -71,7 +71,7 @@ class WhitelistEmailBackend(SMTPEmailBackend):
     def send_messages(self, email_messages):
         """
         Checks if email-recipients are in allowed domains and cancels if not.
-        Uses regular smtp-sending afterwards.
+        Uses regular smtp-sending afterward.
         """
         email_messages = self._process_recipients(email_messages)
         return super().send_messages(email_messages)

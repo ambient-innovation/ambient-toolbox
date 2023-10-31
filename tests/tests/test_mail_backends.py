@@ -1,4 +1,7 @@
+from unittest import mock
+
 from django.core.mail import EmailMultiAlternatives
+from django.core.mail.backends.smtp import EmailBackend
 from django.test import TestCase, override_settings
 
 from ambient_toolbox.mail.backends.whitelist_smtp import WhitelistEmailBackend
@@ -42,3 +45,18 @@ class MailBackendWhitelistBackendTest(TestCase):
         message_list = backend._process_recipients([mail])
         self.assertEqual(len(message_list), 1)
         self.assertEqual(message_list[0].to, ['to_example.com@testuser.valid.domain'])
+
+    @mock.patch.object(EmailBackend, "send_messages")
+    @mock.patch.object(WhitelistEmailBackend, "_process_recipients")
+    def test_send_messages_process_recipients_called(self, mocked_process_recipients, *args):
+        backend = WhitelistEmailBackend()
+        backend.send_messages([])
+
+        mocked_process_recipients.assert_called_once_with([])
+
+    @mock.patch.object(EmailBackend, "send_messages")
+    def test_send_messages_super_called(self, mocked_send_messages):
+        backend = WhitelistEmailBackend()
+        backend.send_messages([])
+
+        mocked_send_messages.assert_called_once_with([])

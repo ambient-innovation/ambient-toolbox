@@ -84,3 +84,16 @@ class UtilsNamedTupleTest(TestCase):
 
     def test_get_key_from_tuple_by_value_not_found(self):
         self.assertEqual(get_key_from_tuple_by_value(self.MY_CHOICE_LIST, 'Something odd'), '-')
+
+    def test_get_values_case_is_instance(self):
+        choices = get_namedtuple_choices(
+            'TestChoices',
+            (
+                (0, 'zero', 'Zero'),
+                (1, 'one', 'One'),
+                ([2, 3], 'two_three', 'Two Three'),
+            ),
+        )
+
+        # Überprüfen, ob die Methode get_values korrekt funktioniert
+        self.assertEqual(choices.get_values(), [0, 1, 2, 3])
