@@ -213,7 +213,11 @@ class CoverageService:
                 raise ConnectionError(f'Call to global pipeline api endpoint failed with status code {status_code}')
 
             # Read target pipeline ID from content
-            target_pipeline_id = json.loads(response.content)[0]['id']
+            try:
+                target_pipeline_id = json.loads(response.content)[0]['id']
+            except IndexError:
+                # This happens when there are zero `target_branch` pipelines
+                target_pipeline_id = 0
             print(f'Default branch pipeline ID identified: {target_pipeline_id}.')
 
         # Get coverage from target pipeline

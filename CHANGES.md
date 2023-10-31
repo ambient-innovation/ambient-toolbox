@@ -1,11 +1,14 @@
 # Changelog
 
-**9.1.5** (2023-10-31)
+**9.1.6** (2023-10-31)
   * Added migration docs to Readme
   * Added migration check to GitHub actions
-  * Added default `develop` for `GITLAB_CI_COVERAGE_TARGET_BRANCH` in GitLab coverage service
   * Updates from ambient updater
   * Fixes typos
+
+**9.1.5** (2023-10-31)
+  * Coverage service fixed crash on zero pipelines
+  * Added default `develop` for `GITLAB_CI_COVERAGE_TARGET_BRANCH` in GitLab coverage service
 
 **9.1.4** (2023-10-29)
   * Added return value for `WhitelistEmailBackend`
