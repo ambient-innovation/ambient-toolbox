@@ -23,7 +23,7 @@ class CoverageService:
         self.token: str = os.environ.get('GITLAB_CI_COVERAGE_PIPELINE_TOKEN')
         self.project_id: int = int(os.environ.get('CI_PROJECT_ID'))
         self.job_name: str = os.environ.get('CI_COVERAGE_JOB_NAME', '')
-        self.target_branch: str = os.environ.get('GITLAB_CI_COVERAGE_TARGET_BRANCH')
+        self.target_branch: str = os.environ.get('GITLAB_CI_COVERAGE_TARGET_BRANCH', 'develop')
         self.pipelines_url = (
             f'{self.base_api_url}/projects/{self.project_id}/pipelines?ref={self.target_branch}&status=success'
         )
@@ -212,7 +212,11 @@ class CoverageService:
                 raise ConnectionError(f'Call to global pipeline api endpoint failed with status code {status_code}')
 
             # Read target pipeline ID from content
-            target_pipeline_id = json.loads(response.content)[0]['id']
+            try:
+                target_pipeline_id = json.loads(response.content)[0]['id']
+            except IndexError:
+                # This happens when there are zero `target_branch` pipelines
+                target_pipeline_id = 0
             print(f'Default branch pipeline ID identified: {target_pipeline_id}.')
 
         # Get coverage from target pipeline
