@@ -1,9 +1,11 @@
 # Changelog
 
-**9.1.5** (2023-10-29)
+**9.1.5** (2023-10-31)
   * Added migration docs to Readme
   * Added migration check to GitHub actions
+  * Added default `develop` for `GITLAB_CI_COVERAGE_TARGET_BRANCH` in GitLab coverage service
   * Updates from ambient updater
+  * Fixes typos
 
 **9.1.4** (2023-10-29)
   * Added return value for `WhitelistEmailBackend`
@@ -135,7 +137,7 @@
   * Set version border for dependency "bleach" because of breaking changes
 
 **6.9.0** (2023-01-18)
-  * Added "GITLAB_CI_DISABLE_COVERAGE" flag to coverage script for Gitlab pipeline
+  * Added "GITLAB_CI_DISABLE_COVERAGE" flag to coverage script for GitLab pipeline
   * Fixed typo in the docs
 
 **6.8.4** (2023-01-11)
@@ -264,10 +266,10 @@
   * Added a view which allows logging errors to Sentry normally while using Graphene.
 
 **5.12.1** (2022-01-31)
-  * Fixed bug in Gitlab code coverage compare service documentation
+  * Fixed bug in GitLab code coverage compare service documentation
 
 **5.12.0** (2022-01-28)
-  * Added Gitlab code coverage compare service `CoverageService` with documentation
+  * Added GitLab code coverage compare service `CoverageService` with documentation
 
 **5.11.1** (2022-01-24)
   * Added docs for `ToggleView`

@@ -24,7 +24,7 @@ class CoverageService:
         self.token: str = os.environ.get('GITLAB_CI_COVERAGE_PIPELINE_TOKEN')
         self.project_id: int = int(os.environ.get('CI_PROJECT_ID'))
         self.job_name: str = os.environ.get('CI_COVERAGE_JOB_NAME', '')
-        self.target_branch: str = os.environ.get('GITLAB_CI_COVERAGE_TARGET_BRANCH')
+        self.target_branch: str = os.environ.get('GITLAB_CI_COVERAGE_TARGET_BRANCH', 'develop')
         self.pipelines_url = (
             f'{self.base_api_url}/projects/{self.project_id}/pipelines?ref={self.target_branch}&status=success'
         )
