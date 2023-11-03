@@ -21,6 +21,8 @@ SECRET_KEY = "ASDFjklö123456890"
 # Routing
 ROOT_URLCONF = "testapp.urls"
 
+STATIC_URL = "/static/"
+
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 DATABASES = {
