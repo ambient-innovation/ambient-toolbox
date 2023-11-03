@@ -10,7 +10,7 @@ class GloballyVisibleQuerySetTest(TestCase):
         super().setUpTestData()
 
         # Create test user
-        cls.user = User.objects.create(username='my-username')
+        cls.user = User.objects.create(username="my-username")
 
         # Create list of objects
         cls.object_list = [

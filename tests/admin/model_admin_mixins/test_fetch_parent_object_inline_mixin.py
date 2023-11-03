@@ -26,7 +26,7 @@ class FetchParentObjectInlineMixinTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.super_user = User.objects.create(username='super_user', is_superuser=True)
+        cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
         admin.site.register(MySingleSignalModel, TestFetchParentObjectInlineMixinAdmin)
 
@@ -48,8 +48,8 @@ class FetchParentObjectInlineMixinTest(RequestProviderMixin, TestCase):
         inline = inline_list[0](parent_model=MySingleSignalModel, admin_site=admin.site)
 
         return_obj = MockResolverResponse()
-        return_obj.kwargs = {'object_id': obj.id}
-        with mock.patch.object(model_admin.inlines[0], '_resolve_url', return_value=return_obj):
+        return_obj.kwargs = {"object_id": obj.id}
+        with mock.patch.object(model_admin.inlines[0], "_resolve_url", return_value=return_obj):
             inline.get_formset(request=request, obj=obj)
 
         self.assertEqual(inline.parent_object, obj)

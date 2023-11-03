@@ -21,7 +21,7 @@ class DeleteMutation(graphene.ClientIDMutation):
     @classmethod
     def __init_subclass_with_meta__(cls, resolver=None, output=None, arguments=None, _meta=None, model=None, **options):
         if not model:
-            raise AttributeError('DeleteMutation needs a valid model to be set.')
+            raise AttributeError("DeleteMutation needs a valid model to be set.")
         super().__init_subclass_with_meta__(resolver, output, arguments, _meta, **options)
         cls.model = model
 
@@ -45,10 +45,10 @@ class DeleteMutation(graphene.ClientIDMutation):
         Ensure custom validation, fetch object and delete it afterwards.
         """
         if not cls.validate(info.context):
-            raise GraphQLError('Delete method not allowed.')
+            raise GraphQLError("Delete method not allowed.")
 
         # Get object id
-        object_id = int(input_data.get('id', None))
+        object_id = int(input_data.get("id", None))
 
         # Find and delete object
         obj = cls.get_queryset(info.context).get(pk=object_id)
@@ -58,7 +58,7 @@ class DeleteMutation(graphene.ClientIDMutation):
         return DeleteMutation()
 
 
-@method_decorator(login_required, name='mutate_and_get_payload')
+@method_decorator(login_required, name="mutate_and_get_payload")
 class LoginRequiredDeleteMutation(DeleteMutation):
     """
     Deletes an object from the database.

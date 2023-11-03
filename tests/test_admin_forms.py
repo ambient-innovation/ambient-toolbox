@@ -12,4 +12,4 @@ class AdminFormTest(TestCase):
 
         self.assertIsInstance(form.helper, FormHelper)
         self.assertIsInstance(form.helper.layout, Layout)
-        self.assertEqual(form.helper.form_method, 'post')
+        self.assertEqual(form.helper.form_method, "post")

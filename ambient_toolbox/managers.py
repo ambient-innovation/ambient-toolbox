@@ -10,13 +10,13 @@ class AbstractPermissionMixin:
     """
 
     def visible_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def editable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def deletable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
 
 class AbstractUserSpecificQuerySet(QuerySet, AbstractPermissionMixin):
@@ -28,13 +28,13 @@ class AbstractUserSpecificQuerySet(QuerySet, AbstractPermissionMixin):
         return self
 
     def visible_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def editable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def deletable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
 
 class AbstractUserSpecificManager(Manager, AbstractPermissionMixin):

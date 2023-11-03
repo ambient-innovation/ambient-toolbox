@@ -105,7 +105,7 @@ def get_value_from_tuple_by_key(choices: tuple, key) -> Any:
     try:
         return dict(choices)[key]
     except KeyError:
-        return '-'
+        return "-"
 
 
 def get_key_from_tuple_by_value(choices: tuple, value) -> Any:
@@ -117,4 +117,4 @@ def get_key_from_tuple_by_value(choices: tuple, value) -> Any:
     try:
         return [x[0] for x in choices if x[1] == value][0]
     except IndexError:
-        return '-'
+        return "-"

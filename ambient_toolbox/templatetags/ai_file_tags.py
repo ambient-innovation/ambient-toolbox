@@ -17,7 +17,7 @@ def filename(value, max_length=25):
     """
     name = os.path.basename(value.url)
     if len(name) > max_length:
-        ext = name.split('.')[-1]
+        ext = name.split(".")[-1]
         name = f"{name[:max_length]}[..].{ext}"
     return name
 

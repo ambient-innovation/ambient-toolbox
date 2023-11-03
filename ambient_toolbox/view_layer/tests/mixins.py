@@ -24,7 +24,7 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
 
     @classmethod
     def get_test_user(cls):
-        return get_user_model().objects.create(username='test_user', email='test.user@ambient-toolbox.com')
+        return get_user_model().objects.create(username="test_user", email="test.user@ambient-toolbox.com")
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -33,7 +33,7 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
             raise TestSetupConfigurationError(_('BaseViewPermissionTestMixin used without setting a "view_class".'))
 
     def get_view_instance(
-        self, *, user: Union[AbstractBaseUser, AnonymousUser], kwargs: dict = None, method: str = 'GET'
+        self, *, user: Union[AbstractBaseUser, AnonymousUser], kwargs: dict = None, method: str = "GET"
     ):
         """
         Creates an instance of the given view class and injects a valid request.
@@ -49,8 +49,8 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
 
     def test_permissions_are_equal(self):
         # Sanity checks
-        self.assertIsNotNone(self.permission_list, msg='Missing permission list declaration in test.')
-        self.assertIsNotNone(self.view_class.permission_list, msg='Missing permission list declaration in view.')
+        self.assertIsNotNone(self.permission_list, msg="Missing permission list declaration in test.")
+        self.assertIsNotNone(self.view_class.permission_list, msg="Missing permission list declaration in view.")
 
         # Assert same amount of permissions
         self.assertEqual(len(self.permission_list), len(self.view_class.permission_list))
@@ -65,11 +65,11 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
 
     def test_permissions_exist_in_database(self):
         for permission in self.permission_list:
-            if '.' not in permission:
+            if "." not in permission:
                 raise TestSetupConfigurationError(
                     f'View "{self.view_class}" contains ill-formatted permission ' f'"{permission}".'
                 )
-            app_label, codename = permission.split('.')
+            app_label, codename = permission.split(".")
             permission_qs = Permission.objects.filter(content_type__app_label=app_label, codename=codename)
 
             if not permission_qs.exists():
@@ -78,7 +78,7 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
                 )
 
     def test_passes_login_barrier_is_called(self):
-        with mock.patch.object(self.view_class, 'passes_login_barrier', return_value=False) as mock_method:
+        with mock.patch.object(self.view_class, "passes_login_barrier", return_value=False) as mock_method:
             view = self.get_view_instance(user=AnonymousUser())
             response = view.dispatch(request=view.request, **view.kwargs)
             # If a user is not logged in, he'll be forwarded to the login view
@@ -87,7 +87,7 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
         mock_method.assert_called_once()
 
     def test_has_permissions_is_called(self):
-        with mock.patch.object(self.view_class, 'has_permissions', return_value=False) as mock_method:
+        with mock.patch.object(self.view_class, "has_permissions", return_value=False) as mock_method:
             view = self.get_view_instance(user=self.user)
             response = view.dispatch(request=view.request, **view.kwargs)
             self.assertEqual(response.status_code, 403)

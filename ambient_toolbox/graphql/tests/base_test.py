@@ -9,7 +9,7 @@ class GraphQLTestCase(TestCase):
     """
 
     # URL to graphql endpoint
-    GRAPHQL_URL = '/graphql/'
+    GRAPHQL_URL = "/graphql/"
     # Here you need to set your graphql schema for the tests
     GRAPHQL_SCHEMA = None
 
@@ -18,7 +18,7 @@ class GraphQLTestCase(TestCase):
         super().setUpClass()
 
         if not cls.GRAPHQL_SCHEMA:
-            raise AttributeError('Variable GRAPHQL_SCHEMA not defined in GraphQLTestCase.')
+            raise AttributeError("Variable GRAPHQL_SCHEMA not defined in GraphQLTestCase.")
 
         cls._client = Client(cls.GRAPHQL_SCHEMA)
 
@@ -31,13 +31,13 @@ class GraphQLTestCase(TestCase):
         :return:            Response object from client
         """
 
-        body = {'query': query}
+        body = {"query": query}
         if op_name:
-            body['operation_name'] = op_name
+            body["operation_name"] = op_name
         if input_data:
-            body['variables'] = {'input': input_data}
+            body["variables"] = {"input": input_data}
 
-        resp = self._client.post(self.GRAPHQL_URL, json.dumps(body), content_type='application/json')
+        resp = self._client.post(self.GRAPHQL_URL, json.dumps(body), content_type="application/json")
         return resp
 
     def assertResponseNoErrors(self, resp):  # noqa: N802
@@ -48,7 +48,7 @@ class GraphQLTestCase(TestCase):
         """
         content = json.loads(resp.content)
         self.assertEqual(resp.status_code, 200)
-        self.assertNotIn('errors', list(content.keys()))
+        self.assertNotIn("errors", list(content.keys()))
 
     def assertResponseHasErrors(self, resp):  # noqa: N802
         """
@@ -56,4 +56,4 @@ class GraphQLTestCase(TestCase):
         :resp HttpResponse: Response
         """
         content = json.loads(resp.content)
-        self.assertIn('errors', list(content.keys()))
+        self.assertIn("errors", list(content.keys()))

@@ -45,12 +45,12 @@ class BaseViewSetTestMixin:
         *,
         url,
         view_kwargs=None,
-        method='get',
+        method="get",
         data=None,
         view_class=None,
         user=None,
         viewset_kwargs=None,
-        data_format='json',
+        data_format="json",
     ) -> Response:
         """
         Helper method which wraps all relevant setup to execute a request to the backends api

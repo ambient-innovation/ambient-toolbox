@@ -48,7 +48,7 @@ class PermissionSetupService:
 
                 # Add permission object to list
                 if new_permission in defined_permission_list:
-                    raise ValueError(f'Permission {new_permission} declared twice.')
+                    raise ValueError(f"Permission {new_permission} declared twice.")
                 defined_permission_list.append(new_permission)
 
                 # Check if permission is already set in the group

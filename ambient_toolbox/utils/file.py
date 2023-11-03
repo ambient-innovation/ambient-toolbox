@@ -8,12 +8,12 @@ def get_filename_without_ending(file_path: str) -> str:
     """
 
     # if filename has file_path parts
-    if '/' in file_path:
-        filename = file_path.rsplit('/')[-1]
+    if "/" in file_path:
+        filename = file_path.rsplit("/")[-1]
     else:
         filename = file_path
 
-    return filename.rsplit('.', 1)[0]
+    return filename.rsplit(".", 1)[0]
 
 
 def crc(file_path: str) -> str:
@@ -40,7 +40,7 @@ def md5_checksum(file_path: str) -> str:
     :param file_path: the file for which the MD5 hashsum should be calculated.
     :return: returns the MD5 of the file in hexadecimal format.
     """
-    with open(file_path, 'rb') as fh:
+    with open(file_path, "rb") as fh:
         m = hashlib.md5()
         while True:
             data = fh.read(8192)

@@ -9,7 +9,7 @@ from testapp.models import ForeignKeyRelatedModel, MySingleSignalModel
 class ForeignKeyRelatedModelForm(forms.ModelForm):
     class Meta:
         model = ForeignKeyRelatedModel
-        fields = ('single_signal',)
+        fields = ("single_signal",)
 
 
 class MySingleSignalModelFormset(CountChildrenFormsetMixin, BaseInlineFormSet):
@@ -47,10 +47,10 @@ class CountChildrenFormsetMixinTest(TestCase):
         )
 
         formset = formset_class(
-            {'fkrm-INITIAL_FORMS': '2', 'fkrm-MIN_NUM_FORMS': '2', 'fkrm-MAX_NUM_FORMS': '3', 'fkrm-TOTAL_FORMS': '2'},
+            {"fkrm-INITIAL_FORMS": "2", "fkrm-MIN_NUM_FORMS": "2", "fkrm-MAX_NUM_FORMS": "3", "fkrm-TOTAL_FORMS": "2"},
             None,
             instance=mssm,
-            prefix='fkrm',
+            prefix="fkrm",
         )
 
         formset.is_valid()

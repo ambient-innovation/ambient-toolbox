@@ -20,7 +20,7 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.super_user = User.objects.create(username='super_user', is_superuser=True)
+        cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
         admin.site.register(MySingleSignalModel, TestReadOnlyAdmin)
         admin.site.register(MyMultipleSignalModel, TestEditableOnlyAdmin)
@@ -39,8 +39,8 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
         readonly_fields = admin_class.get_readonly_fields(request=self.get_request(), obj=obj)
 
         self.assertEqual(len(readonly_fields), 2)
-        self.assertIn('id', readonly_fields)
-        self.assertIn('value', readonly_fields)
+        self.assertIn("id", readonly_fields)
+        self.assertIn("value", readonly_fields)
 
     def test_read_only_admin_no_change_permissions(self):
         admin_class = TestReadOnlyAdmin(model=MySingleSignalModel, admin_site=admin.site)
@@ -58,7 +58,7 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
         request = self.get_request(self.super_user)
         actions = admin_class.get_actions(request=request)
 
-        self.assertNotIn('delete_selected', actions)
+        self.assertNotIn("delete_selected", actions)
 
     def test_editable_only_admin_no_change_permissions(self):
         admin_class = TestEditableOnlyAdmin(model=MyMultipleSignalModel, admin_site=admin.site)

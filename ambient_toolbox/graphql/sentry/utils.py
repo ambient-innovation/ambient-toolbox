@@ -9,4 +9,4 @@ def ignore_graphene_logger():
     Test for:
         * sentry_sdk >= 0.13.0
     """
-    ignore_logger('graphql.execution.utils')
+    ignore_logger("graphql.execution.utils")

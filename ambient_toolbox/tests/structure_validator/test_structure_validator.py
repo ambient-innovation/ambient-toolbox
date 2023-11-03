@@ -18,7 +18,7 @@ class TestStructureValidator:
 
     @staticmethod
     def _get_file_whitelist() -> list:
-        default_whitelist = ['__init__']
+        default_whitelist = ["__init__"]
         try:
             return default_whitelist + settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
         except AttributeError:
@@ -40,7 +40,7 @@ class TestStructureValidator:
 
     @staticmethod
     def _get_ignored_directory_list() -> list:
-        default_dir_list = ['__pycache__']
+        default_dir_list = ["__pycache__"]
         try:
             return default_dir_list + settings.TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST
         except AttributeError:
@@ -54,21 +54,21 @@ class TestStructureValidator:
             return toolbox_settings.TEST_STRUCTURE_VALIDATOR_APP_LIST
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
-        if extension == '.py' and not filename[0:5] == "test_" and filename not in self.file_whitelist:
-            file_path = f"{root}\\{file}".replace('\\', '/')
+        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_whitelist:
+            file_path = f"{root}\\{file}".replace("\\", "/")
             self.issue_list.append(f'Python file without "test_" prefix found: {file_path!r}.')
             return False
         return True
 
     def _check_missing_init(self, *, root: str, init_found: bool, number_of_py_files: int) -> bool:
         if not init_found and number_of_py_files > 0:
-            path = root.replace('\\', '/')
+            path = root.replace("\\", "/")
             self.issue_list.append(f"__init__.py missing in {path!r}.")
             return False
         return True
 
     def _build_path_to_test_package(self, app: str) -> Path:
-        return self._get_base_dir() / Path(app.replace('.', '/')) / 'tests'
+        return self._get_base_dir() / Path(app.replace(".", "/")) / "tests"
 
     def process(self) -> None:  # noqa: PLR0912
         backend_package = self._get_base_app_name()
@@ -79,7 +79,7 @@ class TestStructureValidator:
                 continue
             app_path = self._build_path_to_test_package(app=app)
             for root, dirs, files in os.walk(app_path):
-                cleaned_root = root.replace('\\', '/')
+                cleaned_root = root.replace("\\", "/")
                 print(f"Inspecting {cleaned_root!r}...")
                 init_found = False
                 number_of_py_files = 0
@@ -118,7 +118,7 @@ class TestStructureValidator:
         print("=======================")
 
         if number_of_issues:
-            print(f'Checking test structure failed with {number_of_issues} issue(s).')
+            print(f"Checking test structure failed with {number_of_issues} issue(s).")
             sys.exit(1)
         else:
             print("0 issues detected. Yeah!")

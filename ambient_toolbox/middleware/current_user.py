@@ -19,7 +19,7 @@ class CurrentUserMiddleware(CurrentRequestMiddleware):
     # of one of the next major releases, then fully dropping support for
     # CurrentUserMiddleware.
 
-    def __init__(self, get_response: Callable[['HttpRequest'], 'HttpResponse']):
+    def __init__(self, get_response: Callable[["HttpRequest"], "HttpResponse"]):
         warnings.warn(
             "CurrentUserMiddleware is deprecated. Use CurrentRequestMiddleware instead.",
             category=DeprecationWarning,

@@ -8,7 +8,7 @@ class AdminViewMixin:
     """
 
     model = None
-    admin_page_title = ''
+    admin_page_title = ""
 
     def has_view_permission(self, user, **kwargs) -> bool:
         """
@@ -39,23 +39,23 @@ class AdminViewMixin:
         admin_site = self.get_admin_site()
         context.update(
             {
-                'site_header': admin_site.site_header,
-                'site_title': admin_site.site_title,
-                'title': self.admin_page_title,
-                'name': self.admin_page_title,
-                'original': self.admin_page_title,
-                'is_nav_sidebar_enabled': True,
-                'available_apps': admin.site.get_app_list(self.request),
-                'opts': {
-                    'app_label': self.model._meta.app_label,
-                    'verbose_name': self.model._meta.verbose_name,
-                    'verbose_name_plural': self.model._meta.verbose_name_plural,
-                    'model_name': self.model._meta.model_name,
-                    'app_config': {
-                        'verbose_name': self.model._meta.app_config.verbose_name,
+                "site_header": admin_site.site_header,
+                "site_title": admin_site.site_title,
+                "title": self.admin_page_title,
+                "name": self.admin_page_title,
+                "original": self.admin_page_title,
+                "is_nav_sidebar_enabled": True,
+                "available_apps": admin.site.get_app_list(self.request),
+                "opts": {
+                    "app_label": self.model._meta.app_label,
+                    "verbose_name": self.model._meta.verbose_name,
+                    "verbose_name_plural": self.model._meta.verbose_name_plural,
+                    "model_name": self.model._meta.model_name,
+                    "app_config": {
+                        "verbose_name": self.model._meta.app_config.verbose_name,
                     },
                 },
-                'has_permission': admin_site.has_permission(request=self.request),
+                "has_permission": admin_site.has_permission(request=self.request),
             }
         )
         return context

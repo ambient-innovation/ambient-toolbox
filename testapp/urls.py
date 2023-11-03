@@ -10,9 +10,9 @@ router.registry.extend(model_router.registry)
 
 urlpatterns = [
     # django Admin
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     # REST Viewsets
-    path('api/v1/', include(router.urls)),
+    path("api/v1/", include(router.urls)),
     # Custom login view
-    path("other/login/", TemplateView.as_view(template_name="testapp/test_template.html"), name='other-login-view'),
+    path("other/login/", TemplateView.as_view(template_name="testapp/test_template.html"), name="other-login-view"),
 ]

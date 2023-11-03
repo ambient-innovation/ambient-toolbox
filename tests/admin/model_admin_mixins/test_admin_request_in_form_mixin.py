@@ -17,7 +17,7 @@ class AdminRequestInFormMixinTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.super_user = User.objects.create(username='super_user', is_superuser=True)
+        cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
         admin.site.register(MySingleSignalModel, TestAdminRequestInFormMixinAdmin)
 

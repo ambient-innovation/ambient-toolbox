@@ -22,13 +22,13 @@ class HtmxResponseMixin:
 
         # Set redirect header if set
         if hx_redirect_url:
-            response['HX-Redirect'] = hx_redirect_url
+            response["HX-Redirect"] = hx_redirect_url
 
         # Set trigger header if set
         if isinstance(hx_trigger, dict):
-            response['HX-Trigger'] = json.dumps(hx_trigger)
+            response["HX-Trigger"] = json.dumps(hx_trigger)
         elif isinstance(hx_trigger, str):
-            response['HX-Trigger'] = hx_trigger
+            response["HX-Trigger"] = hx_trigger
 
         # Return augmented response
         return response

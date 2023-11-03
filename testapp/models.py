@@ -22,7 +22,7 @@ class MySingleSignalModel(models.Model):
 
 class ForeignKeyRelatedModel(models.Model):
     single_signal = models.ForeignKey(
-        MySingleSignalModel, on_delete=models.CASCADE, related_name='foreign_key_related_models'
+        MySingleSignalModel, on_delete=models.CASCADE, related_name="foreign_key_related_models"
     )
 
     objects = GloballyVisibleQuerySet.as_manager()
@@ -43,7 +43,7 @@ class MyMultipleSignalModel(models.Model):
         return str(self.value)
 
 
-@receiver(pre_save, sender=MyMultipleSignalModel, dispatch_uid='test.mysinglesignalmodel.increase_value_with_uuid')
+@receiver(pre_save, sender=MyMultipleSignalModel, dispatch_uid="test.mysinglesignalmodel.increase_value_with_uuid")
 def increase_value_with_dispatch_uid(sender, instance, **kwargs):
     instance.value += 1
 
@@ -51,7 +51,7 @@ def increase_value_with_dispatch_uid(sender, instance, **kwargs):
 @receiver(post_save, sender=MyMultipleSignalModel)
 def send_email(sender, instance, **kwargs):
     msg = EmailMultiAlternatives(
-        'Test Mail', 'I am content', from_email='test@example.com', to=['random.dude@example.com']
+        "Test Mail", "I am content", from_email="test@example.com", to=["random.dude@example.com"]
     )
     msg.send()
 
@@ -75,14 +75,14 @@ class ModelWithSelector(models.Model):
 
 
 class ModelWithFkToSelf(models.Model):
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
+    parent = models.ForeignKey("self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.id)
 
 
 class ModelWithOneToOneToSelf(models.Model):
-    peer = models.OneToOneField('self', blank=True, null=True, related_name='related_peer', on_delete=models.CASCADE)
+    peer = models.OneToOneField("self", blank=True, null=True, related_name="related_peer", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.id)

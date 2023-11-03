@@ -35,8 +35,8 @@ class ClassBasedViewTestMixin:
         factory = self.factory_class()
         req_kwargs = {}
         if data:
-            req_kwargs.update({'data': data})
-        request = getattr(factory, method)('/', **req_kwargs)
+            req_kwargs.update({"data": data})
+        request = getattr(factory, method)("/", **req_kwargs)
 
         # Annotate a request object with a session
         middleware = SessionMiddleware(get_response=HttpResponse(status=200))
@@ -55,15 +55,15 @@ class ClassBasedViewTestMixin:
 
     def get(self, user=None, data=None, url_params=None, *args, **kwargs):
         """Returns response for a GET request."""
-        return self._get_response('get', user, data, url_params, *args, **kwargs)
+        return self._get_response("get", user, data, url_params, *args, **kwargs)
 
     def post(self, user=None, data=None, url_params=None, *args, **kwargs):
         """Returns response for a POST request."""
-        return self._get_response('post', user, data, url_params, *args, **kwargs)
+        return self._get_response("post", user, data, url_params, *args, **kwargs)
 
     def delete(self, user=None, data=None, url_params=None, *args, **kwargs):
         """Returns response for a DELETE request."""
-        return self._get_response('delete', user, data, url_params, *args, **kwargs)
+        return self._get_response("delete", user, data, url_params, *args, **kwargs)
 
 
 class RequestProviderMixin:
@@ -75,13 +75,13 @@ class RequestProviderMixin:
 
     @staticmethod
     def get_request(
-        user: Union[AbstractBaseUser, AnonymousUser, None] = None, method: str = 'GET', url: Optional[str] = None
+        user: Union[AbstractBaseUser, AnonymousUser, None] = None, method: str = "GET", url: Optional[str] = None
     ):
         """
         Creates and returns a django request.
         """
         # Determine URL
-        url = url if url else '/'
+        url = url if url else "/"
 
         # Create test request
         factory = RequestFactory()
@@ -92,7 +92,7 @@ class RequestProviderMixin:
         if user is None or isinstance(user, AbstractBaseUser) or isinstance(user, AnonymousUser):  # noqa: PLR1701
             request.user = user
         else:
-            raise ValueError(_('Please pass a user object to RequestProviderMixin.'))
+            raise ValueError(_("Please pass a user object to RequestProviderMixin."))
 
         # Annotate a request object with a session
         session_middleware = SessionMiddleware(get_response=HttpResponse(status=200))

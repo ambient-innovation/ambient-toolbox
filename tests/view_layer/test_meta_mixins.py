@@ -14,37 +14,37 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
         pass
 
     class TestViewSinglePerm(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ['auth.change_user']
+        permission_list = ["auth.change_user"]
         login_view_name = "other-login-view"
 
         def get(self, *args, **kwargs):
             return HttpResponse(status=200)
 
     class TestViewMultiplePerms(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ['auth.change_user', 'auth.add_user']
+        permission_list = ["auth.change_user", "auth.add_user"]
 
         def get_login_url(self):
-            return 'login/'
+            return "login/"
 
     class TestDifferentLoginNameView(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ['auth.change_user']
-        login_view_name = 'other-login-view'
+        permission_list = ["auth.change_user"]
+        login_view_name = "other-login-view"
 
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.permission = Permission.objects.get_by_natural_key(app_label='auth', codename='change_user', model='user')
+        cls.permission = Permission.objects.get_by_natural_key(app_label="auth", codename="change_user", model="user")
 
     def setUp(self) -> None:
         super().setUp()
-        self.user = User.objects.create(username='test_user', email='test.user@ambient-toolbox.com')
+        self.user = User.objects.create(username="test_user", email="test.user@ambient-toolbox.com")
 
     def test_get_login_url(self):
-        self.assertEqual(self.TestViewMultiplePerms().get_login_url(), 'login/')
+        self.assertEqual(self.TestViewMultiplePerms().get_login_url(), "login/")
 
     def test_get_custom_login_url(self):
-        self.assertEqual(self.TestDifferentLoginNameView().get_login_url(), '/other/login/')
+        self.assertEqual(self.TestDifferentLoginNameView().get_login_url(), "/other/login/")
 
     def test_permissions_are_set_validation(self):
         with self.assertRaises(RuntimeError):

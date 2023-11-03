@@ -17,7 +17,7 @@ class RecursiveField(serializers.Serializer):
         # parent serializer.
         # Explanation: With `many=True` DRF creates an intermediate `ListSerializer`. It has `many=True`, so we'll end
         # up in the first if-case. If we do not use `many=True`, the "many" attribute is not set.
-        if getattr(self.parent, 'many', False):
+        if getattr(self.parent, "many", False):
             parent = self.parent.parent
         else:
             parent = self.parent

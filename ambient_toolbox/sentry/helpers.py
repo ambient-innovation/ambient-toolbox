@@ -22,11 +22,11 @@ class SentryEventScrubber:
         self.denylist = [] if denylist is None else denylist
         self.standard_denylist = (
             [
-                'username',
-                'email',
-                'ip_address',
-                'serializer',
-                'admin',
+                "username",
+                "email",
+                "ip_address",
+                "serializer",
+                "admin",
             ]
             if standard_denylist
             else []
@@ -49,15 +49,15 @@ def strip_sensitive_data_from_sentry_event(event, hint):
     Requires "sentry-sdk>=1.5.0" to work.
     """
     try:
-        del event['user']['username']
+        del event["user"]["username"]
     except KeyError:
         pass
     try:
-        del event['user']['email']
+        del event["user"]["email"]
     except KeyError:
         pass
     try:
-        del event['user']['ip_address']
+        del event["user"]["ip_address"]
     except KeyError:
         pass
     return event

@@ -3,6 +3,7 @@
 **9.1.6** (2023-10-31)
   * Added migration docs to Readme
   * Added migration check to GitHub actions
+  * Switched formatter from `black` to `ruff`
   * Updates from ambient updater
   * Fixes typos
 

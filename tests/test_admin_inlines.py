@@ -16,7 +16,7 @@ class AdminInlineTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.super_user = User.objects.create(username='super_user', is_superuser=True)
+        cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
     def test_read_only_tabular_inline_admin_all_fields_readonly(self):
         obj = MySingleSignalModel(value=1)
@@ -26,7 +26,7 @@ class AdminInlineTest(RequestProviderMixin, TestCase):
         readonly_fields = admin_class.get_readonly_fields(request=self.get_request(), obj=fk_related_obj)
 
         self.assertEqual(len(readonly_fields), 1)
-        self.assertIn('single_signal', readonly_fields)
+        self.assertIn("single_signal", readonly_fields)
 
     def test_read_only_admin_tabular_inline_no_change_permissions(self):
         admin_class = TestReadOnlyTabularInline(parent_model=MySingleSignalModel, admin_site=admin.site)

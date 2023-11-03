@@ -13,11 +13,11 @@ class _FormsetMixin:
 
     def get_formset_kwargs(self):
         # may be overridden or extended
-        return {'instance': self.object}
+        return {"instance": self.object}
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['formset'] = self.formset_class(**self.get_formset_kwargs())
+        context["formset"] = self.formset_class(**self.get_formset_kwargs())
         return context
 
     def form_valid(self, form, formset):
@@ -28,7 +28,7 @@ class _FormsetMixin:
         formset.instance = self.object
         formset.save()
 
-        if hasattr(self, 'additional_is_valid'):
+        if hasattr(self, "additional_is_valid"):
             self.additional_is_valid(form, formset)
 
         # Return response (a redirect)
@@ -47,8 +47,8 @@ class _FormsetMixin:
         context = self.get_context_data()
 
         # Update form and formset variables
-        context['form'] = form
-        context['formset'] = formset
+        context["form"] = form
+        context["formset"] = formset
 
         # Pass all data to template
         return render(request, self.get_template_names(), context)

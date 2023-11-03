@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.filter(name='multiply')
+@register.filter(name="multiply")
 def multiply(value, arg):
     """
     Multiplies the arg and the value
@@ -16,7 +16,7 @@ def multiply(value, arg):
     return None
 
 
-@register.filter(name='subtract')
+@register.filter(name="subtract")
 def subtract(value, arg):
     """
     Subtracts the arg from the value
@@ -26,7 +26,7 @@ def subtract(value, arg):
     return int(value) - int(arg)
 
 
-@register.filter(name='divide')
+@register.filter(name="divide")
 def divide(value, arg):
     """
     Divides the value by the arg
@@ -37,7 +37,7 @@ def divide(value, arg):
         return None
 
 
-@register.filter(name='to_int')
+@register.filter(name="to_int")
 def to_int(value):
     """
     Parses a string to int value

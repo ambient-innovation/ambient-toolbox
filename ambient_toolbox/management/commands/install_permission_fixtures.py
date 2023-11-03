@@ -18,14 +18,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        dry_run = options.get('dry_run')
+        dry_run = options.get("dry_run")
         if dry_run:
             print('Starting in "dry-run" mode...')
 
         try:
             fixture_declaration_list = settings.GROUP_PERMISSION_FIXTURES
         except AttributeError:
-            print('No fixtures found in Django settings.')
+            print("No fixtures found in Django settings.")
             fixture_declaration_list = []
 
         for declaration_path in fixture_declaration_list:
@@ -34,11 +34,11 @@ class Command(BaseCommand):
 
             assert isinstance(
                 declaration_class, type(GroupPermissionDeclaration)
-            ), f"Could\'t load group declaration \"{declaration_path}\"."
+            ), f'Could\'t load group declaration "{declaration_path}".'
 
             print(f'> Installing permissions of group "{declaration_class.name}"...')
             service = PermissionSetupService(group_declaration=declaration_class, dry_run=dry_run)
             new_permissions, removed_permissions = service.process()
 
-            print(f'> Newly installed permissions: {new_permissions}')
-            print(f'> Removed permissions: {removed_permissions}\n')
+            print(f"> Newly installed permissions: {new_permissions}")
+            print(f"> Removed permissions: {removed_permissions}\n")
