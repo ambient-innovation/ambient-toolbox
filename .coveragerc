@@ -3,7 +3,8 @@ omit =
   setup.py,
   *_test.py,
   tests.py,
-  *tests*,
+  testapp/*
+  tests/*,
   conftest.py
 
 [report]
