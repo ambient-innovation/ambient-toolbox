@@ -12,11 +12,11 @@ from testapp.models import MyMultipleSignalModel, MySingleSignalModel
 
 
 class TestReadOnlyAdmin(ReadOnlyAdmin):
-    pass
+    model = MySingleSignalModel
 
 
 class TestEditableOnlyAdmin(EditableOnlyAdmin):
-    pass
+    model = MySingleSignalModel
 
 
 class AdminClassesTest(RequestProviderMixin, TestCase):
