@@ -12,7 +12,6 @@ class PermissionModelMixin:
     class Meta:
         # No database table creation or deletion operations will be performed for this model.
         managed = False
-        # todo brauchen wir das? default_permissions = []
 
 
 class SaveWithoutSignalsMixin:

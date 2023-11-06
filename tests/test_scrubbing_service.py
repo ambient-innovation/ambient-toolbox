@@ -27,4 +27,4 @@ class AbstractScrubbingServiceTest(TestCase):
         self.service._get_hashed_default_password()
         mocked_make_password.assert_called_once_with(self.service.DEFAULT_USER_PASSWORD)
 
-    # todo write more tests
+    # TODO: write more tests

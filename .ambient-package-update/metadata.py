@@ -18,6 +18,7 @@ METADATA = PackageMetadata(
             email="hello@ambient.digital",
         ),
     ],
+    min_coverage=96.62,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
@@ -84,5 +85,7 @@ The migration is really simple, just:
         RuffIgnoredInspection(key="B905", comment="Can be enabled when Python <=3.9 support is dropped"),
         RuffIgnoredInspection(key="DTZ001", comment='TODO will affect "tz_today()" method'),
         RuffIgnoredInspection(key="DTZ005", comment='TODO will affect "tz_today()" method'),
+        RuffIgnoredInspection(key="TD002", comment="Missing author in TODO"),
+        RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TODO"),
     ],
 )

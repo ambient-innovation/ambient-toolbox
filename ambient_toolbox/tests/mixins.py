@@ -88,7 +88,7 @@ class RequestProviderMixin:
         request = factory.get(url)
 
         # Set user object if it is of a valid type
-        # todo remove noqa when we drop older python support
+        # TODO: remove noqa when we drop older python support
         if user is None or isinstance(user, AbstractBaseUser) or isinstance(user, AnonymousUser):  # noqa: PLR1701
             request.user = user
         else:

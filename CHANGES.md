@@ -4,7 +4,8 @@
   * Added migration docs to Readme
   * Added migration check to GitHub actions
   * Switched formatter from `black` to `ruff`
-  * Updates from ambient updater
+  * Enforcing minimum coverage in CI/CD pipeline
+  * Further updates from ambient updater package
   * Fixes typos
 
 **9.1.5** (2023-10-31)
