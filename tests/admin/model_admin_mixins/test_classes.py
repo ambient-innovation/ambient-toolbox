@@ -82,26 +82,29 @@ class ReadOnlyAdminTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(username="testuser", password="testpassword", is_superuser=True)
-        cls.model_admin = ReadOnlyAdmin(User, AdminSite())
 
         factory = RequestFactory()
         cls.request = factory.get(f"/admin/auth/user/{cls.user.id}/change/")
         cls.request.user = cls.user
 
     def test_changeform_view_regular(self):
-        response = self.model_admin.changeform_view(self.request, str(self.user.id))
+        model_admin = ReadOnlyAdmin(User, AdminSite())
+        response = model_admin.changeform_view(self.request, str(self.user.id))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Save and continue editing")
         self.assertNotContains(response, "Save")
 
     def test_has_add_permission_regular(self):
-        self.assertFalse(self.model_admin.has_add_permission(self.request))
+        model_admin = ReadOnlyAdmin(User, AdminSite())
+        self.assertFalse(model_admin.has_add_permission(self.request))
 
     def test_has_change_permission_regular(self):
-        self.assertFalse(self.model_admin.has_change_permission(self.request))
+        model_admin = ReadOnlyAdmin(User, AdminSite())
+        self.assertFalse(model_admin.has_change_permission(self.request))
 
     def test_has_delete_permission_regular(self):
-        self.assertFalse(self.model_admin.has_delete_permission(self.request))
+        model_admin = ReadOnlyAdmin(User, AdminSite())
+        self.assertFalse(model_admin.has_delete_permission(self.request))
 
 
 class EditableOnlyAdminTest(TestCase):
@@ -111,7 +114,6 @@ class EditableOnlyAdminTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(username="testuser", password="testpassword", is_superuser=True)
-        cls.model_admin = EditableOnlyAdmin(User, AdminSite())
 
         factory = RequestFactory()
         cls.request = factory.get(f"/admin/auth/user/{cls.user.id}/change/")
@@ -119,6 +121,7 @@ class EditableOnlyAdminTest(TestCase):
 
     @mock.patch.object(ModelAdmin, "get_actions", return_value={"delete_selected": 1})
     def test_get_actions_regular(self, *args):
-        actions = self.model_admin.get_actions(self.request)
+        model_admin = EditableOnlyAdmin(User, AdminSite())
+        actions = model_admin.get_actions(self.request)
         self.assertIsInstance(actions, dict)
         self.assertNotIn("delete_selected", actions)
