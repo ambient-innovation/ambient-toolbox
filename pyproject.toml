@@ -50,7 +50,7 @@ dev = [
    'm2r2==0.3.1',
    'mistune<2.0.0',
    'ambient-package-update~=23.10.8',
-   'gevent~=22.10',
+   'gevent~=23.9',
 ]
 drf = [
    'djangorestframework>=3.8.2',

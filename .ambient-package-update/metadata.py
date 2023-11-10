@@ -62,7 +62,7 @@ The migration is really simple, just:
     optional_dependencies={
         "dev": [
             *DEV_DEPENDENCIES,
-            "gevent~=22.10",
+            "gevent~=23.9",
         ],
         "drf": [
             "djangorestframework>=3.8.2",
