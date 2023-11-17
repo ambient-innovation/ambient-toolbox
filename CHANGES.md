@@ -1,11 +1,12 @@
 # Changelog
 
-**9.1.6** (2023-10-31)
+**9.2.0** (2023-11-17)
   * Added migration docs to Readme
   * Added migration check to GitHub actions
   * Switched formatter from `black` to `ruff`
   * Enforcing minimum coverage in CI/CD pipeline
   * Further updates from ambient updater package
+  * Updated GitHub action versions
   * Fixes typos
 
 **9.1.5** (2023-10-31)
