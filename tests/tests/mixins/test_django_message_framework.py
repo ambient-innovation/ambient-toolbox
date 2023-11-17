@@ -12,9 +12,9 @@ class DjangoMessagingFrameworkTestMixinTest(RequestProviderMixin, DjangoMessagin
         cls.request = cls.get_request()
 
     def test_full_message_found(self):
-        messages.add_message(self.request, messages.INFO, 'My message')
-        self.assert_full_message_in_request(request=self.request, message='My message')
+        messages.add_message(self.request, messages.INFO, "My message")
+        self.assert_full_message_in_request(request=self.request, message="My message")
 
     def test_partial_message_found(self):
-        messages.add_message(self.request, messages.INFO, 'My message')
-        self.assert_partial_message_in_request(request=self.request, message='My')
+        messages.add_message(self.request, messages.INFO, "My message")
+        self.assert_partial_message_in_request(request=self.request, message="My")

@@ -23,12 +23,12 @@ class CommonInfoSerializer(BaseModelSerializer):
 
     def validate(self, data):
         data = super().validate(data)
-        request = self.context.get('request', None)
+        request = self.context.get("request", None)
 
         if request.user:
-            data['lastmodified_by'] = request.user
+            data["lastmodified_by"] = request.user
             if not self.instance:
                 # If this is a new instance, set created_by
-                data['created_by'] = request.user
+                data["created_by"] = request.user
 
         return data

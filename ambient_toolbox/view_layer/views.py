@@ -29,7 +29,7 @@ class RequestInFormKwargsMixin:
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'request': self.request})
+        kwargs.update({"request": self.request})
         return kwargs
 
 
@@ -41,7 +41,7 @@ class UserInFormKwargsMixin:
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs.update({"user": self.request.user})
         return kwargs
 
 
@@ -53,7 +53,7 @@ class ToggleView(SingleObjectMixin, generic.View):
     """
 
     object = None
-    http_method_names = ('post',)
+    http_method_names = ("post",)
 
     def post(self, request, *args, **kwargs):
         raise NotImplementedError

@@ -10,17 +10,17 @@ class PermissionSetupServiceTest(TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.group, created = Group.objects.get_or_create(name='my_group')
+        cls.group, created = Group.objects.get_or_create(name="my_group")
 
         cls.permission_view = Permission.objects.get_by_natural_key(
-            app_label='testapp', codename='view_mysinglesignalmodel', model='mysinglesignalmodel'
+            app_label="testapp", codename="view_mysinglesignalmodel", model="mysinglesignalmodel"
         )
         cls.permission_change = Permission.objects.get_by_natural_key(
-            app_label='testapp', codename='change_mysinglesignalmodel', model='mysinglesignalmodel'
+            app_label="testapp", codename="change_mysinglesignalmodel", model="mysinglesignalmodel"
         )
 
     def test_init_regular(self):
-        group_declaration = GroupPermissionDeclaration(name='my_group', permission_list=[])
+        group_declaration = GroupPermissionDeclaration(name="my_group", permission_list=[])
         service = PermissionSetupService(group_declaration=group_declaration)
 
         self.assertEqual(service.group_declaration, group_declaration)
@@ -28,10 +28,10 @@ class PermissionSetupServiceTest(TestCase):
 
     def test_process_add_permission(self):
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['change_mysinglesignalmodel'], model='mysinglesignalmodel'
+                    app_label="testapp", codename_list=["change_mysinglesignalmodel"], model="mysinglesignalmodel"
                 )
             ],
         )
@@ -49,7 +49,7 @@ class PermissionSetupServiceTest(TestCase):
     def test_process_remove_permission(self):
         self.group.permissions.add(self.permission_view)
 
-        group_declaration = GroupPermissionDeclaration(name='my_group', permission_list=[])
+        group_declaration = GroupPermissionDeclaration(name="my_group", permission_list=[])
 
         service = PermissionSetupService(group_declaration=group_declaration)
         new_permissions, removed_permissions = service.process()
@@ -64,10 +64,10 @@ class PermissionSetupServiceTest(TestCase):
         self.group.permissions.add(self.permission_view)
 
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['view_mysinglesignalmodel'], model='mysinglesignalmodel'
+                    app_label="testapp", codename_list=["view_mysinglesignalmodel"], model="mysinglesignalmodel"
                 )
             ],
         )
@@ -86,10 +86,10 @@ class PermissionSetupServiceTest(TestCase):
         self.group.permissions.add(self.permission_view)
 
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['invalid_permission'], model='mysinglesignalmodel'
+                    app_label="testapp", codename_list=["invalid_permission"], model="mysinglesignalmodel"
                 )
             ],
         )
@@ -104,10 +104,10 @@ class PermissionSetupServiceTest(TestCase):
         self.group.permissions.add(self.permission_view)
 
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='invalid_app', codename_list=['view_mysinglesignalmodel'], model='mysinglesignalmodel'
+                    app_label="invalid_app", codename_list=["view_mysinglesignalmodel"], model="mysinglesignalmodel"
                 )
             ],
         )
@@ -120,10 +120,10 @@ class PermissionSetupServiceTest(TestCase):
         self.group.permissions.add(self.permission_view)
 
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['view_mysinglesignalmodel'], model='invalid_model'
+                    app_label="testapp", codename_list=["view_mysinglesignalmodel"], model="invalid_model"
                 )
             ],
         )
@@ -136,29 +136,29 @@ class PermissionSetupServiceTest(TestCase):
         self.group.permissions.add(self.permission_view)
 
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['view_mysinglesignalmodel'], model='mysinglesignalmodel'
+                    app_label="testapp", codename_list=["view_mysinglesignalmodel"], model="mysinglesignalmodel"
                 ),
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['view_mysinglesignalmodel'], model='mysinglesignalmodel'
+                    app_label="testapp", codename_list=["view_mysinglesignalmodel"], model="mysinglesignalmodel"
                 ),
             ],
         )
 
         service = PermissionSetupService(group_declaration=group_declaration)
-        with self.assertRaisesMessage(ValueError, f'Permission {self.permission_view} declared twice.'):
+        with self.assertRaisesMessage(ValueError, f"Permission {self.permission_view} declared twice."):
             service.process()
 
     def test_process_dry_run_not_persisting(self):
         self.group.permissions.add(self.permission_view)
 
         group_declaration = GroupPermissionDeclaration(
-            name='my_group',
+            name="my_group",
             permission_list=[
                 PermissionModelDeclaration(
-                    app_label='testapp', codename_list=['change_mysinglesignalmodel'], model='mysinglesignalmodel'
+                    app_label="testapp", codename_list=["change_mysinglesignalmodel"], model="mysinglesignalmodel"
                 )
             ],
         )

@@ -22,7 +22,7 @@ class FetchObjectMixinTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.super_user = User.objects.create(username='super_user', is_superuser=True)
+        cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
         admin.site.register(MySingleSignalModel, TestFetchObjectMixinAdmin)
 
@@ -39,8 +39,8 @@ class FetchObjectMixinTest(RequestProviderMixin, TestCase):
         request = self.get_request(self.super_user)
 
         return_obj = MockResolverResponse()
-        return_obj.kwargs = {'object_id': obj.id}
-        with mock.patch('ambient_toolbox.admin.model_admins.mixins.resolve', return_value=return_obj):
+        return_obj.kwargs = {"object_id": obj.id}
+        with mock.patch("ambient_toolbox.admin.model_admins.mixins.resolve", return_value=return_obj):
             obj_from_request = model_admin.get_object_from_request(request)
 
         self.assertEqual(obj_from_request, obj)

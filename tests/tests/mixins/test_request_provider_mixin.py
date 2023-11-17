@@ -14,7 +14,7 @@ class RequestProviderMixinTest(RequestProviderMixin, TestCase):
         self.assertIsInstance(request, HttpRequest)
 
     def test_request_user_set(self):
-        user = User.objects.create(username='albertus_magnus')
+        user = User.objects.create(username="albertus_magnus")
         request = self.get_request(user)
         self.assertEqual(request.user, user)
 
@@ -26,23 +26,23 @@ class RequestProviderMixinTest(RequestProviderMixin, TestCase):
         request = self.get_request(None)
 
         # This would fail if the django messages were not set up correctly
-        messages.add_message(request, messages.SUCCESS, 'I am a great message!')
+        messages.add_message(request, messages.SUCCESS, "I am a great message!")
 
         self.assertIsInstance(request.session, SessionBase)
 
     def test_django_session_set_up_correctly(self):
         request = self.get_request(None)
-        request.session['my_val'] = 27
+        request.session["my_val"] = 27
         request.session.modified = True
 
-        self.assertEqual(request.session['my_val'], 27)
+        self.assertEqual(request.session["my_val"], 27)
 
     def test_passed_user_is_none(self):
         request = self.get_request(None)
         self.assertIsNone(request.user)
 
     def test_passed_user_is_regular_user(self):
-        user = User.objects.create(username='albertus_magnus')
+        user = User.objects.create(username="albertus_magnus")
         request = self.get_request(user)
         self.assertEqual(request.user, user)
 
@@ -58,8 +58,8 @@ class RequestProviderMixinTest(RequestProviderMixin, TestCase):
 
     def test_default_url_used(self):
         request = self.get_request()
-        self.assertEqual(request.build_absolute_uri(), 'http://testserver/')
+        self.assertEqual(request.build_absolute_uri(), "http://testserver/")
 
     def test_passed_url_used(self):
-        request = self.get_request(url='my-url')
-        self.assertEqual(request.build_absolute_uri(), 'http://testserver/my-url')
+        request = self.get_request(url="my-url")
+        self.assertEqual(request.build_absolute_uri(), "http://testserver/my-url")

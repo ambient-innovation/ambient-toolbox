@@ -66,12 +66,12 @@ def first_day_of_month(source_date: datetime.date) -> datetime.date:
 
 
 def get_formatted_date_str(source_date: Union[datetime.date, datetime.datetime]) -> str:
-    return source_date.strftime('%d.%m.%Y')
+    return source_date.strftime("%d.%m.%Y")
 
 
 def get_time_from_seconds(seconds: int) -> str:
     if seconds < 0:
-        raise ValueError(_('Seconds must be positive.'))
+        raise ValueError(_("Seconds must be positive."))
     hours = seconds // 3600
     minutes = (seconds - (hours * 3600)) // 60
     seconds = seconds - ((hours * 3600) + (minutes * 60))
@@ -93,7 +93,7 @@ def get_start_and_end_date_from_calendar_week(year: int, calendar_week: int) -> 
     """
     Returns the first and last day of a given calendar week
     """
-    monday = datetime.datetime.strptime(f'{year}-{calendar_week}-1', "%Y-%W-%w").astimezone().date()
+    monday = datetime.datetime.strptime(f"{year}-{calendar_week}-1", "%Y-%W-%w").astimezone().date()
     return monday, monday + datetime.timedelta(days=6.9)
 
 
@@ -124,7 +124,7 @@ def date_month_delta(start_date: datetime.date, end_date: datetime.date) -> floa
     """
     # If `start_date` is greater, this logic doesn't make any sense
     if start_date > end_date:
-        raise NotImplementedError('Start date > end date')
+        raise NotImplementedError("Start date > end date")
 
     # Calculate date difference between dates
     date_diff = (end_date - start_date).days

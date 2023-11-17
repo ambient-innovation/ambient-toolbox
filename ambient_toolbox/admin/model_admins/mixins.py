@@ -16,7 +16,7 @@ class AdminCreateFormMixin:
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
         if obj is None:
-            defaults['form'] = self.add_form
+            defaults["form"] = self.add_form
         defaults.update(kwargs)
         return super().get_form(request, obj, **defaults)
 
@@ -58,7 +58,7 @@ class FetchParentObjectInlineMixin:
     def get_parent_object_from_request(self, request):
         resolved = self._resolve_url(request)
         if resolved.kwargs:
-            return self.parent_model.objects.get(pk=resolved.kwargs.get('object_id', None))
+            return self.parent_model.objects.get(pk=resolved.kwargs.get("object_id", None))
         return None
 
     def get_formset(self, request, obj=None, **kwargs):
@@ -75,7 +75,7 @@ class FetchObjectMixin:
     def get_object_from_request(self, request):
         resolved = resolve(request.path_info)
         if resolved.kwargs:
-            return self.model.objects.get(pk=resolved.kwargs.get('object_id', None))
+            return self.model.objects.get(pk=resolved.kwargs.get("object_id", None))
         return None
 
 
@@ -90,10 +90,10 @@ class CommonInfoAdminMixin:
         Set the fields CommonInfo handles to readonly to avoid users fiddling around with them.
         """
         return super().get_readonly_fields(request, obj) + (
-            'created_by',
-            'lastmodified_by',
-            'created_at',
-            'lastmodified_at',
+            "created_by",
+            "lastmodified_by",
+            "created_at",
+            "lastmodified_at",
         )
 
     def get_user_obj(self, request) -> Optional[AbstractUser]:
@@ -145,7 +145,7 @@ class DeactivatableChangeViewAdminMixin:
         else:
             opts = self.model._meta
             url = reverse(
-                'admin:{app}_{model}_changelist'.format(
+                "admin:{app}_{model}_changelist".format(
                     app=opts.app_label,
                     model=opts.model_name,
                 )

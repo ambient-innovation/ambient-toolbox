@@ -1,10 +1,10 @@
-# Gitlab
+# GitLab
 
 ## Test coverage service
 
 ### Motivation
 
-When using Gitlab, you can query your projects test coverage via the Gitlab API. This package contains a service which
+When using GitLab, you can query your projects test coverage via the GitLab API. This package contains a service which
 you can utilise within your pipeline as follows.
 
 The script will try to get the last commit inside your branch which came from your default branch (usually "develop")
@@ -31,7 +31,7 @@ service.process()
 ```yaml
 # POST-TEST STAGE
 check coverage:
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/python:3.9
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/python:3.12
   stage: posttest
   needs:
     - unittest
@@ -48,7 +48,7 @@ check coverage:
 
 * Create an access token for your repo having `developer` role and `read_api` permission (Settings -> Access Tokens)
 
-* Add two variables to your CI/CD inside your Gitlab repository (Settings -> CI/CD -> Variables). Insert the token from
+* Add two variables to your CI/CD inside your GitLab repository (Settings -> CI/CD -> Variables). Insert the token from
   step 3 and define your default branch for comparison. Usually, this will be "develop".
 
 > GITLAB_CI_COVERAGE_PIPELINE_TOKEN = [token]

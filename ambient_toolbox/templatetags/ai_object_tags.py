@@ -12,9 +12,9 @@ def dict_key_lookup(the_dict, key):
     :param key:
     :return: str
     """
-    return the_dict.get(key, '')
+    return the_dict.get(key, "")
 
 
-@register.filter(name='label')
+@register.filter(name="label")
 def label(value):
     return value.field.__class__.__name__

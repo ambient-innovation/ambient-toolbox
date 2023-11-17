@@ -1,3 +1,5 @@
+from unittest import mock
+
 from django.test import TestCase, override_settings
 
 from ambient_toolbox.services.custom_scrubber import AbstractScrubbingService, ScrubbingError
@@ -20,4 +22,9 @@ class AbstractScrubbingServiceTest(TestCase):
         with self.assertRaisesMessage(ScrubbingError, "Scrubber settings validation failed"):
             self.service.process()
 
-    # todo write more tests
+    @mock.patch("ambient_toolbox.services.custom_scrubber.make_password")
+    def test_get_hashed_default_password_regular(self, mocked_make_password):
+        self.service._get_hashed_default_password()
+        mocked_make_password.assert_called_once_with(self.service.DEFAULT_USER_PASSWORD)
+
+    # TODO: write more tests

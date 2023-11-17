@@ -7,6 +7,6 @@ class CountChildrenFormsetMixin:
         # Count all choices which are not being deleted right now
         no_choices = 0
         for form in self.forms:
-            if getattr(form, 'cleaned_data', None) and not form.cleaned_data.get('DELETE'):
+            if getattr(form, "cleaned_data", None) and not form.cleaned_data.get("DELETE"):
                 no_choices += 1
         return no_choices

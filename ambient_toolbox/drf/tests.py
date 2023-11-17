@@ -40,17 +40,17 @@ class BaseViewSetTestMixin:
 
         self.assertIn(response.status_code, [status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN])
 
-    def execute_request(
+    def execute_request(  # noqa: PLR0913
         self,
         *,
         url,
         view_kwargs=None,
-        method='get',
+        method="get",
         data=None,
         view_class=None,
         user=None,
         viewset_kwargs=None,
-        data_format='json',
+        data_format="json",
     ) -> Response:
         """
         Helper method which wraps all relevant setup to execute a request to the backends api

@@ -10,13 +10,13 @@ class AbstractPermissionMixin:
     """
 
     def visible_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def editable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def deletable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
 
 class AbstractUserSpecificQuerySet(QuerySet, AbstractPermissionMixin):
@@ -28,20 +28,20 @@ class AbstractUserSpecificQuerySet(QuerySet, AbstractPermissionMixin):
         return self
 
     def visible_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def editable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
     def deletable_for(self, user):
-        raise NotImplementedError('Please implement this method')
+        raise NotImplementedError("Please implement this method")
 
 
 class AbstractUserSpecificManager(Manager, AbstractPermissionMixin):
     """
     The UserSpecificQuerySet has a method 'as_manger', which can be used for creating a default manager,
     which inherits all methods of the queryset and invokes the respective method of it's queryset, respectively.
-    If the manager has to be declared separately for some reasons, all queryset methods, have to be declared twice,
+    If the manager has to be declared separately for some reason, all queryset methods, have to be declared twice,
     once in the QuerySet, once in the manager class.
     For consistency reasons, both inherit from the same mixin, to ensure the equality of the method's names.
     """

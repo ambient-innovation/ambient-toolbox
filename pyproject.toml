@@ -42,15 +42,15 @@ dev = [
    'freezegun~=1.2',
    'pytest-django~=4.5',
    'pytest-mock~=3.10',
-   'pre-commit~=3.2',
-   'black~=23.3',
-   'Django~=3.2',
+   'coverage~=7.3',
+   'pre-commit~=3.5',
+   'ruff~=0.1',
    'sphinx==4.2.0',
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.10.1',
-   'gevent~=22.10',
+   'ambient-package-update~=23.11.1',
+   'gevent~=23.9',
 ]
 drf = [
    'djangorestframework>=3.8.2',
@@ -76,15 +76,6 @@ name = "ambient_toolbox"
 'Bugtracker' = 'https://github.com/ambient-innovation/ambient-toolbox/issues'
 'Changelog' = 'https://ambient-toolbox.readthedocs.io/en/latest/features/changelog.html'
 
-
-[tool.black]
-# use force-exclude, so that black also applies exclude when run using pre-commit: https://github.com/psf/black/issues/395
-force-exclude = '''.*/migrations/.*'''
-line-length = 120
-multi_line_output = 3
-skip-string-normalization = true
-include_trailing_comma = true
-
 [tool.ruff]
 select = [
     "E",       # pycodestyle errors
@@ -96,6 +87,7 @@ select = [
     "A",       # flake8-builtins
     "DTZ",     # flake8-datetimez
     "DJ",      # flake8-django
+    "TD",      # flake8-to-do
     "RUF100",  # Removes unnecessary "#noqa" comments
     "YTT",     # Avoid non-future-prove usages of "sys"
     # "FBT",     # Protects you from the "boolean trap bug"
@@ -103,8 +95,9 @@ select = [
     "PIE",     # Bunch of useful rules
     # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
+    "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
-    # "UP",      # PyUpgrade
+    "PL",      # PyLint
 ]
 ignore = [
     'N999', # Project name contains underscore, not fixable
@@ -113,6 +106,8 @@ ignore = [
     'B905', # Can be enabled when Python <=3.9 support is dropped
     'DTZ001', # TODO will affect "tz_today()" method
     'DTZ005', # TODO will affect "tz_today()" method
+    'TD002', # Missing author in TODO
+    'TD003', # Missing issue link on the line following this TODO
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -126,6 +121,7 @@ fixable = [
     "A",       # flake8-builtins
     "DTZ",     # flake8-datetimez
     "DJ",      # flake8-django
+    "TD",      # flake8-to-do
     "RUF100",  # Removes unnecessary "#noqa" comments
     "YTT",     # Avoid non-future-prove usages of "sys"
     # "FBT",     # Protects you from the "boolean trap bug"
@@ -133,8 +129,9 @@ fixable = [
     "PIE",     # Bunch of useful rules
     # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
+    "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
-    # "UP",      # PyUpgrade
+    "PL",      # PyLint
 ]
 unfixable = []
 
@@ -171,6 +168,19 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # Assume Python 3.12
 target-version = "py312"
 
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
 [tool.tox]
 legacy_tox_ini = """
 [tox]
@@ -180,12 +190,12 @@ isolated_build = True
 [testenv]
 # Django deprecation overview: https://www.djangoproject.com/download/
 deps =
-    django32: Django>=3.2,<3.3
-    django41: Django>=4.1,<4.2
-    django42: Django>=4.2,<4.3
+    django32: Django==3.2.*
+    django41: Django==4.1.*
+    django42: Django==4.2.*
 extras = dev,drf,graphql,sentry,view-layer,
 commands =
-    pytest --ds settings tests
+    coverage run -m pytest --ds settings tests
 
 [gh-actions]
 python =

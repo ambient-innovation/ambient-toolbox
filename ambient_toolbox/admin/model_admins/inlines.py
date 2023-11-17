@@ -25,5 +25,5 @@ class ReadOnlyTabularInline(admin.TabularInline):
                 + [field.name for field in self.opts.local_many_to_many]
             )
         )
-        result.remove('id')
+        result.remove("id")
         return result

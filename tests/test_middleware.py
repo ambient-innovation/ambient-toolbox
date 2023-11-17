@@ -18,13 +18,13 @@ class CurrentUserMiddlewareTest(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.NO_CONTENT)
 
     def test_current_user_is_same_as_request_user(self):
-        new_user = Mock(user_name='test_user')
+        new_user = Mock(user_name="test_user")
         response = set_current_user(user=new_user)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_current_user_is_thread_safe(self):
-        user1 = Mock(user_name='user1')
-        user2 = Mock(user_name='user2')
+        user1 = Mock(user_name="user1")
+        user2 = Mock(user_name="user2")
         current_users = []
         ready_event = threading.Event()
         proceed_event = threading.Event()
@@ -43,12 +43,12 @@ class CurrentUserMiddlewareTest(TestCase):
         proceed_event.set()
         first_thread.join()
         self.assertEqual(current_users[0], user2)
-        self.assertEqual(current_users[0].user_name, 'user2')
+        self.assertEqual(current_users[0].user_name, "user2")
         self.assertEqual(current_users[1], user1)
-        self.assertEqual(current_users[1].user_name, 'user1')
+        self.assertEqual(current_users[1].user_name, "user1")
 
     def test_user_is_cleared_after_request(self):
-        user = Mock(user_name='test_user')
+        user = Mock(user_name="test_user")
         request = Mock(user=user)
         middleware = CurrentUserMiddleware(get_response=lambda request: HttpResponse(status=HTTPStatus.OK))
         response = middleware(request)
@@ -63,7 +63,7 @@ class CurrentUserMiddlewareTest(TestCase):
         # This should ideally be taken into account in our middleware since it
         # is also used to provide the user for `CommonInfo.lastmodified_by`.
         def get_response(request):
-            replaced_user = Mock(user_name='replaced_user')
+            replaced_user = Mock(user_name="replaced_user")
             request.user = replaced_user
             user_from_mw = CurrentUserMiddleware.get_current_user()
             if user_from_mw is not replaced_user:

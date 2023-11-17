@@ -11,14 +11,14 @@ class DjangoPermissionRequiredMixin:
 
     permission_list = None
     login_required = True
-    login_view_name = 'login-view'
+    login_view_name = "login-view"
 
     def __init__(self):
         super().__init__()
 
         if self.permission_list is None:
             raise RuntimeError(
-                _('Class-based view using DjangoPermissionRequiredMixin without defining a permission list.')
+                _("Class-based view using DjangoPermissionRequiredMixin without defining a permission list.")
             )
 
     def get_login_url(self) -> str:
@@ -54,7 +54,7 @@ class DjangoPermissionRequiredMixin:
 
         # Validate that user has all required permissions
         if not self.has_permissions(request.user):
-            return render(request, '403.html', status=403)
+            return render(request, "403.html", status=403)
 
         # If everything goes well, we'll continue to the view
         return super().dispatch(request, *args, **kwargs)

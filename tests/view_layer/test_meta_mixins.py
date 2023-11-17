@@ -1,3 +1,5 @@
+from unittest import mock
+
 from django.contrib.auth.models import AnonymousUser, Permission, User
 from django.http import HttpResponse
 from django.test import TestCase
@@ -12,36 +14,37 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
         pass
 
     class TestViewSinglePerm(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ['auth.change_user']
+        permission_list = ["auth.change_user"]
+        login_view_name = "other-login-view"
 
         def get(self, *args, **kwargs):
             return HttpResponse(status=200)
 
     class TestViewMultiplePerms(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ['auth.change_user', 'auth.add_user']
+        permission_list = ["auth.change_user", "auth.add_user"]
 
         def get_login_url(self):
-            return 'login/'
+            return "login/"
 
     class TestDifferentLoginNameView(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ['auth.change_user']
-        login_view_name = 'other-login-view'
+        permission_list = ["auth.change_user"]
+        login_view_name = "other-login-view"
 
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.permission = Permission.objects.get_by_natural_key(app_label='auth', codename='change_user', model='user')
+        cls.permission = Permission.objects.get_by_natural_key(app_label="auth", codename="change_user", model="user")
 
     def setUp(self) -> None:
         super().setUp()
-        self.user = User.objects.create(username='test_user', email='test.user@ambient-toolbox.com')
+        self.user = User.objects.create(username="test_user", email="test.user@ambient-toolbox.com")
 
     def test_get_login_url(self):
-        self.assertEqual(self.TestViewMultiplePerms().get_login_url(), 'login/')
+        self.assertEqual(self.TestViewMultiplePerms().get_login_url(), "login/")
 
     def test_get_custom_login_url(self):
-        self.assertEqual(self.TestDifferentLoginNameView().get_login_url(), '/other/login/')
+        self.assertEqual(self.TestDifferentLoginNameView().get_login_url(), "/other/login/")
 
     def test_permissions_are_set_validation(self):
         with self.assertRaises(RuntimeError):
@@ -80,6 +83,13 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
         self.user.is_superuser = True
         self.assertTrue(self.TestViewSinglePerm().has_permissions(self.user))
 
+    @mock.patch.object(TestViewSinglePerm, "passes_login_barrier", return_value=True)
+    @mock.patch.object(TestViewSinglePerm, "has_permissions", return_value=True)
+    def test_dispatch_regular(self, *args):
+        response = self.TestViewSinglePerm().dispatch(request=self.get_request(self.user))
+
+        self.assertEqual(response.status_code, 200)
+
     def test_dispatch_lockout_on_missing_permissions(self):
         response = self.TestViewSinglePerm().dispatch(request=self.get_request(self.user))
 
@@ -91,3 +101,10 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
         response = view.dispatch(request=self.get_request(self.user))
 
         self.assertEqual(response.status_code, 200)
+
+    @mock.patch.object(TestViewSinglePerm, "passes_login_barrier", return_value=False)
+    def test_dispatch_passes_login_barrier_false(self, *args):
+        view = self.TestViewSinglePerm()
+        response = view.dispatch(request=self.get_request(self.user))
+
+        self.assertEqual(response.status_code, 302)

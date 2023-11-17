@@ -33,14 +33,14 @@ class DeactivatableChangeViewAdminMixinTest(RequestProviderMixin, TestCase):
 
     def test_get_list_display_links_can_see_method_called(self):
         admin_cls = TestAdmin(admin_site=None, model=User)
-        with mock.patch.object(admin_cls, 'can_see_change_view', return_value=True) as mock_method:
-            admin_cls.get_list_display_links(request=self.get_request(user=self.user), list_display=('first_name',))
+        with mock.patch.object(admin_cls, "can_see_change_view", return_value=True) as mock_method:
+            admin_cls.get_list_display_links(request=self.get_request(user=self.user), list_display=("first_name",))
 
         mock_method.assert_called_once()
 
     def test_get_list_display_links_can_see_method_positive_flag(self):
         admin_cls = TestAdmin(admin_site=None, model=User)
-        field_tuple = ('first_name',)
+        field_tuple = ("first_name",)
         self.assertEqual(
             list(field_tuple),
             admin_cls.get_list_display_links(request=self.get_request(user=self.user), list_display=field_tuple),
@@ -50,13 +50,13 @@ class DeactivatableChangeViewAdminMixinTest(RequestProviderMixin, TestCase):
         admin_cls = TestAdmin(admin_site=None, model=User)
         admin_cls.enable_change_view = False
         self.assertIsNone(
-            admin_cls.get_list_display_links(request=self.get_request(user=self.user), list_display=('first_name',))
+            admin_cls.get_list_display_links(request=self.get_request(user=self.user), list_display=("first_name",))
         )
 
     def test_change_view_can_see_method_called_because_of_positive_flag(self):
         admin_cls = TestAdmin(admin_site=None, model=User)
-        with mock.patch.object(admin_cls, 'can_see_change_view', return_value=True) as mocked_can_see_method:
-            with mock.patch('django.contrib.admin.ModelAdmin.change_view') as mocked_base_change_view:
+        with mock.patch.object(admin_cls, "can_see_change_view", return_value=True) as mocked_can_see_method:
+            with mock.patch("django.contrib.admin.ModelAdmin.change_view") as mocked_base_change_view:
                 admin_cls.change_view(request=self.get_request(user=self.super_user), object_id=str(self.user.id))
 
         mocked_can_see_method.assert_called_once()
@@ -64,8 +64,8 @@ class DeactivatableChangeViewAdminMixinTest(RequestProviderMixin, TestCase):
 
     def test_change_view_can_see_method_not_called_because_of_negative_flag(self):
         admin_cls = TestAdmin(admin_site=None, model=User)
-        with mock.patch.object(admin_cls, 'can_see_change_view', return_value=False) as mocked_can_see_method:
-            with mock.patch('django.contrib.admin.ModelAdmin.change_view') as mocked_base_change_view:
+        with mock.patch.object(admin_cls, "can_see_change_view", return_value=False) as mocked_can_see_method:
+            with mock.patch("django.contrib.admin.ModelAdmin.change_view") as mocked_base_change_view:
                 admin_cls.change_view(request=self.get_request(user=self.super_user), object_id=str(self.user.id))
 
         mocked_can_see_method.assert_called_once()

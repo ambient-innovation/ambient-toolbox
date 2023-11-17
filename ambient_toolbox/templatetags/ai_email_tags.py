@@ -6,7 +6,7 @@ register = template.Library()
 
 
 def obfuscate_string(value):
-    return ''.join([f'&#{str(ord(char)):s};' for char in value])
+    return "".join([f"&#{str(ord(char)):s};" for char in value])
 
 
 @register.filter
@@ -25,4 +25,4 @@ def obfuscate_mailto(value, text=False):
     else:
         link_text = mail
 
-    return mark_safe('<a href="{:s}{:s}">{:s}</a>'.format(obfuscate_string('mailto:'), mail, link_text))
+    return mark_safe('<a href="{:s}{:s}">{:s}</a>'.format(obfuscate_string("mailto:"), mail, link_text))

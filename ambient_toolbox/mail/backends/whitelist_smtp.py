@@ -23,7 +23,7 @@ class WhitelistEmailBackend(SMTPEmailBackend):
         Getter for configuration variable from the settings.
         Will return a list of domains: ['ambient.digital', 'ambient.digital']
         """
-        return getattr(settings, 'EMAIL_BACKEND_DOMAIN_WHITELIST', [])
+        return getattr(settings, "EMAIL_BACKEND_DOMAIN_WHITELIST", [])
 
     @staticmethod
     def get_email_regex():
@@ -31,8 +31,8 @@ class WhitelistEmailBackend(SMTPEmailBackend):
         Getter for configuration variable from the settings.
         Will return a RegEX to match email whitelisted domains.
         """
-        return r'^[\w\-\.]+@(%s)$' % '|'.join(x for x in WhitelistEmailBackend.get_domain_whitelist()).replace(
-            '.', r'\.'
+        return r"^[\w\-\.]+@(%s)$" % "|".join(x for x in WhitelistEmailBackend.get_domain_whitelist()).replace(
+            ".", r"\."
         )
 
     @staticmethod
@@ -56,7 +56,7 @@ class WhitelistEmailBackend(SMTPEmailBackend):
                 allowed_recipients.append(to)
             elif WhitelistEmailBackend.get_backend_redirect_address():
                 # Send not allowed emails to the configured redirect address (with CATCHALL)
-                allowed_recipients.append(WhitelistEmailBackend.get_backend_redirect_address() % to.replace('@', '_'))
+                allowed_recipients.append(WhitelistEmailBackend.get_backend_redirect_address() % to.replace("@", "_"))
         return allowed_recipients
 
     def _process_recipients(self, email_messages):
@@ -71,7 +71,7 @@ class WhitelistEmailBackend(SMTPEmailBackend):
     def send_messages(self, email_messages):
         """
         Checks if email-recipients are in allowed domains and cancels if not.
-        Uses regular smtp-sending afterwards.
+        Uses regular smtp-sending afterward.
         """
         email_messages = self._process_recipients(email_messages)
         return super().send_messages(email_messages)

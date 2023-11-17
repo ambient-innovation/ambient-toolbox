@@ -48,7 +48,7 @@ class PermissionSetupService:
 
                 # Add permission object to list
                 if new_permission in defined_permission_list:
-                    raise ValueError(f'Permission {new_permission} declared twice.')
+                    raise ValueError(f"Permission {new_permission} declared twice.")
                 defined_permission_list.append(new_permission)
 
                 # Check if permission is already set in the group
@@ -58,7 +58,7 @@ class PermissionSetupService:
         # Check which permissions were removed for the given group
         for existing_permission in group.permissions.all():
             if existing_permission not in defined_permission_list:
-                removed_permissions.append(existing_permission)
+                removed_permissions.append(existing_permission)  # noqa: PERF401
 
         if not self.dry_run:
             # Persist changes on removed permissions

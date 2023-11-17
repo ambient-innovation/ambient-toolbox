@@ -19,9 +19,9 @@ class TempDisconnectSignalTest(TestCase):
 
     def test_single_signal_not_executed(self):
         kwargs = {
-            'signal': signals.pre_save,
-            'receiver': increase_value_no_dispatch_uid,
-            'sender': MySingleSignalModel,
+            "signal": signals.pre_save,
+            "receiver": increase_value_no_dispatch_uid,
+            "sender": MySingleSignalModel,
         }
 
         with TempDisconnectSignal(**kwargs):
@@ -31,15 +31,15 @@ class TempDisconnectSignalTest(TestCase):
 
     def test_multiple_signals_not_executed(self):
         kwargs_pre = {
-            'signal': signals.pre_save,
-            'receiver': increase_value_with_dispatch_uid,
-            'sender': MyMultipleSignalModel,
-            'dispatch_uid': 'test.mysinglesignalmodel.increase_value_with_uuid',
+            "signal": signals.pre_save,
+            "receiver": increase_value_with_dispatch_uid,
+            "sender": MyMultipleSignalModel,
+            "dispatch_uid": "test.mysinglesignalmodel.increase_value_with_uuid",
         }
         kwargs_post = {
-            'signal': signals.post_save,
-            'receiver': send_email,
-            'sender': MyMultipleSignalModel,
+            "signal": signals.post_save,
+            "receiver": send_email,
+            "sender": MyMultipleSignalModel,
         }
 
         with TempDisconnectSignal(**kwargs_pre):
@@ -53,10 +53,10 @@ class TempDisconnectSignalTest(TestCase):
 
     def test_multiple_signals_one_still_active(self):
         kwargs_pre = {
-            'signal': signals.pre_save,
-            'receiver': increase_value_with_dispatch_uid,
-            'sender': MyMultipleSignalModel,
-            'dispatch_uid': 'test.mysinglesignalmodel.increase_value_with_uuid',
+            "signal": signals.pre_save,
+            "receiver": increase_value_with_dispatch_uid,
+            "sender": MyMultipleSignalModel,
+            "dispatch_uid": "test.mysinglesignalmodel.increase_value_with_uuid",
         }
 
         with TempDisconnectSignal(**kwargs_pre):

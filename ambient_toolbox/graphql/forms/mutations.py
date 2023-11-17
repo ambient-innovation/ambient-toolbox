@@ -30,7 +30,7 @@ class DjangoValidatedModelFormMutation(DjangoModelFormMutation):
         result = cls.mutate_and_get_payload(root, info, **input)
 
         if result.errors:
-            err_msg = ''
+            err_msg = ""
             for err in result.errors:
                 err_msg += f"Field '{err.field}': {err.messages[0]} "
 
@@ -42,7 +42,7 @@ class DjangoValidatedModelFormMutation(DjangoModelFormMutation):
         return on_resolve(result)
 
 
-@method_decorator(login_required, name='perform_mutate')
+@method_decorator(login_required, name="perform_mutate")
 class LoginRequiredDjangoModelFormMutation(DjangoValidatedModelFormMutation):
     """
     Ensures that you need to be logged in with GraphQL JWT (json web token) authentication

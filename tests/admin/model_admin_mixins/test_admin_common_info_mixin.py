@@ -13,7 +13,7 @@ from testapp.models import CommonInfoBasedModel
 class CommonInfoBasedModelForm(forms.ModelForm):
     class Meta:
         model = CommonInfoBasedModel
-        fields = ('value',)
+        fields = ("value",)
 
 
 class TestCommonInfoAdminMixinAdmin(CommonInfoAdminMixin, admin.ModelAdmin):
@@ -25,7 +25,7 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.user = User.objects.create(username='my_user')
+        cls.user = User.objects.create(username="my_user")
         cls.request = cls.get_request(cls.user)
 
         admin.site.register(CommonInfoBasedModel, TestCommonInfoAdminMixinAdmin)
@@ -39,11 +39,11 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
     def test_readonly_fields_are_set(self):
         model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 
-        self.assertIn('created_by', model_admin.get_readonly_fields(self.request))
-        self.assertIn('created_at', model_admin.get_readonly_fields(self.request))
+        self.assertIn("created_by", model_admin.get_readonly_fields(self.request))
+        self.assertIn("created_at", model_admin.get_readonly_fields(self.request))
 
-        self.assertIn('lastmodified_by', model_admin.get_readonly_fields(self.request))
-        self.assertIn('lastmodified_at', model_admin.get_readonly_fields(self.request))
+        self.assertIn("lastmodified_by", model_admin.get_readonly_fields(self.request))
+        self.assertIn("lastmodified_at", model_admin.get_readonly_fields(self.request))
 
     def test_get_user_obj_regular(self):
         model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
@@ -61,8 +61,8 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
     def test_created_by_is_not_altered_on_update(self):
         model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 
-        other_user = User.objects.create(username='other_user')
-        with mock.patch.object(CommonInfoBasedModel, 'get_current_user', return_value=other_user):
+        other_user = User.objects.create(username="other_user")
+        with mock.patch.object(CommonInfoBasedModel, "get_current_user", return_value=other_user):
             obj = CommonInfoBasedModel.objects.create(value=1, created_by=other_user, lastmodified_by=other_user)
 
         form = CommonInfoBasedModelForm(instance=obj)

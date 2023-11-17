@@ -118,7 +118,7 @@ class DateUtilTest(TestCase):
     def test_tz_today_as_str(self):
         frozen_date = datetime.datetime(year=2019, month=9, day=19, hour=10)
         with freeze_time(frozen_date):
-            self.assertEqual(tz_today('%d.%m.%Y'), '19.09.2019')
+            self.assertEqual(tz_today("%d.%m.%Y"), "19.09.2019")
 
     def test_add_months_one_month(self):
         source_date = datetime.date(year=2020, month=6, day=26)
@@ -162,7 +162,7 @@ class DateUtilTest(TestCase):
             add_minutes(source_datetime, -2), datetime.datetime(year=2020, month=6, day=26, hour=7, minute=58)
         )
 
-    @freeze_time('2020-06-26')
+    @freeze_time("2020-06-26")
     def test_get_next_month_regular(self):
         self.assertEqual(get_next_month(), datetime.date(year=2020, month=7, day=26))
 
@@ -172,40 +172,40 @@ class DateUtilTest(TestCase):
 
     def test_get_formatted_date_str_regular(self):
         source_date = datetime.date(year=2020, month=6, day=26)
-        self.assertEqual(get_formatted_date_str(source_date), '26.06.2020')
+        self.assertEqual(get_formatted_date_str(source_date), "26.06.2020")
 
     def test_get_time_from_seconds_one_hour(self):
-        self.assertEqual(get_time_from_seconds(3600), '01:00:00')
+        self.assertEqual(get_time_from_seconds(3600), "01:00:00")
 
     def test_get_time_from_seconds_one_minute(self):
-        self.assertEqual(get_time_from_seconds(60), '00:01:00')
+        self.assertEqual(get_time_from_seconds(60), "00:01:00")
 
     def test_get_time_from_seconds_big_hours(self):
-        self.assertEqual(get_time_from_seconds(3600 * 99), '99:00:00')
+        self.assertEqual(get_time_from_seconds(3600 * 99), "99:00:00")
 
     def test_get_time_from_seconds_huge_hours(self):
-        self.assertEqual(get_time_from_seconds(3600 * 1000), '1000:00:00')
+        self.assertEqual(get_time_from_seconds(3600 * 1000), "1000:00:00")
 
     def test_get_time_from_seconds_negative_seconds(self):
         with self.assertRaises(ValueError):
             get_time_from_seconds(-1)
 
-    @override_settings(TIME_ZONE='UTC')
+    @override_settings(TIME_ZONE="UTC")
     def test_datetime_format_regular(self):
         source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=pytz.UTC)
-        self.assertEqual(datetime_format(source_date, '%d.%m.%Y %H:%M'), '26.06.2020 08:00')
+        self.assertEqual(datetime_format(source_date, "%d.%m.%Y %H:%M"), "26.06.2020 08:00")
 
-    @override_settings(TIME_ZONE='Europe/Cologne')
+    @override_settings(TIME_ZONE="Europe/Cologne")
     def test_datetime_format_wrong_timezone(self):
         source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
-        self.assertEqual(datetime_format(source_date, '%d.%m.%Y %H:%M'), '26.06.2020 08:00')
+        self.assertEqual(datetime_format(source_date, "%d.%m.%Y %H:%M"), "26.06.2020 08:00")
 
-    @override_settings(TIME_ZONE='Europe/Berlin')
+    @override_settings(TIME_ZONE="Europe/Berlin")
     def test_datetime_format_different_timezone(self):
         source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=pytz.UTC)
-        self.assertEqual(datetime_format(source_date, '%d.%m.%Y %H:%M'), '26.06.2020 10:00')
+        self.assertEqual(datetime_format(source_date, "%d.%m.%Y %H:%M"), "26.06.2020 10:00")
 
-    @freeze_time('2022-12-14')
+    @freeze_time("2022-12-14")
     def test_get_first_and_last_of_month_in_december(self):
         first_of_month, last_of_month = get_first_and_last_of_month()
         expected_first_of_month = datetime.date(day=1, month=12, year=2022)
@@ -214,7 +214,7 @@ class DateUtilTest(TestCase):
         self.assertEqual(expected_first_of_month, first_of_month)
         self.assertEqual(expected_last_of_month, last_of_month)
 
-    @freeze_time('2020-02-14')
+    @freeze_time("2020-02-14")
     def test_get_first_and_last_of_month_in_february_leap_year(self):
         first_of_month, last_of_month = get_first_and_last_of_month()
         expected_first_of_month = datetime.date(day=1, month=2, year=2020)
@@ -223,7 +223,7 @@ class DateUtilTest(TestCase):
         self.assertEqual(expected_first_of_month, first_of_month)
         self.assertEqual(expected_last_of_month, last_of_month)
 
-    @freeze_time('2022-02-14')
+    @freeze_time("2022-02-14")
     def test_get_first_and_last_of_month_in_february_non_leap_year(self):
         first_of_month, last_of_month = get_first_and_last_of_month()
         expected_first_of_month = datetime.date(day=1, month=2, year=2022)
@@ -232,7 +232,7 @@ class DateUtilTest(TestCase):
         self.assertEqual(expected_first_of_month, first_of_month)
         self.assertEqual(expected_last_of_month, last_of_month)
 
-    @freeze_time('2022-04-04')
+    @freeze_time("2022-04-04")
     def test_get_first_and_last_of_month_in_april(self):
         first_of_month, last_of_month = get_first_and_last_of_month()
         expected_first_of_month = datetime.date(day=1, month=4, year=2022)
@@ -244,25 +244,25 @@ class DateUtilTest(TestCase):
     def test_get_first_and_last_of_month_with_date_objects_passed(self):
         date_mapping = {
             datetime.date(day=14, month=12, year=2022): {
-                'first': datetime.date(day=1, month=12, year=2022),
-                'last': datetime.date(day=31, month=12, year=2022),
+                "first": datetime.date(day=1, month=12, year=2022),
+                "last": datetime.date(day=31, month=12, year=2022),
             },
             datetime.date(day=14, month=2, year=2020): {
-                'first': datetime.date(day=1, month=2, year=2020),
-                'last': datetime.date(day=29, month=2, year=2020),
+                "first": datetime.date(day=1, month=2, year=2020),
+                "last": datetime.date(day=29, month=2, year=2020),
             },
             datetime.date(day=14, month=2, year=2022): {
-                'first': datetime.date(day=1, month=2, year=2022),
-                'last': datetime.date(day=28, month=2, year=2022),
+                "first": datetime.date(day=1, month=2, year=2022),
+                "last": datetime.date(day=28, month=2, year=2022),
             },
             datetime.date(day=4, month=4, year=2022): {
-                'first': datetime.date(day=1, month=4, year=2022),
-                'last': datetime.date(day=30, month=4, year=2022),
+                "first": datetime.date(day=1, month=4, year=2022),
+                "last": datetime.date(day=30, month=4, year=2022),
             },
         }
 
         for date_object in date_mapping:
             first_of_month, last_of_month = get_first_and_last_of_month(date_object=date_object)
 
-            self.assertEqual(date_mapping[date_object]['first'], first_of_month)
-            self.assertEqual(date_mapping[date_object]['last'], last_of_month)
+            self.assertEqual(date_mapping[date_object]["first"], first_of_month)
+            self.assertEqual(date_mapping[date_object]["last"], last_of_month)

@@ -11,8 +11,8 @@ from testapp.models import MySingleSignalModel
 
 class TestView(AdminViewMixin, generic.TemplateView):
     model = MySingleSignalModel
-    admin_page_title = 'My fancy title'
-    template_name = 'testapp/test_template.html'
+    admin_page_title = "My fancy title"
+    template_name = "testapp/test_template.html"
 
 
 class AdminViewMixinTest(RequestProviderMixin, TestCase):
@@ -22,8 +22,8 @@ class AdminViewMixinTest(RequestProviderMixin, TestCase):
 
         cls.view = TestView()
 
-        cls.super_user = User.objects.create(username='super_user', is_superuser=True)
-        cls.regular_user = User.objects.create(username='test_user', is_superuser=False)
+        cls.super_user = User.objects.create(username="super_user", is_superuser=True)
+        cls.regular_user = User.objects.create(username="test_user", is_superuser=False)
 
         # View needs a request since django 3.2
         request = cls.get_request(cls.super_user)
@@ -54,17 +54,17 @@ class AdminViewMixinTest(RequestProviderMixin, TestCase):
         context_data = self.view.get_context_data()
 
         # Simply assert custom fields are available
-        self.assertIn('site_header', context_data)
-        self.assertIn('site_title', context_data)
-        self.assertIn('name', context_data)
-        self.assertIn('original', context_data)
-        self.assertIn('is_nav_sidebar_enabled', context_data)
-        self.assertIn('available_apps', context_data)
-        self.assertIn('opts', context_data)
-        self.assertIn('app_label', context_data['opts'])
-        self.assertIn('verbose_name', context_data['opts'])
-        self.assertIn('verbose_name_plural', context_data['opts'])
-        self.assertIn('model_name', context_data['opts'])
-        self.assertIn('app_config', context_data['opts'])
-        self.assertIn('verbose_name', context_data['opts']['app_config'])
-        self.assertIn('has_permission', context_data)
+        self.assertIn("site_header", context_data)
+        self.assertIn("site_title", context_data)
+        self.assertIn("name", context_data)
+        self.assertIn("original", context_data)
+        self.assertIn("is_nav_sidebar_enabled", context_data)
+        self.assertIn("available_apps", context_data)
+        self.assertIn("opts", context_data)
+        self.assertIn("app_label", context_data["opts"])
+        self.assertIn("verbose_name", context_data["opts"])
+        self.assertIn("verbose_name_plural", context_data["opts"])
+        self.assertIn("model_name", context_data["opts"])
+        self.assertIn("app_config", context_data["opts"])
+        self.assertIn("verbose_name", context_data["opts"]["app_config"])
+        self.assertIn("has_permission", context_data)
