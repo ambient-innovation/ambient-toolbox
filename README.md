@@ -73,7 +73,7 @@ The migration is really simple, just:
 ### Setup package for development
 
 - Create a Python virtualenv and activate it
-- Install "pip-tools" with `pip install pip-tools`
+- Install "pip-tools" with `pip install -U pip-tools`
 - Compile the requirements with `pip-compile --extra dev,drf,graphql,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
 - Sync the dependencies with your virtualenv with `pip-sync`
 
