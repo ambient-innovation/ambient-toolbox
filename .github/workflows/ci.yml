@@ -21,7 +21,7 @@ jobs:
       - name: Run pre-commit hooks
         run: pre-commit run --all-files --hook-stage push
 
-  
+
   validate_migrations:
     name: Validate migrations
     runs-on: ubuntu-22.04
@@ -35,9 +35,12 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -U pip-tools && pip-compile --extra dev,drf,graphql,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking && pip-sync
 
+      - name: todo show migrations
+        run: python manage.py makemigrations && cat testapp/migrations/0002_alter_commoninfobasedmodel_created_by_and_more.py
+
       - name: Validate migration integrity
         run: python manage.py makemigrations --check --dry-run
-  
+
 
   tests:
     name: Python ${{ matrix.python-version }}, django ${{ matrix.django-version }}
