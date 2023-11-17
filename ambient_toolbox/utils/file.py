@@ -35,7 +35,7 @@ def md5_checksum(file_path: str) -> str:
     """
     Returns the md5 checksum of the file from the given file_path.
 
-    See ``open`` for all the exceptins that can be raised.
+    See ``open`` for all the exceptions that can be raised.
 
     :param file_path: the file for which the MD5 hashsum should be calculated.
     :return: returns the MD5 of the file in hexadecimal format.
