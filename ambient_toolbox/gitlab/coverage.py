@@ -36,8 +36,9 @@ class CoverageService:
         """
         Get the latest commit which is in the current branch and the target compare branch.
         """
-        result = subprocess.run(
-            ["git", "merge-base", "--fork-point", f"origin/{self.target_branch}"], stdout=subprocess.PIPE, check=True
+        result = subprocess.run(  # noqa: PLW1510
+            ["git", "merge-base", "--fork-point", f"origin/{self.target_branch}"],
+            stdout=subprocess.PIPE,
         )
         return result.stdout.decode("utf-8").strip()
 

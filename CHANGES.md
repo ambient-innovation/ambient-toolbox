@@ -1,5 +1,8 @@
 # Changelog
 
+**9.2.1** (2023-11-21)
+  * Fixed crash in GitLab coverage service due to `check=True`
+
 **9.2.0** (2023-11-17)
   * Added migration docs to Readme
   * Added migration check to GitHub actions
