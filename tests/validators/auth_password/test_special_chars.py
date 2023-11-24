@@ -26,9 +26,9 @@ class SpecialCharValidatorTest(TestCase):
     @override_settings(AUTH_PASSWORD_VALIDATORS=["ambient_toolbox.validators.SpecialCharValidator"])
     def test_functional_happy_path(self):
         user = User()
-        self.assertTrue(user.check_password("Admin0404!"))
+        self.assertIsNone(user.set_password("Admin0404!"))
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=["ambient_toolbox.validators.auth_password.SpecialCharValidator"])
     def test_functional_special_char_missing(self):
         user = User()
-        self.assertFalse(user.check_password("EasyPassword"))
+        self.assertFalse(user.set_password("EasyPassword"))

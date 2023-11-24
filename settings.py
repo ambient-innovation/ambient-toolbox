@@ -66,3 +66,7 @@ EMAIL_BACKEND_REDIRECT_ADDRESS = ""
 TIME_ZONE = "UTC"
 
 LOCALE_PATHS = [str(BASE_PATH) + "/ambient_toolbox/locale"]
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.MD5PasswordHasher",
+]
