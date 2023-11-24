@@ -1,5 +1,8 @@
 # Changelog
 
+**9.3.0** (2023-11-21)
+  * Added auth password validator for special chars `SpecialCharValidator`
+
 **9.2.1** (2023-11-21)
   * Fixed crash in GitLab coverage service due to `check=True`
 
