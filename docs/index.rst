@@ -32,6 +32,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
    features/services.md
    features/tests.md
    features/utils.rst
+   features/validators.md
    features/view-layer.rst
    features/changelog.md
 
