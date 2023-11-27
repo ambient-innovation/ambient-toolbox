@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 16:03+0200\n"
+"POT-Creation-Date: 2023-11-27 09:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,19 +35,19 @@ msgstr "Ambient toolbox"
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: .\ambient_toolbox\models.py:28
+#: .\ambient_toolbox\models.py:34
 msgid "Created by"
 msgstr "Erstellt von"
 
-#: .\ambient_toolbox\models.py:34
+#: .\ambient_toolbox\models.py:40
 msgid "Last modified at"
 msgstr "Zuletzt geändert am"
 
-#: .\ambient_toolbox\models.py:37
+#: .\ambient_toolbox\models.py:43
 msgid "Last modified by"
 msgstr "Zuletzt geändert von"
 
-#: .\ambient_toolbox\tests\mixins.py:94
+#: .\ambient_toolbox\tests\mixins.py:95
 msgid "Please pass a user object to RequestProviderMixin."
 msgstr "Bitte ein User-Objekt an RequestProviderMixin übergeben."
 
@@ -55,7 +55,14 @@ msgstr "Bitte ein User-Objekt an RequestProviderMixin übergeben."
 msgid "Seconds must be positive."
 msgstr "Sekunden müssen eine positive Zahl sein."
 
-#: .\ambient_toolbox\view_layer\mixins.py:20
+#: .\ambient_toolbox\validators\auth_password\special_chars.py:15
+#: .\ambient_toolbox\validators\auth_password\special_chars.py:20
+msgid ""
+"The password has to contain one of the following special characters: \"@#$%!"
+"^&*\""
+msgstr "Das Passwort muss eines der folgenden Sonderzeichen enthalten: \"@#$%!^&*\""
+
+#: .\ambient_toolbox\view_layer\mixins.py:21
 msgid ""
 "Class-based view using DjangoPermissionRequiredMixin without defining a "
 "permission list."

@@ -1,6 +1,10 @@
 # Changelog
 
-**9.3.0** (2023-11-21)
+**9.3.1** (2023-11-27)
+  * Fixed wrong path in validator documentation
+  * Added missing German translation
+
+**9.3.0** (2023-11-24)
   * Added auth password validator for special chars `SpecialCharValidator`
 
 **9.2.1** (2023-11-21)

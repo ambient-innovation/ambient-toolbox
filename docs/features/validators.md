@@ -18,7 +18,7 @@ password: `@#$%!^&*`.
 AUTH_PASSWORD_VALIDATORS = [
     ...
     {
-        "NAME": "ambient_toolbox.validators.auth_password.SpecialCharValidator",
+        "NAME": "ambient_toolbox.validators.auth_password.special_chars.SpecialCharValidator",
     },
 ]
 
