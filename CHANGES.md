@@ -1,5 +1,8 @@
 # Changelog
 
+**9.3.2** (2023-12-01)
+  * Handled NullPointer in GitLab coverage script
+
 **9.3.1** (2023-11-27)
   * Fixed wrong path in validator documentation
   * Added missing German translation

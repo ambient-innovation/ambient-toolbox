@@ -116,9 +116,9 @@ class CoverageService:
             job_response.content.decode("utf-8"),
             re.DOTALL | re.MULTILINE,
         )
-        # print(job_log.group())
+        job_log_group = job_log.group() if job_log else None
 
-        return coverage_job["coverage"] if coverage_job else 0.0, coverages_total, job_log.group()
+        return coverage_job["coverage"] if coverage_job else 0.0, coverages_total, job_log_group
 
     @staticmethod
     def color_text(sign: int, prefix: str, target: float, current: float, diff: float):
