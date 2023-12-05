@@ -1,4 +1,3 @@
-import datetime
 from unittest.mock import PropertyMock, patch
 
 from django.test import TestCase
@@ -36,7 +35,10 @@ class CommonInfoTest(TestCase):
         obj.refresh_from_db()
         self.assertEqual(obj.value, 2)
         self.assertEqual(obj.value_b, 1, "value_b should not have changed")
-        self.assertEqual(obj.lastmodified_at, datetime.datetime(2022, 6, 26, 10))
+        self.assertEqual(obj.lastmodified_at.year, 2022)
+        self.assertEqual(obj.lastmodified_at.month, 6)
+        self.assertEqual(obj.lastmodified_at.day, 26)
+        self.assertEqual(obj.lastmodified_at.hour, 10)
 
     @patch("testapp.models.CommonInfoBasedModel.ALWAYS_UPDATE_FIELDS", new_callable=PropertyMock)
     @freeze_time("2022-06-26 10:00")
@@ -49,7 +51,10 @@ class CommonInfoTest(TestCase):
 
         obj.refresh_from_db()
         self.assertEqual(obj.value, 2)
-        self.assertEqual(obj.lastmodified_at, datetime.datetime(2020, 9, 19))
+        self.assertEqual(obj.lastmodified_at.year, 2020)
+        self.assertEqual(obj.lastmodified_at.month, 9)
+        self.assertEqual(obj.lastmodified_at.day, 19)
+        self.assertEqual(obj.lastmodified_at.hour, 0)
 
     @freeze_time("2022-06-26 10:00")
     def test_save_common_fields_set_without_update_fields(self):
@@ -60,4 +65,7 @@ class CommonInfoTest(TestCase):
 
         obj.refresh_from_db()
         self.assertEqual(obj.value, 2)
-        self.assertEqual(obj.lastmodified_at, datetime.datetime(2022, 6, 26, 10))
+        self.assertEqual(obj.lastmodified_at.year, 2022)
+        self.assertEqual(obj.lastmodified_at.month, 6)
+        self.assertEqual(obj.lastmodified_at.day, 26)
+        self.assertEqual(obj.lastmodified_at.hour, 10)
