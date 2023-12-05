@@ -1,5 +1,8 @@
 # Changelog
 
+**9.4.0** (2023-12-05)
+  * Support for Django 5.0 added
+
 **9.3.2** (2023-12-01)
   * Handled NullPointer in GitLab coverage script
 
