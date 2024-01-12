@@ -1,5 +1,8 @@
 # Changelog
 
+**9.4.1** (2024-01-12)
+  * Updated testing docs
+
 **9.4.0** (2023-12-05)
   * Support for Django 5.0 added
 

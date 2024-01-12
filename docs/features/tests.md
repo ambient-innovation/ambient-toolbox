@@ -30,14 +30,15 @@ class MyViewTestCase(ClassBasedViewTestMixin, TestCase):
 
 ### RequestProviderMixin
 
-In many cases you will find yourself in the position that you need a request in your unittests. A wise programmer will
-of course try to avoid looping the request object through all services - but from time to time you just end up with a
-well written method which takes the request as a parameter.
+In many cases, you will find yourself in the position that you need a request in your unittests.
+A wise programmer will try to avoid looping the request object through all services — but from time to time you end up
+with a well-written method which takes the request as a parameter.
 
-For these cases the toolbox provides a handy mixin, from which you can easily derive your test class. Then you will be
-able to use a method called `get_request(user=None)`. If you specify a user, he/she will be the request user. In most
-cases you won't need to set an explicit url, so `/` will be taken as a default. If you do need it, just pass set
-the `url` parameter.
+For these cases, the toolbox provides a handy mixin, from which you can derive your test class.
+Then you will be able to use a method called `get_request(user=None)`.
+If you specify a user, he/she will be the request user.
+In most cases you won't need to set an explicit url, so `/` will be taken as a default.
+If you do need it, pass set the `url` parameter.
 
 ````python
 from django.test import TestCase
@@ -69,7 +70,7 @@ Please refer to the view layer section to get details about how to use this view
 ### DjangoMessagingFrameworkTestMixin
 
 If you're working with Django views, you might want to use (and therefore test) the Django messaging framework. To make
-this as easy as possible, just inherit your view test class from the `DjangoMessagingFrameworkTestMixin`.
+this as easy as possible, inherit your view test class from the `DjangoMessagingFrameworkTestMixin`.
 
 You can either check for a full message or just for a partial one.
 
@@ -96,7 +97,7 @@ class MyViewTest(DjangoMessagingFrameworkTestMixin, TestCase):
 
 ### Motivation
 
-When working in a Django project, it can happen very easily that you create unit-tests in a way that they won't be
+When working on a Django project, it can happen very easily that you create unit tests in a way that they won't be
 auto-discovered. The mean thing about this is that you can still run those tests - so it's hard to find those issues.
 
 The most common mistakes are forgetting the `__init__.py` in the directory or not prefixing your python files
@@ -105,6 +106,8 @@ CI pipeline.
 
     python manage.py validate_test_structure
 
+Note: If you enforce 100% coverage in your project, this check is redundant, since the coverage will detect any
+tests / test files which are not executed.
 
 ### Configuration
 
