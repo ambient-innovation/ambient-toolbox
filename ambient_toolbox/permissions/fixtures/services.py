@@ -33,10 +33,11 @@ class PermissionSetupService:
             for codename in permission_declaration.codename_list:
                 # Instantiate permission as ORM object
                 try:
+                    # Cast strings to lower cases to avoid issues with SQLite
                     new_permission = Permission.objects.get_by_natural_key(
-                        app_label=permission_declaration.app_label,
-                        codename=codename,
-                        model=permission_declaration.model,
+                        app_label=permission_declaration.app_label.lower(),
+                        codename=codename.lower(),
+                        model=permission_declaration.model.lower(),
                     )
                 except Permission.DoesNotExist as e:
                     raise ValueError(f'Invalid permission "{permission_declaration.model}.{codename}" declared.') from e

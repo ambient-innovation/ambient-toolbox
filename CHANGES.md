@@ -1,5 +1,8 @@
 # Changelog
 
+**9.4.2** (2024-01-22)
+  * Fixed an SQLite bug in "PermissionSetupService"
+
 **9.4.1** (2024-01-12)
   * Updated testing docs
 
