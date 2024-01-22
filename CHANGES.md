@@ -1,5 +1,8 @@
 # Changelog
 
+**9.4.3** (2024-01-22)
+  * Updated sphinx packages
+
 **9.4.2** (2024-01-22)
   * Fixed an SQLite bug in "PermissionSetupService"
 
