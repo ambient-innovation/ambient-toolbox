@@ -1,5 +1,8 @@
 # Changelog
 
+**9.5.0** (2024-02-02)
+  * Downgraded sphinx to 7.1.* for Python 3.8 compatability
+
 **9.4.4** (2024-01-22)
   * Downgraded sphinx to 7.1.* for Python 3.8 compatability
 

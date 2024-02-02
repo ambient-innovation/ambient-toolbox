@@ -18,3 +18,7 @@ class DjangoMessagingFrameworkTestMixinTest(RequestProviderMixin, DjangoMessagin
     def test_partial_message_found(self):
         messages.add_message(self.request, messages.INFO, "My message")
         self.assert_partial_message_in_request(request=self.request, message="My")
+
+    def test_message_not_found(self):
+        messages.add_message(self.request, messages.INFO, "My message")
+        self.assert_message_not_in_request(request=self.request, message="Ninja")

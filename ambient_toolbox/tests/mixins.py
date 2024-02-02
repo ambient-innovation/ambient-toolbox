@@ -138,3 +138,13 @@ class DjangoMessagingFrameworkTestMixin:
                 message_found = True
 
         self.assertTrue(message_found, f"Message part {message!r} not found in request.")
+
+    def assert_message_not_in_request(self, request: WSGIRequest, message: str) -> None:
+        messages = list(get_messages(request))
+
+        message_found = False
+        for request_message in messages:
+            if str(request_message) == message:
+                message_found = True
+
+        self.assertFalse(message_found, f"Message {message!r} not found in request.")
