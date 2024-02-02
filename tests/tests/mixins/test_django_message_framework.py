@@ -22,3 +22,8 @@ class DjangoMessagingFrameworkTestMixinTest(RequestProviderMixin, DjangoMessagin
     def test_message_not_found(self):
         messages.add_message(self.request, messages.INFO, "My message")
         self.assert_message_not_in_request(request=self.request, message="Ninja")
+
+    def test_message_not_found_but_found(self):
+        messages.add_message(self.request, messages.INFO, "My message")
+        with self.assertRaises(AssertionError):
+            self.assert_message_not_in_request(request=self.request, message="My message")
