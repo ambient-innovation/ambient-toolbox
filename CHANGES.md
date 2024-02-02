@@ -1,7 +1,7 @@
 # Changelog
 
 **9.5.0** (2024-02-02)
-  * Downgraded sphinx to 7.1.* for Python 3.8 compatability
+  * Added django message test helper method `assert_message_not_in_request`
 
 **9.4.4** (2024-01-22)
   * Downgraded sphinx to 7.1.* for Python 3.8 compatability
