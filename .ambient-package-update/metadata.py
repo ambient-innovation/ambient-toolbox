@@ -63,6 +63,7 @@ The migration is really simple, just:
         "dev": [
             *DEV_DEPENDENCIES,
             "gevent~=23.9",
+            "httpx~=0.27",
         ],
         "drf": [
             "djangorestframework>=3.8.2",

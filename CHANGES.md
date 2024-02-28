@@ -1,5 +1,8 @@
 # Changelog
 
+**9.5.1** (2024-02-28)
+  * Fixed bug in coverage script that a set `GITLAB_CI_DISABLE_COVERAGE` would always skip coverage check
+
 **9.5.0** (2024-02-02)
   * Added django message test helper method `assert_message_not_in_request`
 

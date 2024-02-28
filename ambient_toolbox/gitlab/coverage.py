@@ -30,7 +30,20 @@ class CoverageService:
         )
         self.pipelines_url_with_token = f"{self.pipelines_url}&private_token={self.token}"
 
-        self.disable_coverage: bool = os.environ.get("GITLAB_CI_DISABLE_COVERAGE", False)
+        self.disable_coverage: bool = self.get_disable_coverage(os.environ.get("GITLAB_CI_DISABLE_COVERAGE", "0"))
+
+    @staticmethod
+    def get_disable_coverage(disable_env: str) -> bool:
+        disable_coverage = disable_env
+
+        if disable_coverage.lower() == "true":
+            return True
+        elif disable_coverage.lower() == "false":
+            return False
+        elif disable_coverage.isdigit():
+            return bool(int(disable_coverage))
+        else:
+            return bool(disable_coverage)
 
     def get_latest_target_branch_commit_sha(self) -> str:
         """
