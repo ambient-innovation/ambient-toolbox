@@ -97,4 +97,4 @@ jobs:
       - name: Combine coverage and fail if it's too low
         run: |
           python -m coverage html --skip-covered
-          python -m coverage report --fail-under=87.64
+          python -m coverage report --fail-under=87.72
