@@ -5,6 +5,7 @@ import subprocess
 import sys
 from difflib import ndiff
 from http import HTTPStatus
+from typing import Optional
 
 import httpx
 
@@ -30,7 +31,20 @@ class CoverageService:
         )
         self.pipelines_url_with_token = f"{self.pipelines_url}&private_token={self.token}"
 
-        self.disable_coverage: bool = os.environ.get("GITLAB_CI_DISABLE_COVERAGE", False)
+        self.disable_coverage: bool = self.get_disable_coverage(os.environ.get("GITLAB_CI_DISABLE_COVERAGE", "0"))
+
+    @staticmethod
+    def get_disable_coverage(disable_env: str) -> bool:
+        disable_coverage = disable_env
+
+        if disable_coverage.lower() == "true":
+            return True
+        elif disable_coverage.lower() == "false":
+            return False
+        elif disable_coverage.isdigit():
+            return bool(int(disable_coverage))
+        else:
+            return bool(disable_coverage)
 
     def get_latest_target_branch_commit_sha(self) -> str:
         """
@@ -42,7 +56,7 @@ class CoverageService:
         )
         return result.stdout.decode("utf-8").strip()
 
-    def get_pipeline_id_by_commit_sha(self, sha: str) -> int | None:
+    def get_pipeline_id_by_commit_sha(self, sha: str) -> Optional[int]:
         pipeline_url = f"{self.pipelines_url_with_token}&sha={sha}"
         response = httpx.get(pipeline_url)
         status_code = response.status_code

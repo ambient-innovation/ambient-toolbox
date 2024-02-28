@@ -86,7 +86,7 @@ def number_to_string(value: Optional[Union[int, float]], decimal_digits: int = 0
     If the passed "value" is None, it will return `replacement`.
     Attention: Will not localise the return value!
     """
-    return intcomma(floatformat(value, decimal_digits)) if value is not None else replacement
+    return intcomma(floatformat(value, decimal_digits)).strip(",") if value is not None else replacement
 
 
 def string_or_none_to_string(value: Optional[any], replacement: str = "-") -> str:
