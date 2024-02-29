@@ -31,6 +31,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
    features/sentry.md
    features/services.md
    features/tests.md
+   features/translations.md
    features/utils.rst
    features/validators.md
    features/view-layer.rst
