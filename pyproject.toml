@@ -200,7 +200,7 @@ deps =
     django50: Django==5.0.*
 extras = dev,drf,graphql,sentry,view-layer,
 commands =
-    sudo coverage run -m pytest --ds settings tests
+    coverage run -m pytest --ds settings tests
 
 [gh-actions]
 python =

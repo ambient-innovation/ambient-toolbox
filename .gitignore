@@ -182,3 +182,4 @@ _build
 
 # Test files
 ambient_toolbox/locale/xx/*
+!ambient_toolbox/locale/xx/.gitkeep
