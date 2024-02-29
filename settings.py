@@ -9,6 +9,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "ambient_toolbox",
     "testapp",
 )
 
@@ -65,7 +66,7 @@ EMAIL_BACKEND_REDIRECT_ADDRESS = ""
 
 TIME_ZONE = "UTC"
 
-LOCALE_PATHS = [str(BASE_PATH) + "/ambient_toolbox/locale"]
+LOCALE_PATHS = [BASE_PATH / "ambient_toolbox/locale"]
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",

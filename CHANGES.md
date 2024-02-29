@@ -1,5 +1,9 @@
 # Changelog
 
+**9.6.0** (2024-02-29)
+  * Added management command `create_translation_file` to smoothen the workflow with translation files
+  * Added docs about pipeline checks for translation files
+
 **9.5.1** (2024-02-28)
   * Fixed bug in coverage script that a set `GITLAB_CI_DISABLE_COVERAGE` would always skip coverage check
   * Bugfix in `number_to_string` for more recent Django versions
