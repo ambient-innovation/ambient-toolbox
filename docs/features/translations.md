@@ -21,7 +21,7 @@ Therefore, we've created the management command `create_translation_file`, which
 
 It makes a lot of sense to check your transaction file in the pipeline, to avoid forgotten or left-over translations.
 
-Here is a comprehensive example:
+Here is a comprehensive example for the language "en":
 
 ```yml
 # Check for fuzzy translations
@@ -31,7 +31,7 @@ Here is a comprehensive example:
 - echo "Check for left-over translations"
 - grep -q "#~" ./locale/en/LC_MESSAGES/django.po && exit 1
 # Check if "makemessages" detects new translations
-- python manage.py create_translation_file
+- python manage.py create_translation_file --lang en
 # Checking for differences in translation file
 - echo "Checking for differences in translation file"
 - git diff --ignore-matching-lines=POT-Creation-Date --ignore-matching-lines=# --exit-code locale/

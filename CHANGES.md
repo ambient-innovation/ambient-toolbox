@@ -1,5 +1,8 @@
 # Changelog
 
+**9.6.3** (2024-03-04)
+  * Fixed a bug in the documentation
+
 **9.6.2** (2024-03-04)
   * Fixed a bug in the documentation
 
