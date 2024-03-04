@@ -14,7 +14,11 @@ class Command(BaseCommand):
         parser.add_argument("--lang", type=str)
 
     def handle(self, *args, **options):
-        language = options["lang"].strip('"')
+        try:
+            language = options["lang"].strip('"')
+        except AttributeError as e:
+            raise RuntimeError('Please provide a language with the "--lang" parameter.') from e
+
         call_command("makemessages", "-l", language, "--no-location", "--no-wrap")
 
         file_path = settings.LOCALE_PATHS[0] / f"{language}/LC_MESSAGES/django.po"

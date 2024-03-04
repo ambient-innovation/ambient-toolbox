@@ -1,5 +1,8 @@
 # Changelog
 
+**9.6.1** (2024-03-04)
+  * Improved error handling in `create_translation_file`
+
 **9.6.0** (2024-02-29)
   * Added management command `create_translation_file` to smoothen the workflow with translation files
   * Added docs about pipeline checks for translation files
