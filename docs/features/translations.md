@@ -1,6 +1,6 @@
 # Translations
 
-# "makemessages" wrapper management command
+## "makemessages" wrapper management command
 
 Working with translations can be tedious. If you don't have any checks in your pipeline, ever second time, you'll forget
 to execute `manage.py makemessages`. Furthermore, you are enormously prone to merge conflicts because the file will be
@@ -17,7 +17,7 @@ Therefore, we've created the management command `create_translation_file`, which
 * The management command will remove the `POT-Creation-Date:` header from the po-file to remove a source for merge
   conflicts.
 
-# Pipeline checks
+## Pipeline checks
 
 It makes a lot of sense to check your transaction file in the pipeline, to avoid forgotten or left-over translations.
 
