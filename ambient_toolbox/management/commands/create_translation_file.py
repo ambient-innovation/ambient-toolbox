@@ -1,4 +1,6 @@
 from os.path import isfile
+from pathlib import Path
+from typing import Optional
 
 from django.conf import settings
 from django.core.management import call_command
@@ -13,11 +15,31 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--lang", type=str)
 
+    def detect_single_translation_language(self) -> Optional[str]:
+        """
+        Returns the language code of the projects' translation if there is exactly one.
+        Returns None otherwise.
+        """
+        locale_path = settings.LOCALE_PATHS[0]
+
+        # We don't bother with odd configurations for a convenience feature
+        if not isinstance(locale_path, Path):
+            return None
+
+        dir_list: list[Path] = [directory for directory in locale_path.iterdir() if directory.is_dir()]
+
+        if len(dir_list) == 1:
+            return dir_list[0].name
+        return None
+
     def handle(self, *args, **options):
         try:
             language = options["lang"].strip('"')
         except AttributeError as e:
-            raise RuntimeError('Please provide a language with the "--lang" parameter.') from e
+            language = self.detect_single_translation_language()
+
+            if not language:
+                raise RuntimeError('Please provide a language with the "--lang" parameter.') from e
 
         call_command("makemessages", "-l", language, "--no-location", "--no-wrap")
 

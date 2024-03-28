@@ -1,7 +1,13 @@
 # Changelog
 
+**9.6.4** (2024-03-28)
+
+* Added convenience feature for `create_translation_file` so the user can omit the `--lang` param if there is only one
+  language
+
 **9.6.3** (2024-03-04)
-  * Fixed a bug in the documentation
+
+* Fixed a bug in the documentation
 
 **9.6.2** (2024-03-04)
   * Fixed a bug in the documentation
