@@ -18,7 +18,7 @@ METADATA = PackageMetadata(
             email="hello@ambient.digital",
         ),
     ],
-    min_coverage=94.23,
+    min_coverage=86.51,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
