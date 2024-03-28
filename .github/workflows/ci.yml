@@ -70,9 +70,9 @@ jobs:
           TOXENV: django${{ matrix.django-version }}
         run: tox
       - name: Upload coverage data
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          pattern: coverage-reports-*
+          name: coverage-data
           path: '.coverage*'
 
   coverage:
