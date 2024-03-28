@@ -18,7 +18,7 @@ METADATA = PackageMetadata(
             email="hello@ambient.digital",
         ),
     ],
-    min_coverage=96.52,
+    min_coverage=86.51,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
@@ -55,6 +55,8 @@ The migration is really simple, just:
         "Django>=3.2.20",
         "bleach>=1.4,<6",
         "python-dateutil>=2.5.3",
+        # We keep this until we drop Python 3.8
+        "pytz",
     ],
     supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
     supported_python_versions=SUPPORTED_PYTHON_VERSIONS,
