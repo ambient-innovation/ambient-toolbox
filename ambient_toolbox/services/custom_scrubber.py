@@ -5,7 +5,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth.hashers import make_password
 from django.contrib.sessions.models import Session
 from django.core.management import call_command
-from django.db import connections
+from django.db import OperationalError, connections
 
 
 class ScrubbingError(RuntimeError):
@@ -79,10 +79,14 @@ class AbstractScrubbingService:
         # Reset scrubber data to avoid huge db dumps
         if not self.keep_scrubber_data:
             self._logger.info('Clearing data from "django_scrubber_fakedata" ...')
-            # We truncate and don't scrub because the table is huge and clearing on object-level might take a while.
-            # Furthermore, can we avoid having a direct dependency to django-scrubber this way.
+            # We truncate and don't scrub because the table is huge, and clearing on object-level might take a while.
+            # Furthermore, we can avoid having a direct dependency on django-scrubber this way.
             cursor = connections["default"].cursor()
-            cursor.execute("TRUNCATE TABLE django_scrubber_fakedata;")
+            try:
+                cursor.execute("TRUNCATE TABLE django_scrubber_fakedata;")
+            except OperationalError:
+                # SQLite doesn't have "TRUNCATE"
+                cursor.execute("DELETE FROM django_scrubber_fakedata;")
 
         self._logger.info("Scrubbing finished!")
 

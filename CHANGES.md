@@ -1,5 +1,8 @@
 # Changelog
 
+**9.6.5** (2024-04-10)
+  * Added SQLite support for `AbstractScrubbingService`
+
 **9.6.4** (2024-03-28)
   * Added convenience feature for `create_translation_file` so the user can omit the `--lang` param if there is only
 one language
