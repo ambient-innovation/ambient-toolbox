@@ -12,8 +12,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4.1",
     "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.0",
     "Intended Audience :: Developers",
@@ -53,7 +51,7 @@ dev = [
    'm2r2==0.3.3.post2',
    'mistune<2.0.0',
    'flit~=3.9',
-   'ambient-package-update~=23.12.4',
+   'ambient-package-update~=24.4.4',
    'gevent~=23.9',
    'httpx~=0.27',
 ]
@@ -82,7 +80,7 @@ name = "ambient_toolbox"
 'Changelog' = 'https://ambient-toolbox.readthedocs.io/en/latest/features/changelog.html'
 
 [tool.ruff]
-select = [
+lint.select = [
     "E",       # pycodestyle errors
     "W",       # pycodestyle warnings
     "F",       # Pyflakes
@@ -104,7 +102,7 @@ select = [
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
 ]
-ignore = [
+lint.ignore = [
     'N999', # Project name contains underscore, not fixable
     'A003', # Django attributes shadow python builtins
     'DJ001', # Django model text-based fields shouldn't be nullable
@@ -116,7 +114,7 @@ ignore = [
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = [
+lint.fixable = [
     "E",       # pycodestyle errors
     "W",       # pycodestyle warnings
     "F",       # Pyflakes
@@ -138,7 +136,7 @@ fixable = [
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
 ]
-unfixable = []
+lint.unfixable = []
 
 exclude = [
     ".bzr",
@@ -195,8 +193,6 @@ isolated_build = True
 [testenv]
 # Django deprecation overview: https://www.djangoproject.com/download/
 deps =
-    django32: Django==3.2.*
-    django41: Django==4.1.*
     django42: Django==4.2.*
     django50: Django==5.0.*
 extras = dev,drf,graphql,sentry,view-layer,
@@ -211,3 +207,10 @@ python =
     3.11: py311
     3.12: py312
 """
+
+[tool.pytest.ini_options]
+python_files = [
+    "tests.py",
+    "test_*.py",
+    "*_tests.py",
+]
