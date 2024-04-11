@@ -1,5 +1,9 @@
 # Changelog
 
+**10.0.0** (2024-04-11)
+  * Dropped Django 3.2 & 4.1 support (via `ambient-package-update`)
+  * Internal updates via `ambient-package-update`
+
 **9.6.5** (2024-04-10)
   * Added SQLite support for `AbstractScrubbingService`
 
