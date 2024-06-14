@@ -5,12 +5,14 @@ from ambient_package_update.metadata.constants import (
     SUPPORTED_DJANGO_VERSIONS,
     SUPPORTED_PYTHON_VERSIONS,
 )
+from ambient_package_update.metadata.maintainer import PackageMaintainer
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
 
 METADATA = PackageMetadata(
     package_name="ambient_toolbox",
+    module_name="ambient_toolbox",
     company="Ambient Innovation: GmbH",
     authors=[
         PackageAuthor(
@@ -18,6 +20,7 @@ METADATA = PackageMetadata(
             email="hello@ambient.digital",
         ),
     ],
+    maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
     min_coverage=86.30,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,

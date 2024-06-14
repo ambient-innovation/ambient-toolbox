@@ -10,7 +10,7 @@ Python toolbox of Ambient Digital containing an abundance of useful tools and ga
 * [PyPI](https://pypi.org/project/ambient-toolbox/)
 * [GitHub](https://github.com/ambient-innovation/ambient-toolbox)
 * [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
-* Creator & Maintainer: [Ambient Digital](https://ambient.digital)
+* Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
 ## Features
 
@@ -128,6 +128,7 @@ Example: run all hooks of pre-push stage
 - To build the documentation run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
 
+
 ### Translation files
 
 If you have added custom text, make sure to wrap it in `_()` where `_` is
@@ -144,6 +145,7 @@ How to compile translation files:
 * Navigate to `ambient-toolbox`
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `ambient_toolbox/locale`
+
 
 ### Publish to ReadTheDocs.io
 
