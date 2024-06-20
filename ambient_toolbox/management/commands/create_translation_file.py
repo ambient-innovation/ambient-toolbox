@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
         call_command("makemessages", "-l", language, "--no-location", "--no-wrap")
 
-        file_path = settings.LOCALE_PATHS[0] / f"{language}/LC_MESSAGES/django.po"
+        file_path = f"{settings.LOCALE_PATHS[0]}/{language}/LC_MESSAGES/django.po"
         if not isfile(file_path):
             raise RuntimeError(f'PO file not found at "{file_path}".')
 
