@@ -12,6 +12,7 @@ Python toolbox of Ambient Digital containing an abundance of useful tools and ga
 * [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
 * Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
+
 ## Features
 
 * Useful classes and mixins for Django admin
@@ -38,9 +39,7 @@ The migration is really simple, just:
 * The class-based mail functionality was moved to a separate package called
 [django-pony-express](https://pypi.org/project/django-pony-express/).
 
-
 ## Installation
-
 
 - Install the package via pip:
 
@@ -63,9 +62,6 @@ The migration is really simple, just:
 - Apply migrations by running:
 
   `python ./manage.py migrate`
-
-
-
 
 
 ## Contribute
@@ -183,3 +179,4 @@ being rendered by this updater. It works similar to well-known updaters like `py
 
 To run an update, refer to the [documentation page](https://pypi.org/project/ambient-package-update/)
 of the "ambient-package-update".
+

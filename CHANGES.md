@@ -1,5 +1,9 @@
 # Changelog
 
+**10.0.2** (2024-06-20)
+  * Made the "default" translation command more visible
+  * Internal updates via `ambient-package-update`
+
 **10.0.1** (2024-06-14)
   * Internal updates via `ambient-package-update`
 
