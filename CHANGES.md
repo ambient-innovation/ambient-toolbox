@@ -1,5 +1,8 @@
 # Changelog
 
+**10.0.3** (2024-06-20)
+  * Made translation helper management command work with string-based locale paths
+
 **10.0.2** (2024-06-20)
   * Made the "default" translation command more visible
   * Internal updates via `ambient-package-update`
