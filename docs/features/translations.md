@@ -8,7 +8,7 @@ time-stamped and the location comments can change very easily.
 
 Therefore, we've created the management command `create_translation_file`, which will help you as follows:
 
-> python manage.py create_translation_file --lang en
+> `python manage.py create_translation_file --lang en`
 
 * The management command will call `makemessages` with --no-location to avoid cluttering your `*.po` files with
   easy-to-cause merge conflict reasons
