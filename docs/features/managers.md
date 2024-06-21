@@ -13,9 +13,11 @@ visibility needs to be determined on object level. Let's say we have this data s
 class Company(models.Model):
     name = models.CharField(max_length=100)
 
+
 class User(models.Model):
     name = models.CharField(max_length=100)
     company = models.ForeignKey(Company)
+
 
 class Project(models.Model):
     name = models.CharField(max_length=100)
@@ -65,7 +67,7 @@ Now you can easily use the given methods in every view, service or serializers a
 # views.py
 def project_list(request):
     project_list = Project.objects.all().visible_for(request.user)
-    return render(request, 'project/project_list.html', {'project_list': project_list})
+    return render(request, "project/project_list.html", {"project_list": project_list})
 ```
 
 Obviously, if you are not listing your projects but want to validate if the user is allowed to create/edit or delete the
@@ -90,6 +92,7 @@ class ProjectQuerySet(AbstractUserSpecificQuerySet):
 
     def deletable_for(self, user):
         return self.filter(company=user.company)
+
 
 class ProjectManager(models.Manager):
 

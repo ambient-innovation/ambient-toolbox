@@ -20,9 +20,9 @@ code to be sure that it won't be forgotten at any time.
 
 Therefore, we create the `BleacherMixin` which is used in the model like this.
 
-```
+```python
 class MyModel(BleacherMixin, models.Model):
-    BLEACH_FIELD_LIST = ['my_html_field']
+    BLEACH_FIELD_LIST = ["my_html_field"]
 
     my_field = models.IntegerField()
     my_html_field = models.TextField()
@@ -37,32 +37,59 @@ Technically the mixin bleaches the field on a model `safe()` call.
 
 The default settings are as follows:
 
-```
+```python
 DEFAULT_ALLOWED_ATTRIBUTES = {
-    '*': ['class', 'style', 'id'],
-    'a': ['href', 'rel'],
-    'img': ['alt', 'src'],
+    "*": ["class", "style", "id"],
+    "a": ["href", "rel"],
+    "img": ["alt", "src"],
 }
 
-DEFAULT_ALLOWED_TAGS = bleach.ALLOWED_TAGS + ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5',*
-                                              'h6', 'img', 'div', 'u', 'br', 'blockquote']
+DEFAULT_ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
+    "span",
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    *"h6",
+    "img",
+    "div",
+    "u",
+    "br",
+    "blockquote",
+]
 ```
 
 ### Customize whitelists
 
 If you want to alter your whitelists, just add something similar to this in your global django `settings.py`:
 
-```
+```python
 # Bleach
 BLEACH_ALLOWED_ATTRIBUTES = {
-    '*': ['class', 'style', 'id'],
-    'a': ['href', 'rel', 'target'],
-    'img': ['alt', 'src'],
+    "*": ["class", "style", "id"],
+    "a": ["href", "rel", "target"],
+    "img": ["alt", "src"],
 }
 
-BLEACH_ALLOWED_TAGS = ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                       'img', 'div', 'u', 'br', 'blockquote', 'strong', 'a']
-
+BLEACH_ALLOWED_TAGS = [
+    "span",
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "img",
+    "div",
+    "u",
+    "br",
+    "blockquote",
+    "strong",
+    "a",
+]
 ```
 
 ### Limitations
@@ -118,8 +145,10 @@ saving the instance and then reconnecting the signals.
 from django.db import models
 from ambient_toolbox.mixins.models import SaveWithoutSignalsMixin
 
+
 class MyModelWithAnnoyingSignals(SaveWithoutSignalsMixin, models.Model):
     pass
+
 
 # another_file.py
 

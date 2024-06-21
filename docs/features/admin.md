@@ -14,13 +14,13 @@ This will ensure that nobody can modify or delete the records of this class in a
 
 Either you can register it like this:
 
-````
+````python
 admin.site.register(MyModel, ReadOnlyAdmin)
 ````
 
 Or like this, if you want to customise it further:
 
-````
+````python
 @admin.register(MyModel)
 class MyModelAdmin(ReadOnlyAdmin):
     ...
@@ -34,13 +34,13 @@ way.
 
 Either you can register it like this:
 
-````
+````python
 admin.site.register(MyModel, EditableOnlyAdmin)
 ````
 
 Or like this, if you want to customise it further:
 
-````
+````python
 @admin.register(MyModel)
 class MyModelAdmin(EditableOnlyAdmin):
     ...
@@ -54,7 +54,7 @@ If you want to make a model ``MyModel`` 100% read-only, but the model is embedde
 can derive from the ``ReadOnlyTabularInline``. This will ensure that all instances of ``MyModel`` will not be editable
 in any way.
 
-````
+````python
 from django.contrib import admin
 
 class MyModelInline(ReadonlyTabularInline):
@@ -77,7 +77,7 @@ With this mixin you can easily use two different forms for creating and editing 
 Similar to the user creation where you want to set an email and a password at first and later take care about the other
 variables, you can now use this pattern for every admin:
 
-````
+````python
 from django.contrib import admin
 
 @admin.register(MyModel)
@@ -91,7 +91,7 @@ class MyModelAdmin(AdminCreateFormMixin, admin.ModelAdmin):
 This mixin removes all admin inline panels from a given admin class when being in the "create" case. This especially
 comes in handy when your inlines have inner dependencies based on the parent model (of the admin class).
 
-````
+````python
 from django.contrib import admin
 
 @admin.register(MyModel)
@@ -104,7 +104,7 @@ class MyModelAdmin(AdminNoInlinesForCreateMixin, admin.ModelAdmin):
 This mixin injects the current request in the form when creating or changing an object of the registered admin class.
 Very useful when some data of the form is user-related.
 
-````
+````python
 from django.contrib import admin
 
 @admin.register(MyModel)
@@ -123,7 +123,7 @@ If you need the parent object for a different use-case, have a look at the examp
 used to determine if it is possible to add any new objects of the parent models class. If you want to fetch the parent
 object, just call the handy method `get_parent_object_from_request(request)`:
 
-````
+````python
 class MyChildModelInline(FetchParentObjectInlineMixin, admin.TabularInline):
     model = MyChildModel
     ...
@@ -140,7 +140,7 @@ class MyChildModelInline(FetchParentObjectInlineMixin, admin.TabularInline):
 
 If you need the current object, you can derive from this mixin and use the method `get_object_from_request(request)`.
 
-````
+````python
 from django.contrib import admin
 
 @admin.register(MyModel)
@@ -162,7 +162,7 @@ There are two ways to handle the locking of the change view.
 
 First you can set the boolean class attribute `enable_change_view` to enable or disable the view permanently.
 
-````
+````python
 @admin.register(MyModel)
 class MyModelNoDetailPageAdmin(DeactivatableChangeViewAdminMixin, admin.ModelAdmin):
     enable_change_view = False
@@ -171,7 +171,7 @@ class MyModelNoDetailPageAdmin(DeactivatableChangeViewAdminMixin, admin.ModelAdm
 If you need a dynamic way to toggle the detail view, you can overwrite the class method `can_see_change_view()`. The
 following example only allows access to the detail page for superusers:
 
-````
+````python
 @admin.register(MyModel)
 class MyModelSuperuserDetailPageAdmin(DeactivatableChangeViewAdminMixin, admin.ModelAdmin):
 

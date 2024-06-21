@@ -8,6 +8,7 @@ Here is a simple Django model in `my_app/models.py`:
 ```python
 from django.db import models
 
+
 class User(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -15,22 +16,24 @@ class User(models.Model):
 
 Now we create a `ModelForm` in `my_app/forms.py`:
 
-```
+```python
 from django import forms
 from .models import User
+
 
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
+        fields = ("first_name", "last_name")
 ```
 
  We need to create an `ObjectType` which we derive from our model.
  Lives in `my_apps/schemes/schematypes.py`:
 
-```
+```python
 from graphene_django import DjangoObjectType
 from ..models import User
+
 
 class UserType(DjangoObjectType):
     class Meta:
@@ -40,7 +43,7 @@ class UserType(DjangoObjectType):
  Here's the mutation in `my_app/schema/mutations.py`.
  It takes a `ModelForm` (or a non-model form) to derive the validation rules from:
 
- ```
+```python
 import graphene
 from graphene_django_ai.forms.mutations import LoginRequiredDjangoModelFormMutation
 from .schematypes import UserType
@@ -56,8 +59,8 @@ class UserCreateUpdateMutation(LoginRequiredDjangoModelFormMutation):
 
 # Register new mutation
 class UserMutation(graphene.ObjectType):
-    spaces = UserCreateUpdateMutation.Field(description='Create and update users')
- ```
+    spaces = UserCreateUpdateMutation.Field(description="Create and update users")
+```
 
  If you register now your `UserMutation` in your schema you have a working model-based and DRY API
  endpoint. Congratulations!
@@ -70,6 +73,7 @@ If you want to delete an object you can easily use the `DeleteMutation` like thi
 from graphene_django_ai.schemes.mutations import DeleteMutation
 from my_app.models import MyModel
 
+
 class MyModelDeleteMutation(DeleteMutation):
     class Meta:
         model = MyModel
@@ -80,6 +84,7 @@ If you are using `django-graphql-jwt` authentication you can ensure only logged 
 ```python
 from graphene_django_ai.schemes.mutations import LoginRequiredDeleteMutation
 from my_app.models import MyModel
+
 
 class MyModelDeleteMutation(LoginRequiredDeleteMutation):
     class Meta:
@@ -92,6 +97,7 @@ If you need to customize the **validation** or the **base queryset** you can ove
 from graphene_django_ai.schemes.mutations import LoginRequiredDeleteMutation
 from graphql import GraphQLError
 from my_app.models import MyModel
+
 
 class MyModelDeleteMutation(LoginRequiredDeleteMutation):
     class Meta:
@@ -112,8 +118,9 @@ care about securing the login with the decorators.
 
 ```python
 from graphene_django_ai.forms.mutations import LoginRequiredDjangoModelFormMutation
-class MyMutation(LoginRequiredDjangoModelFormMutation):
-    ...
+
+
+class MyMutation(LoginRequiredDjangoModelFormMutation): ...
 ```
 
 ## Testing GraphQL calls
@@ -128,6 +135,7 @@ import json
 from graphene_django.tests.base_test import GraphQLTestCase
 from my_project.config.schema import schema
 
+
 class MyFancyTestCase(GraphQLTestCase):
 
     # Here you need to inject your test case's schema
@@ -135,15 +143,15 @@ class MyFancyTestCase(GraphQLTestCase):
 
     def test_some_query(self):
         response = self.query(
-            '''
+            """
             query {
                 myModel {
                     id
                     name
                 }
             }
-            ''',
-            op_name='myModel'
+            """,
+            op_name="myModel",
         )
         content = json.loads(response.content)
         # This validates the status code and if you get errors
@@ -154,7 +162,7 @@ class MyFancyTestCase(GraphQLTestCase):
 
     def test_some_mutation(self):
         response = self.query(
-            '''
+            """
             mutation myMutation($input: MyMutationInput!) {
                 myMutation(input: $input) {
                     my-model {
@@ -163,9 +171,9 @@ class MyFancyTestCase(GraphQLTestCase):
                     }
                 }
             }
-            ''',
-            op_name='myMutation',
-            input_data={'my_field': 'foo', 'other_field': 'bar'}
+            """,
+            op_name="myMutation",
+            input_data={"my_field": "foo", "other_field": "bar"},
         )
         # This validates the status code and if you get errors
         self.assertResponseNoErrors(response)
@@ -175,8 +183,8 @@ class MyFancyTestCase(GraphQLTestCase):
 
     def test_failing_call(self):
 
-       response = self.query(
-           '''
+        response = self.query(
+            """
            mutation myMutation($input: MyMutationInput!) {
                myMutation(input: $badInput) {
                    my-model {
@@ -185,17 +193,16 @@ class MyFancyTestCase(GraphQLTestCase):
                    }
                }
            }
-           ''',
-           op_name='myMutation',
-           input_data={'my_field': 'foo', 'other_field': 'bar'}
-       )
-       # This assert tests if the call raised some errors
-       # For example if you want to test if invalid input is handled correctly by your endpoint
-       self.assertResponseHasErrors(response)
+           """,
+            op_name="myMutation",
+            input_data={"my_field": "foo", "other_field": "bar"},
+        )
+        # This assert tests if the call raised some errors
+        # For example if you want to test if invalid input is handled correctly by your endpoint
+        self.assertResponseHasErrors(response)
 
-       # Add some more asserts if you like
-       ...
-
+        # Add some more asserts if you like
+        ...
 ```
 
 ## GraphQL with Sentry
@@ -217,7 +224,7 @@ from django.views.decorators.csrf import csrf_exempt
 from ambient_toolbox.graphql.views import SentryGraphQLView
 from ambient_toolbox.graphql.utils import ignore_graphene_logger
 
-ignore_graphene_logger()    # <-- add this line at global level
+ignore_graphene_logger()  # <-- add this line at global level
 
 # change this line:
 path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),

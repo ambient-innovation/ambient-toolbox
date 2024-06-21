@@ -462,7 +462,7 @@ from ambient_toolbox.view_layer.views import ToggleView
 
 class ToggleActiveStateView(ToggleView):
     model = MyModel
-    template_name = 'myapp/my_model_edit.html'
+    template_name = "myapp/my_model_edit.html"
 
     def post(self, request, *args, **kwargs):
         # Update object
@@ -470,5 +470,5 @@ class ToggleActiveStateView(ToggleView):
         obj.is_active = not obj.is_active
         obj.save()
 
-        return render(self.request, self.template_name, {'object': obj})
+        return render(self.request, self.template_name, {"object": obj})
 ```

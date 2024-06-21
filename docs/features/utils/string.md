@@ -4,7 +4,7 @@
 
 Returns a list of unique entries from `not_distinct_list`.
 
-````
+````python
 from ambient_toolbox.utils.string import distinct
 
 not_distinct_list = ['Beer', 'Wine', 'Whiskey', 'Beer']
@@ -19,7 +19,7 @@ Note that the order might change due to internal casting to a set.
 
 Turns a string into a nice slugified filename.
 
-````
+````python
 from ambient_toolbox.utils.string import slugify_file_name
 
 filename = 'hola and hello.txt'
@@ -29,7 +29,7 @@ slug = slugify_file_name(filename)
 
 You can pass a parameter to control how many characters the slug is supposed to have.
 
-````
+````python
 from ambient_toolbox.utils.string import slugify_file_name
 
 filename = 'a very long filename.txt'
@@ -42,7 +42,7 @@ slug = slugify_file_name(filename, 6)
 This helper cuts a string at a word-boundary and therefore keeps words intact. Similar to djangos
 default-filter `truncatechars`, you can pass the desired string length.
 
-````
+````python
 from ambient_toolbox.utils.string import smart_truncate
 
 my_sentence = 'I am a very interesting sentence.'
@@ -52,7 +52,7 @@ truncated_str = smart_truncate(my_sentence, 10)
 
 By default, after cutting the string, it will append "..." which can be configured as follows:
 
-````
+````python
 from ambient_toolbox.utils.string import smart_truncate
 
 my_sentence = 'I am a very interesting sentence.'
@@ -64,7 +64,7 @@ truncated_str = smart_truncate(my_sentence, 10, '[...]')
 
 If you have a float which you like to convert to a properly formatted string (German format), then you can do this:
 
-````
+````python
 from ambient_toolbox.utils.string import float_to_string
 
 float_str = float_to_string(1234.56)
@@ -74,7 +74,7 @@ float_str = float_to_string(1234.56)
 If you are not sure your float value will always be set, you can either use the default fallback or overwrite it with
 something custom.
 
-````
+````python
 from ambient_toolbox.utils.string import float_to_string
 
 value = None
@@ -92,7 +92,7 @@ fallback_result = float_to_string(value, 'NaN')
 
 If you want to easily convert a date object to a string in the given format, just use this helper:
 
-````
+````python
 import datetime
 from ambient_toolbox.utils.string import date_to_string
 
@@ -107,7 +107,7 @@ date_str = date_to_string(datetime.date(2020, 9, 19), str_format='%Y-%m-%d')
 
 Again, you can set a replacement if the date object is `None`:
 
-````
+````python
 import datetime
 from ambient_toolbox.utils.string import date_to_string
 
@@ -124,7 +124,7 @@ date_str = date_to_string(None, 'no date')
 
 If you want to easily convert a datetime object to a string in the given format, just use this helper:
 
-````
+````python
 import datetime
 from ambient_toolbox.utils.string import datetime_to_string
 
@@ -139,7 +139,7 @@ datetime_str = datetime_to_string(datetime.datetime(2020, 9, 19, 8), str_format=
 
 Again, you can set a replacement if the datetime object is `None`:
 
-````
+````python
 import datetime
 from ambient_toolbox.utils.string import datetime_to_string
 
@@ -156,7 +156,7 @@ datetime_str = datetime_to_string(None, 'no datetime')
 
 If you have a float or int variable which you like to convert to a properly formatted string, then you can do this:
 
-````
+````python
 from ambient_toolbox.utils.string import number_to_string
 
 number_str = number_to_string(1234.56, decimal_digits=2)
@@ -166,7 +166,7 @@ number_str = number_to_string(1234.56, decimal_digits=2)
 If you are not sure your float value will always be set, you can either use the default fallback or overwrite it with
 something custom.
 
-````
+````python
 from ambient_toolbox.utils.string import number_to_string
 
 value = None
@@ -188,7 +188,7 @@ result will NOT be localised!
 Similar to django filter `default`, this method will return the value if it is not equal to `None` and
 will return the fallback value otherwise.
 
-````
+````python
 from ambient_toolbox.utils.string import string_or_none_to_string
 
 value = 'I am a string.'
@@ -210,7 +210,7 @@ result = string_or_none_to_string(None, replacement='empty')
 
 If you want a simple transformer from XML to HTML(-entities), you can use this helper:
 
-````
+````python
 from ambient_toolbox.utils.string import encode_to_xml
 
 value = '<tag>Something with an ampersand (&)</tag>'

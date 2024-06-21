@@ -6,7 +6,7 @@ The function ``server_settings()`` puts the variables `DEBUG_MODE` and `SERVER_U
 
 Register the context manager like this in your global settings file:
 
-````
+````python
 TEMPLATES = [
     {
         ...

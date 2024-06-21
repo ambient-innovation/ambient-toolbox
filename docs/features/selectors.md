@@ -42,7 +42,7 @@ class UserSelector(Selector):
         """
         Fetches a list of active users who like to drink beer.
         """
-        return self.model.objects.is_active().likes_beverages(beverage_list=['beer'])
+        return self.model.objects.is_active().likes_beverages(beverage_list=["beer"])
 ```
 
 Here is an example on how to register a selector within a model.
@@ -91,7 +91,7 @@ class UserManager(manager.Manager):
         """
         Fetches a list of active users who like to drink beer.
         """
-        return self.model.objects.is_active().likes_bevarages(beverage_list=['beer'])
+        return self.model.objects.is_active().likes_bevarages(beverage_list=["beer"])
 ```
 
 ## Remarks
@@ -114,14 +114,12 @@ with a mixin `AbstractUserSpecificSelectorMixin`. This mixin provides three meth
 from ambient_toolbox.selectors.base import Selector
 from ambient_toolbox.selectors.permission import AbstractUserSpecificSelectorMixin
 
+
 class MyModelSelector(AbstractUserSpecificSelectorMixin, Selector):
 
-    def visible_for(self, user):
-        ...
+    def visible_for(self, user): ...
 
-    def editable_for(self, user):
-        ...
+    def editable_for(self, user): ...
 
-    def deletable_for(self, user):
-        ...
+    def deletable_for(self, user): ...
 ```

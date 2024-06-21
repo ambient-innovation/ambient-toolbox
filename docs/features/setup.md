@@ -16,7 +16,7 @@ version of `ambient-toolbox`:
 Afterwards, include the package in your ``INSTALLED_APPS`` within your main
 [django settings file](https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-INSTALLED_APPS):
 
-````
+````python
 INSTALLED_APPS = (
     ...
     'ambient_toolbox',

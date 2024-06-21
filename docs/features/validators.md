@@ -16,10 +16,9 @@ password: `@#$%!^&*`.
 
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    ...
     {
         "NAME": "ambient_toolbox.validators.auth_password.special_chars.SpecialCharValidator",
     },
+    ...,
 ]
-
 ```

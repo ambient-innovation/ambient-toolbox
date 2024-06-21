@@ -32,7 +32,7 @@ That's why this package contains a neat wrapper for the original scrubber.
 
 Just create a new python file somewhere in your application (`apps/core/scrubbing.py`) and create a class like this:
 
-````
+````python
 class MyScrubbingService(AbstractScrubbingService):
     pre_scrub_functions = [
         'remove_some_data',
@@ -60,7 +60,7 @@ django ORM in the regular way.
 
 Next, you need to create a django management command for your service to be able to call it from the CLI:
 
-````
+````python
 from django.core.management.base import BaseCommand
 from apps.core.services import PortalScrubbingService
 
@@ -124,7 +124,7 @@ overwrite the class constant `DEFAULT_USER_PASSWORD`.
 
 Here is an example:
 
-````
+````python
 
 class MyScrubbingService(AbstractScrubbingService):
     post_scrub_functions = [
@@ -153,7 +153,7 @@ the [django-scrubber docs](https://github.com/RegioHelden/django-scrubber/blob/m
 
 Here is an example of how your configuration could look like:
 
-````
+````python
 # Scrubber
 SCRUBBER_ENTRIES_PER_PROVIDER = 10000
 SCRUBBER_RANDOM_SEED = 456489135

@@ -1,5 +1,8 @@
 # Changelog
 
+**10.0.4** (2024-06-20)
+  * Linted docs with `blacken-docs` via `ambient-package-update`
+
 **10.0.3** (2024-06-20)
   * Made translation helper management command work with string-based locale paths
 

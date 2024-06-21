@@ -9,7 +9,7 @@ It will preserve order.
 
 Here you'll find a basic example:
 
-````
+````python
 class MyModel(models.Model):
     COLORS = get_namedtuple_choices('COLORS', (
         (0, 'black', 'Black'),
@@ -37,7 +37,7 @@ class OtherModel(models.Model):
 
 #### Helpers
 
-````
+````python
 # get_choices()
 >>> MyModel.COLORS.get_choices()
 [(0, 'Black'), (1, 'White')]
@@ -81,10 +81,12 @@ True
 If you have a tuple ``my_tuple`` and you want to get the value for the key `my_key`, you can use the straight-forward
 helper function ``get_value_from_tuple_by_key()``:
 
-```
+```python
 my_tuple = (
-    1, 'Value One',
-    2, 'Value Two',
+    1,
+    "Value One",
+    2,
+    "Value Two",
 )
 
 my_value = get_value_from_tuple_by_key(my_tuple, 1)
@@ -96,12 +98,14 @@ my_value = get_value_from_tuple_by_key(my_tuple, 1)
 If you have a tuple ``my_tuple`` and you want to get the key for the value `my_key`, you can use the straight-forward
 helper function ``get_key_from_tuple_by_value()``:
 
-```
+```python
 my_tuple = (
-    1, 'Value One',
-    2, 'Value Two',
+    1,
+    "Value One",
+    2,
+    "Value Two",
 )
 
-my_value = get_key_from_tuple_by_value(my_tuple, 'Value One')
+my_value = get_key_from_tuple_by_value(my_tuple, "Value One")
 # my_value = 1
 ```

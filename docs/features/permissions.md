@@ -186,5 +186,5 @@ class PermissionFixturesIntegrationTest(TestCase):
 ### Limitations
 
 Please note that new groups will be created but the service won't **delete** any groups. The simple reason is that if
-you rename a group, this would count as a "delete" and a "create" operation. The new group would have all permissions
-but all user assignment would be lost on deleting the previous group.
+you rename a group, this would count as a "delete" and a "create" operation. The new group would have all permissions,
+but all user assignments would be lost on deleting the previous group.

@@ -24,7 +24,7 @@ fill it with data having the same meaning as your production state.
 
 Imagine, we have a django model for your customer data:
 
-````
+````python
 # models.py
 
 from django.db import models
@@ -40,7 +40,7 @@ whereas `last_login` is quite uncritical.
 
 With django-scrubber, we can define a subclass within the model like this:
 
-````
+````python
 # models.py
 
 from django.db import modelsclass Customer(models.Model):
@@ -72,7 +72,7 @@ as mentioned above and afterwards creating test users, forwarding credentials et
 
 For this reason we implemented an abstract class called AbstractScrubbingService:
 
-````
+````python
 # services.py
 
 from ambient_toolbox.services.custom_scrubber import AbstractScrubbingService
@@ -107,7 +107,7 @@ this in the example above. Only register the functions in the class attributes `
 
 Finally, you need to create a new management command called `custom_scrub`. Here is an example implementation:
 
-````
+````python
 # custom_scrub.py
 
 from django.core.management.base import BaseCommand

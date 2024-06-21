@@ -13,9 +13,11 @@ define an email address (must be a catchall inbox), where the restricted emails 
 
 Example:
 
-    EMAIL_BACKEND = 'ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend'
-    EMAIL_BACKEND_DOMAIN_WHITELIST = ['ambient.digital']
-    EMAIL_BACKEND_REDIRECT_ADDRESS = '%s@testuser.ambient.digital'
+```python
+EMAIL_BACKEND = "ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend"
+EMAIL_BACKEND_DOMAIN_WHITELIST = ["ambient.digital"]
+EMAIL_BACKEND_REDIRECT_ADDRESS = "%s@testuser.ambient.digital"
+```
 
 If EMAIL_BACKEND_REDIRECT_ADDRESS is configured, an email to 'albertus.magnus@example.com' will be redirected to:
 albertus.magnus_example.com@testuser.ambient.digital

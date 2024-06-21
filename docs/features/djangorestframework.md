@@ -7,7 +7,7 @@
 This serializers extends the restframework ``ModelSerializer`` but ensures that the ``clean()`` method in the model is
 called. By default, only django forms call the model-level clean, not the serializers.
 
-````
+````python
 # models.py
 class MyModel(models.Model):
     ...
@@ -34,7 +34,7 @@ database object, this serializers takes care of setting those fields if a reques
 Furthermore, it extends the ``BaseModelSerializer`` to ensure that model-level validation is called on serializer
 validation.
 
-````
+````python
 # models.py
 class MyOwnershipRelevantModel(CommonInfo):
     ...
@@ -54,7 +54,7 @@ class MyOwnershipRelevantModelSerializer(CommonInfoSerializer)
 In some cases you'll have to define a foreign key from and to the same model. One popular use-case is a simple tree
 structure. If you want to use the same serializer for the parent and all children, you can utilise our `RecursiveField`:
 
-````
+````python
 class MyModelSerializer(serializers.ModelSerializer):
     ...
     children = RecursiveField(many=True)
@@ -79,7 +79,7 @@ viewset manually.
 It is easy to use this mixin, just follow these steps. You will probably have some base test class to encapsulate your
 general test setup. So create a new base api test class like this:
 
-````
+````python
 class BaseApiTest(BaseViewSetTestMixin, BaseTest):
     def get_default_api_user(self) -> AbstractUser:
         return baker.make_recipe('apps.account.tests.user')
@@ -100,7 +100,7 @@ If you do not need this default user, simply return `None` in the described meth
 Permissions are one of the most vital things to test in your application. So this mixin provides a helper method, so you
 are able to test what you require without thinking about how to test it.
 
-````
+````python
 class MyFancyViewsetApiTest(BaseApiTest):
     def test_list_authentication_required(self):
         self.validate_authentication_required(
@@ -118,7 +118,7 @@ this case, if the API does not return valid data, but an error code, the reason 
 other hand start with asserting response data, you might get an ``IndexError`` which will point the assigned developer
 in the wrong direction at first.
 
-````
+````python
 class MyFancyViewsetApiTest(BaseApiTest):
     def test_list_regular(self):
         response = self.execute_request(
@@ -155,7 +155,7 @@ deactivated.
 
 With this mixin you can ensure this easily like this:
 
-````
+````python
 class MyFancyViewsetApiTest(BaseApiTest):
     view_class = views.MyFancyViewset
     ...
@@ -174,7 +174,7 @@ class MyFancyViewsetApiTest(BaseApiTest):
 
 Here is an example of how to test file uploads. Feel free to adjust the `data` kwarg to suit your needs.
 
-````
+````python
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class MyFancyViewsetApiTest(BaseApiTest):
