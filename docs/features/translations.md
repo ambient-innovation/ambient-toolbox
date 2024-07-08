@@ -25,7 +25,7 @@ This toolbox provides a management command to validate the integrity of your PO 
 
 The command will check all PO files from all active languages in the Django settings (`LANGUAGES`).
 
-> python ./manage.py validate_translation_file_integrity
+> `python ./manage.py validate_translation_file_integrity`
 
 The following cases are being covered:
 * Fuzzy translations aren't allowed

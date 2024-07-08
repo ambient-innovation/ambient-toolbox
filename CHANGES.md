@@ -1,5 +1,8 @@
 # Changelog
 
+**10.1.1** (2024-07-08)
+  * Fixed documentation nitpick
+
 **10.1.0** (2024-07-08)
   * Added management command `validate_translation_file_integrity`
 
