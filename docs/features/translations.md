@@ -21,21 +21,14 @@ Therefore, we've created the management command `create_translation_file`, which
 
 It makes a lot of sense to check your transaction file in the pipeline, to avoid forgotten or left-over translations.
 
-Here is a comprehensive example for the language "en":
+This toolbox provides a management command to validate the integrity of your PO files.
 
-```yml
-# Check for fuzzy translations
-- echo "Check for fuzzy translations"
-- grep -q "#, fuzzy" ./locale/en/LC_MESSAGES/django.po && exit 1
-# Check for left-over translations
-- echo "Check for left-over translations"
-- grep -q "#~" ./locale/en/LC_MESSAGES/django.po && exit 1
-# Check if "makemessages" detects new translations
-- python manage.py create_translation_file --lang en
-# Checking for differences in translation file
-- echo "Checking for differences in translation file"
-- git diff --ignore-matching-lines=POT-Creation-Date --ignore-matching-lines=# --exit-code locale/
-# Check if all translation strings have been translated
-- echo "Check if all translation strings have been translated"
-- msgattrib --untranslated ./locale/en/LC_MESSAGES/django.po | exit `wc -c`
-```
+The command will check all PO files from all active languages in the Django settings (`LANGUAGES`).
+
+> python ./manage.py validate_translation_file_integrity
+
+The following cases are being covered:
+* Fuzzy translations aren't allowed
+* Commented-out translations aren't allowed
+* Validate, that `manage.py makemessages` has been called before committing
+* Validate, that all translations were actually translated

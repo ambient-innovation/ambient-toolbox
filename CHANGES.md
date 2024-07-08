@@ -1,5 +1,8 @@
 # Changelog
 
+**10.1.0** (2024-07-08)
+  * Added management command `validate_translation_file_integrity`
+
 **10.0.4** (2024-06-20)
   * Linted docs with `blacken-docs` via `ambient-package-update`
 
