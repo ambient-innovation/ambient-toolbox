@@ -50,7 +50,7 @@ dev = [
    'mistune<2.0.0',
    'flit~=3.9',
    'keyring~=25.2',
-   'ambient-package-update~=24.7.2',
+   'ambient-package-update~=24.7.3',
    'gevent~=23.9',
    'httpx~=0.27',
 ]
@@ -101,7 +101,6 @@ lint.select = [
     "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
-    "D",       # Pydocstyle
     "LOG",     # flake8-logging
     "TID",     # flake8-tidy-imports
     "PLR2004", # Magic numbers
@@ -117,17 +116,9 @@ lint.ignore = [
     'B905', # Can be enabled when Python <=3.9 support is dropped
     'DTZ001', # TODO will affect "tz_today()" method
     'DTZ005', # TODO will affect "tz_today()" method
+    'RUF012', # Mutable class attributes should be annotated with `typing.ClassVar`
     'TD002', # Missing author in TODO
     'TD003', # Missing issue link on the line following this TODO
-    'D1', # Missing docstring
-    'RUF012', # Mutable class attributes should be annotated with `typing.ClassVar`
-    'D200', # Fits-on-one-line
-    'D203', # one-blank-line-before-class - incompatible to D211 no-blank-line-before-class
-    'D205', # Checks docstring summary lines not separated from the docstring description
-    'D212', # Multi-line-summary-first-line
-    'D400', # Checks docstrings in which the first line does not end in a period -> ! ? should also be allowed
-    'D401', # Checks function docstrings that include the function's signature in the summary line
-    'D415', # Checks first line docstrings doesn't end in a punctuation mark, ".", "?", "!" -> weird behavior
     'TRY002', # Checks for code that raises Exception directly.
     'TRY003', # Checks for long exception messages that are not defined in the exception class itself.
 ]
@@ -152,7 +143,6 @@ lint.fixable = [
     "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
-    "D",       # Pydocstyle
     "LOG",     # flake8-logging
     "TID",     # flake8-tidy-imports
     "PLR2004", # Magic numbers
