@@ -1,19 +1,22 @@
 # Mixins
 
-## BleacherMixin
+## HTML sanitation
 
 ### Motivation
 
-Sometimes it is necessary to allow the user to write HTML and save this in the database. Unfortunately this creates the
-possibility to insert malicious content. A package called [bleach](https://pypi.org/project/bleach) can help with this
-problem.
+Sometimes it is necessary to allow the user to write HTML and save this in the database.
+A common examples are WYSIWYG editors. Unfortunately, this creates the
+possibility to insert malicious content and open your website to XSS attacks.
+
+A package called [nh3](https://pypi.org/project/nh3/) can help with this problem. nh3 is an Ammonia-based successor
+of "bleach", which got deprecated in 2023.
 
 Keep in mind that django templates will automatically escape all HTML and script code it renders. So if you want to
 allow the user to create custom HTML content, this content has to be marked as "safe" in the template. This will
-deactivate the escaping - and will render every evil piece of code the user inserted (intentionally or not).
+deactivate the escaping — and will render every evil piece of code the user inserted (intentionally or not).
 
-If you allow custom content to be rendered "safely", you should whitelist harmless HTML tags and attributes and remove
-all possible dangers - and as we are working with django, we want to define this security layer on a single point in the
+If you allow custom content to be rendered "safely", you should allow HTML tags and attributes and remove
+only possible dangers - and as we are working with Django, we want to define this security layer at a single point in the
 code to be sure that it won't be forgotten at any time.
 
 ### Model mixin
@@ -21,6 +24,10 @@ code to be sure that it won't be forgotten at any time.
 Therefore, we create the `BleacherMixin` which is used in the model like this.
 
 ```python
+from ambient_toolbox.mixins.bleacher import BleacherMixin
+from django.db import models
+
+
 class MyModel(BleacherMixin, models.Model):
     BLEACH_FIELD_LIST = ["my_html_field"]
 
@@ -28,23 +35,29 @@ class MyModel(BleacherMixin, models.Model):
     my_html_field = models.TextField()
 ```
 
-This will automatically bleach (meaning escape) all non-whitelisted HTML tags and attributes in the defined fields while
-leaving the white-listed ones intact.
+This will automatically bleach (meaning escape) all not allowed HTML tags and attributes in the defined fields while
+leaving the allowed ones intact.
 
 Technically the mixin bleaches the field on a model `safe()` call.
+
+Ensure that you install the Ambient toolbox with the `bleacher` extra.
+
+> pip install ambient-toolbox[bleacher]
 
 ### Default settings
 
 The default settings are as follows:
 
 ```python
+import nh3
+
 DEFAULT_ALLOWED_ATTRIBUTES = {
+    **nh3.ALLOWED_ATTRIBUTES,
     "*": ["class", "style", "id"],
-    "a": ["href", "rel"],
-    "img": ["alt", "src"],
 }
 
-DEFAULT_ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
+DEFAULT_ALLOWED_TAGS = [
+    *nh3.ALLOWED_TAGS,
     "span",
     "p",
     "h1",
@@ -52,7 +65,7 @@ DEFAULT_ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "h3",
     "h4",
     "h5",
-    *"h6",
+    "h6",
     "img",
     "div",
     "u",
@@ -61,16 +74,15 @@ DEFAULT_ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 ]
 ```
 
-### Customize whitelists
+### Customize allowlists
 
-If you want to alter your whitelists, just add something similar to this in your global django `settings.py`:
+If you want to alter your allowlists, add something similar to this in your global django `settings.py`:
 
 ```python
 # Bleach
 BLEACH_ALLOWED_ATTRIBUTES = {
     "*": ["class", "style", "id"],
-    "a": ["href", "rel", "target"],
-    "img": ["alt", "src"],
+    "a": ["href", "target"],
 }
 
 BLEACH_ALLOWED_TAGS = [
