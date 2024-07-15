@@ -7,7 +7,7 @@ from testapp.models import MySingleSignalModel
 
 
 class MySingleSignalModelViewSet(mixins.ListModelMixin, GenericViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.MySingleSignalModelSerializer
 
     def get_queryset(self):

@@ -14,10 +14,10 @@ class TestManyTrueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ModelWithFkToSelf
-        fields = [
+        fields = (
             "id",
             "children",
-        ]
+        )
 
 
 @pytest.mark.skip
@@ -26,10 +26,10 @@ class TestManyFalseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ModelWithOneToOneToSelf
-        fields = [
+        fields = (
             "id",
             "peer",
-        ]
+        )
 
 
 class RecursiveFieldTest(TestCase):

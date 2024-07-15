@@ -1,5 +1,3 @@
-from typing import List
-
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
@@ -18,7 +16,7 @@ class PermissionSetupService:
         self.dry_run = dry_run
 
     @transaction.atomic
-    def process(self) -> (List[Permission], List[Permission]):
+    def process(self) -> (list[Permission], list[Permission]):
         # Fetch or create group
         group, created = Group.objects.get_or_create(name=self.group_declaration.name)
 

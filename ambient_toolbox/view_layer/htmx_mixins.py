@@ -1,5 +1,5 @@
 import json
-from typing import Dict, Union
+from typing import Union
 
 
 class HtmxResponseMixin:
@@ -11,7 +11,7 @@ class HtmxResponseMixin:
     """
 
     hx_redirect_url: str = None
-    hx_trigger: Union[str, Dict[str, str]] = None
+    hx_trigger: Union[str, dict[str, str]] = None
 
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)

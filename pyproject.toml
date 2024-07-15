@@ -20,7 +20,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -51,7 +50,7 @@ dev = [
    'mistune<2.0.0',
    'flit~=3.9',
    'keyring~=25.2',
-   'ambient-package-update~=24.6.5',
+   'ambient-package-update~=24.7.1',
    'gevent~=23.9',
    'httpx~=0.27',
 ]
@@ -94,16 +93,22 @@ lint.select = [
     "DTZ",     # flake8-datetimez
     "DJ",      # flake8-django
     "TD",      # flake8-to-do
-    "RUF100",  # Removes unnecessary "#noqa" comments
+    "RUF",     # Ruff-specific rules
     "YTT",     # Avoid non-future-prove usages of "sys"
-    # "FBT",     # Protects you from the "boolean trap bug"
     "C4",      # Checks for unnecessary conversions
     "PIE",     # Bunch of useful rules
-    # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
     "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
+    "D",       # Pydocstyle
+    "LOG",     # flake8-logging
+    "TID",     # flake8-tidy-imports
+    "PLR2004", # Magic numbers
+    "BLE",     # Checks for except clauses that catch all exceptions
+    "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
+    "TRY",     # Clean try/except
+    "ERA",     # Commented out code
 ]
 lint.ignore = [
     'N999', # Project name contains underscore, not fixable
@@ -114,6 +119,17 @@ lint.ignore = [
     'DTZ005', # TODO will affect "tz_today()" method
     'TD002', # Missing author in TODO
     'TD003', # Missing issue link on the line following this TODO
+    'D1', # Missing docstring
+    'RUF012', # Mutable class attributes should be annotated with `typing.ClassVar`
+    'D200', # Fits-on-one-line
+    'D203', # one-blank-line-before-class - incompatible to D211 no-blank-line-before-class
+    'D205', # Checks docstring summary lines not separated from the docstring description
+    'D212', # Multi-line-summary-first-line
+    'D400', # Checks docstrings in which the first line does not end in a period -> ! ? should also be allowed
+    'D401', # Checks function docstrings that include the function's signature in the summary line
+    'D415', # Checks first line docstrings doesn't end in a punctuation mark, ".", "?", "!" -> weird behavior
+    'TRY002', # Checks for code that raises Exception directly.
+    'TRY003', # Checks for long exception messages that are not defined in the exception class itself.
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -128,16 +144,22 @@ lint.fixable = [
     "DTZ",     # flake8-datetimez
     "DJ",      # flake8-django
     "TD",      # flake8-to-do
-    "RUF100",  # Removes unnecessary "#noqa" comments
+    "RUF",     # Ruff-specific rules
     "YTT",     # Avoid non-future-prove usages of "sys"
-    # "FBT",     # Protects you from the "boolean trap bug"
     "C4",      # Checks for unnecessary conversions
     "PIE",     # Bunch of useful rules
-    # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
     "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
+    "D",       # Pydocstyle
+    "LOG",     # flake8-logging
+    "TID",     # flake8-tidy-imports
+    "PLR2004", # Magic numbers
+    "BLE",     # Checks for except clauses that catch all exceptions
+    "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
+    "TRY",     # Clean try/except
+    "ERA",     # Commented out code
 ]
 lint.unfixable = []
 
@@ -190,7 +212,7 @@ line-ending = "auto"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py{38,39,310,311}-django{32,41,42}
+envlist = py{39,310,311,312}-django{32,41,42}
 isolated_build = True
 
 [testenv]
@@ -204,7 +226,6 @@ commands =
 
 [gh-actions]
 python =
-    3.8: py38
     3.9: py39
     3.10: py310
     3.11: py311

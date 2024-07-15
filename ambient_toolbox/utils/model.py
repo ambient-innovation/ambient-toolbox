@@ -1,12 +1,13 @@
+from typing import Optional
+
 from django.db.models import ForeignKey
 
 
-def object_to_dict(obj, blacklisted_fields: list = None, include_id: bool = False) -> dict:
+def object_to_dict(obj, blacklisted_fields: Optional[list] = None, include_id: bool = False) -> dict:
     """
     Returns a dict with all data defined in the model class as a key-value-dict
     Attention: Does not work for M2M fields!
     """
-
     # Default blacklist
     blacklisted_fields = blacklisted_fields if blacklisted_fields else []
 

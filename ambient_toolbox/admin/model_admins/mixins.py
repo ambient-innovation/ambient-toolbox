@@ -89,7 +89,8 @@ class CommonInfoAdminMixin:
         """
         Set the fields CommonInfo handles to readonly to avoid users fiddling around with them.
         """
-        return super().get_readonly_fields(request, obj) + (
+        return (
+            *super().get_readonly_fields(request, obj),
             "created_by",
             "lastmodified_by",
             "created_at",
@@ -121,7 +122,7 @@ class DeactivatableChangeViewAdminMixin:
 
     def can_see_change_view(self, request) -> bool:
         """
-        This method determines if the change view is disabled or visible.
+        A method that determines if the change view is disabled or visible.
         """
         return self.enable_change_view
 

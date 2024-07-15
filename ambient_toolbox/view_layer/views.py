@@ -6,7 +6,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 class CustomPermissionMixin(generic.View):
     """
-    This mixin provides the method `validate_permissions()` to create a space where custom, non-django-permissions
+    A mixin that provides the method `validate_permissions()` to create a space where custom, non-django-permissions
     can live. This method will be called in the `dispatch()` method to avoid executing unnecessary logic in the
     "permission denied" case.
     """

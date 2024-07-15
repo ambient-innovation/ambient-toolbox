@@ -26,7 +26,6 @@ class ClassBasedViewTestMixin:
 
     def _get_response(self, method, user, data, url_params=None, *args, **kwargs):
         """Returns response."""
-
         # Catch case that URL does not get any params passed to
         if not url_params:
             url_params = {}

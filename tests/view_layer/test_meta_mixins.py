@@ -14,20 +14,20 @@ class MetaDjangoPermissionRequiredMixinTest(RequestProviderMixin, TestCase):
         pass
 
     class TestViewSinglePerm(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ["auth.change_user"]
+        permission_list = ("auth.change_user",)
         login_view_name = "other-login-view"
 
         def get(self, *args, **kwargs):
             return HttpResponse(status=200)
 
     class TestViewMultiplePerms(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ["auth.change_user", "auth.add_user"]
+        permission_list = ("auth.change_user", "auth.add_user")
 
         def get_login_url(self):
             return "login/"
 
     class TestDifferentLoginNameView(DjangoPermissionRequiredMixin, generic.View):
-        permission_list = ["auth.change_user"]
+        permission_list = ("auth.change_user",)
         login_view_name = "other-login-view"
 
     @classmethod
