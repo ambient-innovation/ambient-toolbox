@@ -115,6 +115,6 @@ def get_key_from_tuple_by_value(choices: tuple, value) -> Any:  # noqa: ANN401
     Usage: project_type_a_name = get_value_from_tuple_by_key(PROJECT_TYPE_CHOICES, 'Budget-Project')
     """
     try:
-        return next(x[0] for x in choices if x[1] == value)
+        return [x[0] for x in choices if x[1] == value][0]  # noqa: RUF015
     except IndexError:
         return "-"
