@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from sentry_sdk.serializer import serialize
 
@@ -13,7 +13,7 @@ class SentryEventScrubber:
     before_send_transaction = SentryEventScrubber().scrub_sensitive_data_from_sentry_event
     """
 
-    def __init__(self, denylist: Optional[List[str]] = None, standard_denylist: Optional[bool] = True) -> None:
+    def __init__(self, denylist: Optional[list[str]] = None, standard_denylist: Optional[bool] = True) -> None:
         """
         Arguments:
         ---------
