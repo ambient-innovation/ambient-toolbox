@@ -67,5 +67,36 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(key="DTZ005", comment='TODO will affect "tz_today()" method'),
         RuffIgnoredInspection(key="TD002", comment="Missing author in TODO"),
         RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TODO"),
+        RuffIgnoredInspection(key="D1", comment="Missing docstring"),
+        RuffIgnoredInspection(
+            key="D200",
+            comment="Fits-on-one-line",
+        ),
+        RuffIgnoredInspection(
+            key="D203", comment="one-blank-line-before-class - incompatible to D211 no-blank-line-before-class"
+        ),
+        RuffIgnoredInspection(
+            key="D205", comment="Checks docstring summary lines not separated from the docstring description"
+        ),
+        RuffIgnoredInspection(
+            key="D212",
+            comment="Multi-line-summary-first-line",
+        ),
+        RuffIgnoredInspection(
+            key="D400",
+            comment="Checks docstrings in which the first line does not end in a period -> ! ? should also be allowed",
+        ),
+        RuffIgnoredInspection(
+            key="D401", comment="Checks function docstrings that include the function's signature in the summary line"
+        ),
+        RuffIgnoredInspection(
+            key="D415",
+            comment='Checks first line docstrings doesn\'t end in a punctuation mark, ".", "?", "!" -> weird behavior',
+        ),
+        RuffIgnoredInspection(key="TRY002", comment="Checks for code that raises Exception directly."),
+        RuffIgnoredInspection(
+            key="TRY003",
+            comment="Checks for long exception messages that are not defined in the exception class itself.",
+        ),
     ],
 )

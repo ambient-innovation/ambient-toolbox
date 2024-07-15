@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import bleach
 
 
@@ -29,15 +31,16 @@ class BleacherMixin:
       * img: alt, src
     """
 
-    BLEACH_FIELD_LIST = []
+    BLEACH_FIELD_LIST: ClassVar = []
 
-    DEFAULT_ALLOWED_ATTRIBUTES = {
+    DEFAULT_ALLOWED_ATTRIBUTES: ClassVar = {
         "*": ["class", "style", "id"],
         "a": ["href", "rel"],
         "img": ["alt", "src"],
     }
 
-    DEFAULT_ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
+    DEFAULT_ALLOWED_TAGS: ClassVar = [
+        *bleach.ALLOWED_TAGS,
         "span",
         "p",
         "h1",

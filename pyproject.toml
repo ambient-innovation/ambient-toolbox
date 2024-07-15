@@ -3,7 +3,7 @@ requires = ["flit_core>=3.4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "ambient-toolbox"
+name = "ambient_toolbox"
 authors = [
     {'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital'},
 ]
@@ -44,14 +44,15 @@ dev = [
    'pytest-django~=4.7',
    'pytest-mock~=3.12',
    'coverage~=7.3',
-   'pre-commit~=3.5',
-   'ruff~=0.1.7',
+   'pre-commit~=3.7',
+   'ruff~=0.4',
    'sphinx~=7.1',
    'sphinx-rtd-theme~=2.0',
    'm2r2==0.3.3.post2',
    'mistune<2.0.0',
    'flit~=3.9',
-   'ambient-package-update~=24.6.4',
+   'keyring~=25.2',
+   'ambient-package-update~=24.6.5',
    'gevent~=23.9',
    'httpx~=0.27',
 ]
@@ -91,16 +92,22 @@ lint.select = [
     "DTZ",     # flake8-datetimez
     "DJ",      # flake8-django
     "TD",      # flake8-to-do
-    "RUF100",  # Removes unnecessary "#noqa" comments
+    "RUF",     # Ruff-specific rules
     "YTT",     # Avoid non-future-prove usages of "sys"
-    # "FBT",     # Protects you from the "boolean trap bug"
     "C4",      # Checks for unnecessary conversions
     "PIE",     # Bunch of useful rules
-    # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
     "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
+    "D",       # Pydocstyle
+    "LOG",     # flake8-logging
+    "TID",     # flake8-tidy-imports
+    "PLR2004", # Magic numbers
+    "BLE",     # Checks for except clauses that catch all exceptions
+    "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
+    "TRY",     # Clean try/except
+    "ERA",     # Commented out code
 ]
 lint.ignore = [
     'N999', # Project name contains underscore, not fixable
@@ -111,6 +118,16 @@ lint.ignore = [
     'DTZ005', # TODO will affect "tz_today()" method
     'TD002', # Missing author in TODO
     'TD003', # Missing issue link on the line following this TODO
+    'D1', # Missing docstring
+    'D200', # fits-on-one-line - if wanted should be in it's own MR -> effects nearly every doc-strings
+    'D203', # one-blank-line-before-class - incompatible to D211 no-blank-line-before-class
+    'D205', # Checks docstring summary lines not separated from the docstring description
+    'D212', # multi-line-summary-first-line - if wanted should be in it's own MR -> effects nearly every doc-string
+    'D400', # Checks docstrings in which the first line does not end in a period -> ! ? should also be allowed
+    'D401', # Checks function docstrings that include the function's signature in the summary line
+    'D415', # Checks first line docstrings doesn't end in a punctuation mark, ".", "?", "!" -> weird behavior
+    'TRY002', # Checks for code that raises Exception directly.
+    'TRY003', # Checks for long exception messages that are not defined in the exception class itself.
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -125,16 +142,22 @@ lint.fixable = [
     "DTZ",     # flake8-datetimez
     "DJ",      # flake8-django
     "TD",      # flake8-to-do
-    "RUF100",  # Removes unnecessary "#noqa" comments
+    "RUF",     # Ruff-specific rules
     "YTT",     # Avoid non-future-prove usages of "sys"
-    # "FBT",     # Protects you from the "boolean trap bug"
     "C4",      # Checks for unnecessary conversions
     "PIE",     # Bunch of useful rules
-    # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
     "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
     "PL",      # PyLint
+    "D",       # Pydocstyle
+    "LOG",     # flake8-logging
+    "TID",     # flake8-tidy-imports
+    "PLR2004", # Magic numbers
+    "BLE",     # Checks for except clauses that catch all exceptions
+    "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
+    "TRY",     # Clean try/except
+    "ERA",     # Commented out code
 ]
 lint.unfixable = []
 
@@ -166,7 +189,7 @@ exclude = [
 line-length = 120
 
 # Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 # Assume Python 3.12
 target-version = "py312"

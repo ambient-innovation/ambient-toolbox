@@ -96,7 +96,7 @@ def get_namedtuple_choices(name, choices_tuple):
     return Choices._make([val for val, name, desc in choices_tuple])
 
 
-def get_value_from_tuple_by_key(choices: tuple, key) -> Any:
+def get_value_from_tuple_by_key(choices: tuple, key) -> Any:  # noqa: ANN401
     """
     Fetches the tuple value by a given key
     Useful for getting the name of a key from a model choice tuple of tuples.
@@ -108,13 +108,13 @@ def get_value_from_tuple_by_key(choices: tuple, key) -> Any:
         return "-"
 
 
-def get_key_from_tuple_by_value(choices: tuple, value) -> Any:
+def get_key_from_tuple_by_value(choices: tuple, value) -> Any:  # noqa: ANN401
     """
     Fetches the tuple key by a given value
     Useful for getting the key of a value from a model choice tuple of tuples.
     Usage: project_type_a_name = get_value_from_tuple_by_key(PROJECT_TYPE_CHOICES, 'Budget-Project')
     """
     try:
-        return [x[0] for x in choices if x[1] == value][0]
+        return next(x[0] for x in choices if x[1] == value)
     except IndexError:
         return "-"

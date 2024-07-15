@@ -16,7 +16,7 @@ class BaseModelSerializer(ModelSerializer):
 
 class CommonInfoSerializer(BaseModelSerializer):
     """
-    This serializer should be used for all models that extend "CommonInfo". It adds the data for
+    A serializer that should be used for all models that extend "CommonInfo". It adds the data for
     `lastmodified_by` and `created_by` when saving a model through the serializer.
     This cannot be done in the model's `save` function, since the request is required.
     """

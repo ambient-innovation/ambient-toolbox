@@ -11,5 +11,4 @@ def format_to_minutes(time):
     :param time:
     :return minutes:
     """
-
     return time.seconds // 60

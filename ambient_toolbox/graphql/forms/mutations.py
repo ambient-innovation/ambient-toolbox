@@ -24,7 +24,7 @@ class DjangoValidatedModelFormMutation(DjangoModelFormMutation):
             try:
                 payload.client_mutation_id = input.get("client_mutation_id")
             except Exception as e:
-                raise Exception(f"Cannot set client_mutation_id in the payload object {repr(payload)}") from e
+                raise Exception(f"Cannot set client_mutation_id in the payload object {payload!r}") from e
             return payload
 
         result = cls.mutate_and_get_payload(root, info, **input)

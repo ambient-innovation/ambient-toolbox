@@ -1,4 +1,4 @@
-from typing import Union
+from typing import ClassVar, Optional, Union
 from unittest import mock
 
 from django.contrib.auth import get_user_model
@@ -14,7 +14,7 @@ from ambient_toolbox.view_layer.mixins import DjangoPermissionRequiredMixin
 class BaseViewPermissionTestMixin(RequestProviderMixin):
     view_class = None
     permission_list = None
-    view_kwargs = {}
+    view_kwargs: ClassVar = {}
 
     @classmethod
     def setUpTestData(cls):
@@ -33,7 +33,7 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
             raise TestSetupConfigurationError(_('BaseViewPermissionTestMixin used without setting a "view_class".'))
 
     def get_view_instance(
-        self, *, user: Union[AbstractBaseUser, AnonymousUser], kwargs: dict = None, method: str = "GET"
+        self, *, user: Union[AbstractBaseUser, AnonymousUser], kwargs: Optional[dict] = None, method: str = "GET"
     ):
         """
         Creates an instance of the given view class and injects a valid request.
