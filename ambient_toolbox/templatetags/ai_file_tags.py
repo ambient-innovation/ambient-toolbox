@@ -32,5 +32,5 @@ def filesize(value):
     """
     try:
         return os.path.getsize(f"{settings.MEDIA_ROOT}{value}")
-    except Exception:
+    except Exception:  # noqa: BLE001
         return 0

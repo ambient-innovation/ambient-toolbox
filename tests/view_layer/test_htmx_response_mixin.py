@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.views import generic
@@ -12,7 +14,7 @@ class HtmxResponseMixinTest(RequestProviderMixin, TestCase):
         hx_trigger = "myEvent"
 
     class TestViewWithTriggerDict(HtmxResponseMixin, generic.View):
-        hx_trigger = {"myEvent": None}
+        hx_trigger: ClassVar = {"myEvent": None}
 
     def test_dispatch_functional(self):
         view = self.TestView()

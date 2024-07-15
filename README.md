@@ -43,11 +43,11 @@ The migration is really simple, just:
 
 - Install the package via pip:
 
-  `pip install ambient-toolbox`
+  `pip install ambient_toolbox`
 
   or via pipenv:
 
-  `pipenv install ambient-toolbox`
+  `pipenv install ambient_toolbox`
 
 - Add module to `INSTALLED_APPS` within the main django `settings.py`:
 

@@ -63,7 +63,6 @@ class BaseViewSetTestMixin:
         viewset_kwargs: ViewSets need a dict to tell it, what action we want to execute
         data_format: Format of the sent data, defaults to JSON, might be "multipart" etc.
         """
-
         # Set proper default fallback value for dicts
         if view_kwargs is None:
             view_kwargs = {}

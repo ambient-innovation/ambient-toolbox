@@ -1,5 +1,9 @@
 # Changelog
 
+**10.2.0** (2024-07-15)
+  * Dropped Python 3.8 support
+  * Added new Ruff linting rules
+
 **10.1.1** (2024-07-08)
   * Fixed documentation nitpick
 

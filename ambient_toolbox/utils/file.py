@@ -6,7 +6,6 @@ def get_filename_without_ending(file_path: str) -> str:
     """
     Returns the filename without extension
     """
-
     # if filename has file_path parts
     if "/" in file_path:
         filename = file_path.rsplit("/")[-1]
@@ -17,12 +16,13 @@ def get_filename_without_ending(file_path: str) -> str:
 
 
 def crc(file_path: str) -> str:
-    """Calculates the cyclic redundancy checksum (CRC) of the given file.
+    """
+    Calculates the cyclic redundancy checksum (CRC) of the given file.
 
     See ``open`` for all the exceptions that can be raised.
 
-    :param file_path: the file for which the CRC checksum should be calculated.
-    :return: returns the CRC checksum of the file in hexadecimal format (8 characters).
+    :param file_path: The file for which the CRC checksum should be calculated.
+    :return: Returns the CRC checksum of the file in hexadecimal format (8 characters).
     """
     prev = 0
     with open(file_path, "rb") as f:

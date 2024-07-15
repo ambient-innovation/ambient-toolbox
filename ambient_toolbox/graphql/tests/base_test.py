@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 from django.test import Client, TestCase
 
@@ -22,7 +23,7 @@ class GraphQLTestCase(TestCase):
 
         cls._client = Client(cls.GRAPHQL_SCHEMA)
 
-    def query(self, query: str, op_name: str = None, input_data: dict = None):
+    def query(self, query: str, op_name: Optional[str] = None, input_data: Optional[dict] = None):
         """
         :param query:       GraphQL query to run
         :param op_name:     If the query is a mutation or named query, you must supply the op_name.
@@ -30,7 +31,6 @@ class GraphQLTestCase(TestCase):
         :param input_data:  If provided, the $input variable in GraphQL will be set to this value
         :return:            Response object from client
         """
-
         body = {"query": query}
         if op_name:
             body["operation_name"] = op_name

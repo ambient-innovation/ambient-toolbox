@@ -196,7 +196,6 @@ class CoverageService:
         Compare coverage from target branch (latest develop) with the current one.
         At first, we try to get a successfully finished pipeline for the "self.target_branch" (usually "develop")
         """
-
         # Check, if coverage is supposed to run. If not, inform the user and return early.
         if self.disable_coverage:
             print("Coverage was skipped!")

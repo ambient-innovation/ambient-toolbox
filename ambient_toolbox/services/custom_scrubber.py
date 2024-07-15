@@ -1,4 +1,5 @@
 import logging
+from typing import ClassVar, Final
 
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
@@ -13,14 +14,14 @@ class ScrubbingError(RuntimeError):
 
 
 class AbstractScrubbingService:
-    DEFAULT_USER_PASSWORD = "Admin0404!"
+    DEFAULT_USER_PASSWORD: Final[str] = "Admin0404!"
 
     # Over-writable values
-    keep_session_data = False
-    keep_scrubber_data = False
-    keep_django_admin_log = False
-    pre_scrub_functions = []
-    post_scrub_functions = []
+    keep_session_data: bool = False
+    keep_scrubber_data: bool = False
+    keep_django_admin_log: bool = False
+    pre_scrub_functions: ClassVar = []
+    post_scrub_functions: ClassVar = []
 
     def __init__(self):
         self._logger = logging.getLogger("django_scrubber")
