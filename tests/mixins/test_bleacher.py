@@ -44,7 +44,3 @@ class BleacherMixinTest(TestCase):
     def test_save_custom_attribute_allowed(self):
         obj = BleacherMixinModel.objects.create(content='<img alt="Noodle" />')
         self.assertEqual('<img alt="Noodle">', obj.content)
-
-
-# TODO(RV): nh3 nur installieren, wenn man extra verwendet
-#   - doku anpassen
