@@ -29,8 +29,7 @@ METADATA = PackageMetadata(
         tagline="Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.",
     ),
     dependencies=[
-        "Django>=3.2.20",
-        "bleach>=1.4,<6",
+        "Django>=4.2",
         "python-dateutil>=2.5.3",
         # We keep this until we drop Python 3.8
         "pytz",
@@ -50,6 +49,9 @@ METADATA = PackageMetadata(
         "graphql": [
             "graphene-django>=2.2.0",
             "django-graphql-jwt>=0.2.1",
+        ],
+        "bleacher": [
+            "nh3>=0.2,<1",
         ],
         "sentry": [
             "sentry-sdk>=1.19.1",

@@ -43,11 +43,11 @@ The migration is really simple, just:
 
 - Install the package via pip:
 
-  `pip install ambient-toolbox`
+  `pip install ambient_toolbox`
 
   or via pipenv:
 
-  `pipenv install ambient-toolbox`
+  `pipenv install ambient_toolbox`
 
 - Add module to `INSTALLED_APPS` within the main django `settings.py`:
 
@@ -70,7 +70,7 @@ The migration is really simple, just:
 
 - Create a Python virtualenv and activate it
 - Install "pip-tools" with `pip install -U pip-tools`
-- Compile the requirements with `pip-compile --extra dev,drf,graphql,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
+- Compile the requirements with `pip-compile --extra dev,drf,graphql,bleacher,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
 - Sync the dependencies with your virtualenv with `pip-sync`
 
 ### Add functionality
