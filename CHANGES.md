@@ -1,7 +1,8 @@
 # Changelog
 
-**10.2.0** (2024-07-15)
+**11.0.0** (2024-07-15)
   * Dropped Python 3.8 support
+  * Replaced underlying bleach package with nh3 in `BleacherMixin`
   * Added new Ruff linting rules
 
 **10.1.1** (2024-07-08)

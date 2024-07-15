@@ -29,8 +29,7 @@ METADATA = PackageMetadata(
         tagline="Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.",
     ),
     dependencies=[
-        "Django>=3.2.20",
-        "bleach>=1.4,<6",
+        f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
         "python-dateutil>=2.5.3",
         # We keep this until we drop Python 3.8
         "pytz",
@@ -51,6 +50,9 @@ METADATA = PackageMetadata(
             "graphene-django>=2.2.0",
             "django-graphql-jwt>=0.2.1",
         ],
+        "bleacher": [
+            "nh3>=0.2,<1",
+        ],
         "sentry": [
             "sentry-sdk>=1.19.1",
         ],
@@ -65,34 +67,11 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(key="B905", comment="Can be enabled when Python <=3.9 support is dropped"),
         RuffIgnoredInspection(key="DTZ001", comment='TODO will affect "tz_today()" method'),
         RuffIgnoredInspection(key="DTZ005", comment='TODO will affect "tz_today()" method'),
+        RuffIgnoredInspection(
+            key="RUF012", comment="Mutable class attributes should be annotated with `typing.ClassVar`"
+        ),
         RuffIgnoredInspection(key="TD002", comment="Missing author in TODO"),
         RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TODO"),
-        RuffIgnoredInspection(key="D1", comment="Missing docstring"),
-        RuffIgnoredInspection(
-            key="D200",
-            comment="Fits-on-one-line",
-        ),
-        RuffIgnoredInspection(
-            key="D203", comment="one-blank-line-before-class - incompatible to D211 no-blank-line-before-class"
-        ),
-        RuffIgnoredInspection(
-            key="D205", comment="Checks docstring summary lines not separated from the docstring description"
-        ),
-        RuffIgnoredInspection(
-            key="D212",
-            comment="Multi-line-summary-first-line",
-        ),
-        RuffIgnoredInspection(
-            key="D400",
-            comment="Checks docstrings in which the first line does not end in a period -> ! ? should also be allowed",
-        ),
-        RuffIgnoredInspection(
-            key="D401", comment="Checks function docstrings that include the function's signature in the summary line"
-        ),
-        RuffIgnoredInspection(
-            key="D415",
-            comment='Checks first line docstrings doesn\'t end in a punctuation mark, ".", "?", "!" -> weird behavior',
-        ),
         RuffIgnoredInspection(key="TRY002", comment="Checks for code that raises Exception directly."),
         RuffIgnoredInspection(
             key="TRY003",

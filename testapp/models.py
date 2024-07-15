@@ -4,6 +4,7 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from ambient_toolbox.managers import GloballyVisibleQuerySet
+from ambient_toolbox.mixins.bleacher import BleacherMixin
 from ambient_toolbox.mixins.models import PermissionModelMixin, SaveWithoutSignalsMixin
 from ambient_toolbox.mixins.validation import CleanOnSaveMixin
 from ambient_toolbox.models import CommonInfo
@@ -99,6 +100,15 @@ class ModelWithCleanMixin(CleanOnSaveMixin, models.Model):
 class MyPermissionModelMixin(PermissionModelMixin, models.Model):
     def __str__(self):
         return str(self.id)
+
+
+class BleacherMixinModel(BleacherMixin, models.Model):
+    BLEACH_FIELD_LIST = ["content"]
+
+    content = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.content
 
 
 class ModelWithSaveWithoutSignalsMixin(SaveWithoutSignalsMixin, models.Model):
