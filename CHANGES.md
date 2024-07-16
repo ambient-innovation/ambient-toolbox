@@ -1,5 +1,8 @@
 # Changelog
 
+**11.0.1** (2024-07-16)
+  * Updated GitHub actions
+
 **11.0.0** (2024-07-15)
   * Dropped Python 3.8 support
   * Replaced underlying bleach package with nh3 in `BleacherMixin`
