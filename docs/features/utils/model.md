@@ -37,3 +37,33 @@ result = object_to_dict(obj, include_id=True)
 # result = {'id': 1, value_1': 19, 'value_2': 9}
 ````
 
+### get_cached_related_obj(obj, field_name)
+
+The function ``get_cached_related_obj(obj, field_name)`` is supposed to helps avoiding silent sub-queries,
+due to missing `select_related()` or `prefetch_related()`.
+
+What problem does this function solve?
+
+```python
+foo = Foo.objects.all().first()
+foo.bar  # <-- this will silently cause a sub-query
+```
+
+```python
+foo = Foo.objects.all().select_related("bar").first()
+foo.bar  # <-- this will cause no sub-query
+```
+
+The only subtle difference is the usage of `select_related()`, which can easily be forgotten.
+
+Usage:
+
+```python
+foo = Foo.objects.all().first()
+get_cached_related_obj(foo, "bar")
+```
+
+This will result in a KeyError instead of a silent sub-query if the field is not cached
+via `select_related()` or `prefetch_related()`.
+
+Parameter `silently_return_none` can be set to `True` to return `None` instead of raising an AttributeError.
