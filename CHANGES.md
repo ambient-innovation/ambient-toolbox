@@ -1,5 +1,8 @@
 # Changelog
 
+**11.0.2** (2024-07-16)
+  * Fixed GitHub actions bug
+
 **11.0.1** (2024-07-16)
   * Updated GitHub actions
 
