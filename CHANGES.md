@@ -1,5 +1,8 @@
 # Changelog
 
+**11.1.0** (2024-07-16)
+  * Added static role permission feature
+
 **11.0.3** (2024-07-16)
   * Added SECURITY.md
   * Updated linters
