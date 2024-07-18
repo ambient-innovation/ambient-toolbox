@@ -12,7 +12,7 @@ from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredI
 
 METADATA = PackageMetadata(
     package_name="ambient_toolbox",
-    module_name="ambient_toolbox",
+    github_package_group="ambient-innovation",
     company="Ambient Innovation: GmbH",
     authors=[
         PackageAuthor(

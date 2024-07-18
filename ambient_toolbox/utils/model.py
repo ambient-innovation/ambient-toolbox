@@ -16,18 +16,15 @@ def object_to_dict(obj, blacklisted_fields: Optional[list] = None, include_id: b
         blacklisted_fields.append("id")
 
     data = vars(obj)
-    valid_data = {}
 
     valid_fields = []
     for f in obj.__class__._meta.get_fields():
-        if type(f) != ForeignKey:
+        if not isinstance(f, ForeignKey):
             valid_fields.append(f.name)
         else:
             valid_fields.append(f"{f.name}_id")
 
-    for key, value in list(data.items()):
-        if key in valid_fields and key not in blacklisted_fields:
-            valid_data[key] = value
+    valid_data = {key: value for key, value in data.items() if key in valid_fields and key not in blacklisted_fields}
 
     return valid_data
 

@@ -1,5 +1,10 @@
 # Changelog
 
+**11.0.3** (2024-07-16)
+  * Added SECURITY.md
+  * Updated linters
+  * Internal updates via `ambient-package-update`
+
 **11.0.2** (2024-07-16)
   * Fixed GitHub actions bug
 
