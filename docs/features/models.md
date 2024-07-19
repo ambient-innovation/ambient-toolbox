@@ -64,3 +64,8 @@ class MyModelAdmin(CommonInfoAdminMixin, admin.ModelAdmin):
 Note, that you can derive from this class and overwrite the `get_user_obj()` method if your ownership doesn't use the
 default Django user object. This might be the case if you work with a OneToOne relation between the default `User` and
 your custom one.
+
+#### Limitations
+
+Note that this package doesn't provide a mixin for InlineAdmins. But when you install the middleware, this shouldn't be
+necessary anyway.
