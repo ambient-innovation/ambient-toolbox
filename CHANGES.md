@@ -1,6 +1,9 @@
 # Changelog
 
-**11.1.0** (2024-07-16)
+**11.1.1** (2024-07-19)
+  * Fixed a bug leading to missing docs
+
+**11.1.0** (2024-07-18)
   * Added static role permission feature
 
 **11.0.3** (2024-07-16)

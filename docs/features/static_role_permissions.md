@@ -10,7 +10,7 @@ based on a static (hardcoded) definition of roles and permissions.
 
 1. Add `StaticRolePermissionBackend` to your `AUTHENTICATION_BACKENDS` in the `settings.py`:
 
-```py
+```python
 AUTHENTICATION_BACKENDS = [
     # ... other backends
     # 'django.contrib.auth.backends.ModelBackend',  <-- replace the default ModelBackend
@@ -24,12 +24,12 @@ AUTHENTICATION_BACKENDS = [
 Example:
 
 `settings.py`
-```py
+```python
 STATIC_ROLE_PERMISSIONS_PATH = "my_project.conf.permisions.PERMISSIONS_DICT"
 ```
 
 `my_project.conf.permisions.py`
-```py
+```python
 PERMISSIONS_DICT: dict[str, set[str]] = {
     "role_1": {"my_app.permission_1", "my_app.permission_2", ...},
     "role_2": {...},
@@ -43,9 +43,9 @@ By default, a system check will match the values against the Django model permis
 In theory, roles and permissions could be any hashable value. Just make sure that the return value of `User.role`
 matches the keys of the dictionary.
 
-3. add `ambient_toolbox` to your `INSTALLED_APPS` in the `settings.py` if not already done:
+3. Add `ambient_toolbox` to your `INSTALLED_APPS` in the `settings.py` if not already done:
 
-```py
+```python
 INSTALLED_APPS = [
     # ... other apps
     "ambient_toolbox",
@@ -56,7 +56,7 @@ This is needed to register the [system check](#system-check).
 
 ## Simple example
 
-```py
+```python
 PERMISSIONS_DICT: dict[str, set[str]] = {
     "admin": {
         "auth.view_user",
@@ -81,7 +81,7 @@ User(is_staff=True).has_perm("auth.edit_user")  # --> True (without any db query
 
 This library does not require a role field on the user model, but here is an example how you could implement it:
 
-```py
+```python
 class UserRoleChoices(models.TextChoices):
     ADMIN = "ADMIN", "Admin"
     EMPLOYEE = "EMPLOYEE", "Employee"
@@ -122,16 +122,16 @@ Django permission system in a nutshell:
 - User have permissions (n:m)
 - Users have groups (n:m)
 - Groups have permissions (n:m)
-- So a user has all permissions of his groups and his own permissions combined
+- So a user has all permissions of their groups and their own permissions combined
 - Permissions are strings like `app_label.permission_name` (e.g. `polls.view_poll`)
 - Groups, Permissions and their relations are stored in the db and can be managed via the admin interface at runtime
 
-However, in many cases this adds of lot of complexity to the application, which is not needed.
+However, in many cases, this adds a lot of complexities to the application, which is not needed.
 
 - When users should only have one group at a time, you still need to manage an n:m relation
 - When permissions should not change at runtime, you still need to create and query the permissions via your database.
 - When your authorisation logic is not based on permissions at all, you probably still need to deal with permission,
-  e.g. in Django Admin, because the Django ecosystem is build around this system.
+  e.g. in Django Admin, because the Django ecosystem is built around this system.
 
 This library provides a much simpler way to manage permissions, which is based roles and a hardcoded
 set of permissions per role.
@@ -143,6 +143,6 @@ If your reality is more complex than that, you should not use it.
 
 E.g when:
 
-- User should have more than one role at a time
+- Users should have more than one role at a time
 - Permissions should be managed at runtime
 - You need to assign permissions to individual users

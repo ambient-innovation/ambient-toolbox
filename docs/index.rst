@@ -30,6 +30,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
    features/selectors.md
    features/sentry.md
    features/services.md
+   features/static_role_permissions.md
    features/tests.md
    features/translations.md
    features/utils.rst
