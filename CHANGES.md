@@ -1,8 +1,10 @@
 # Changelog
 
+**11.2.0** (2024-08-12)
+  * Added Django 5.1 support
+
 **11.1.2** (2024-07-19)
   * Added limitation paragraph to object ownership admin documentation
-
 
 **11.1.1** (2024-07-19)
   * Fixed a bug leading to missing docs
