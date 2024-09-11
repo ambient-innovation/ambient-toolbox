@@ -1,5 +1,9 @@
 # Changelog
 
+**11.2.3** (2024-09-11)
+  * Fixed coverage setup due to GitHub changes
+  * Optimised sentry helper tests to make them version agnostic
+
 **11.2.2** (2024-09-11)
   * Fixed issue with package name
   * Updated linters
