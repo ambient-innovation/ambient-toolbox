@@ -1,5 +1,9 @@
 # Changelog
 
+**11.2.2** (2024-09-11)
+  * Fixed issue with package name
+  * Updated linters
+
 **11.2.1** (2024-08-12)
   * Fixed test matrix
 
