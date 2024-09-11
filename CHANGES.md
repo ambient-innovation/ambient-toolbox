@@ -1,5 +1,8 @@
 # Changelog
 
+**11.2.4** (2024-09-11)
+  * Added GitHub action trigger for PRs
+
 **11.2.3** (2024-09-11)
   * Fixed coverage setup due to GitHub changes
   * Optimised sentry helper tests to make them version agnostic
