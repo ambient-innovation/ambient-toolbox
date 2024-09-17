@@ -10,9 +10,11 @@ from ambient_toolbox.utils.date import (
     add_days,
     add_minutes,
     add_months,
+    check_date_is_weekend,
     date_month_delta,
     datetime_format,
     first_day_of_month,
+    get_current_year,
     get_first_and_last_of_month,
     get_formatted_date_str,
     get_next_calendar_week,
@@ -266,3 +268,23 @@ class DateUtilTest(TestCase):
 
             self.assertEqual(date_mapping[date_object]["first"], first_of_month)
             self.assertEqual(date_mapping[date_object]["last"], last_of_month)
+
+    @freeze_time("2017-06-26")
+    def test_get_current_year_regular(self):
+        self.assertEqual(get_current_year(), 2017)
+
+    @freeze_time("2017-12-31 23:59")
+    def test_get_current_year_end_of_year(self):
+        self.assertEqual(get_current_year(), 2017)
+
+    @freeze_time("2017-01-01 00:00")
+    def test_get_current_year_new_year(self):
+        self.assertEqual(get_current_year(), 2017)
+
+    def test_check_date_is_weekend_positive(self):
+        compare_date = datetime.date(year=2024, month=9, day=19)
+        self.assertIs(check_date_is_weekend(compare_date), False)
+
+    def test_check_date_is_weekend_negative(self):
+        compare_date = datetime.date(year=2024, month=9, day=21)
+        self.assertIs(check_date_is_weekend(compare_date), True)

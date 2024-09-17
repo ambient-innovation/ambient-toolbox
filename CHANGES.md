@@ -1,5 +1,9 @@
 # Changelog
 
+**11.3.0** (2024-09-17)
+  * Added date util functions `get_current_year` and `check_date_is_weekend`
+  * Improved date utils docs
+
 **11.2.4** (2024-09-11)
   * Added GitHub action trigger for PRs
 

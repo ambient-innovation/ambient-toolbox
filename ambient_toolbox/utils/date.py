@@ -1,3 +1,4 @@
+import calendar
 import datetime
 from calendar import monthrange
 from typing import Optional, Union
@@ -165,3 +166,19 @@ def get_first_and_last_of_month(date_object: Optional[datetime.date] = None) -> 
     last_of_month = first_of_next_month - datetime.timedelta(days=1)
 
     return first_of_month, last_of_month
+
+
+def get_current_year() -> int:
+    """
+    Returns the current year.
+    Useful in model defaults where you want to put a callable.
+    """
+    return tz_today().year
+
+
+def check_date_is_weekend(compare_date: datetime.date, weekend_days=(calendar.SATURDAY, calendar.SUNDAY)) -> bool:
+    """
+    Determines if a given "compare_date" is on a weekday, based on "weekend_days",
+    which default to European weekend days.
+    """
+    return compare_date.weekday() in weekend_days

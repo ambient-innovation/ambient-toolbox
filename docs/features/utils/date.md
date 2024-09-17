@@ -4,12 +4,15 @@
 ### DateHelper
 
 The date helper class provides constants to use when querying for weekdays ("Monday", "Tuesday") with the django ORM.
-The assignment from numbers to weekdays is not standarised throughout the different django packages. For example,
-in the ``calendar`` extension, Monday equals `0`, in the djang ORM, a Monday is represented by `2`.
+The assignment from numbers to weekdays is not standardised throughout the different django packages.
+
+For example, in the ``calendar`` extension, Monday equals `0`, in the Django ORM, a Monday is represented by `2`.
 
 To avoid using the integers directly, you can use the constants from this class as follows:
 
 ````python
+from ambient_toolbox.utils.date import DateHelper
+
 # Just get records where `my_date` is on a Sunday
 MyModel.objects.filter(my_date__week_day=DateHelper.ORM_SUNDAY)
 
@@ -22,7 +25,8 @@ MyModel.objects.exclude(my_date__week_day__in[DateHelper.ORM_SATURDAY, DateHelpe
 The function ``add_months(source_date)`` provides a simple way to add any number of months to a given date:
 
 ````python
-from ambient_toolbox.utils import add_months
+import datetime
+from ambient_toolbox.utils.date import add_months
 
 new_date = add_months(datetime.date(year=2020, month=9, day=19), 2)
 # new_date = datetime.date(2020, 11, 19)
@@ -35,7 +39,8 @@ You can also use a negative number to subtract months.
 The function ``add_days(source_date)`` provides a simple way to add any number of months to a given date:
 
 ````python
-from ambient_toolbox.utils import add_days
+import datetime
+from ambient_toolbox.utils.date import add_days
 
 new_date = add_days(datetime.date(year=2020, month=9, day=19), 2)
 # new_date = datetime.date(2020, 9, 21)
@@ -48,7 +53,8 @@ You can also use a negative number to subtract days.
 The function ``add_minutes(source_datetime)`` provides a simple way to add any number of months to a given date:
 
 ````python
-from ambient_toolbox.utils import add_days
+import datetime
+from ambient_toolbox.utils.date import add_minutes
 
 new_datetime = add_minutes(datetime.datetime(year=2020, month=9, day=19, hour=8), 60)
 # new_datetime = add_minutes.date(2020, 9, 19, 9)
@@ -65,7 +71,8 @@ The function ``get_next_month()`` is a wrapper for ``add_months()`` and will ret
 The function ``first_day_of_month(source_date)`` will return the first of month for any given date:
 
 ````python
-from ambient_toolbox.utils import first_day_of_month
+import datetime
+from ambient_toolbox.utils.date import first_day_of_month
 
 new_date = first_day_of_month(datetime.date(year=2020, month=9, day=19))
 # new_date = datetime.date(2020, 9, 1)
@@ -76,7 +83,8 @@ new_date = first_day_of_month(datetime.date(year=2020, month=9, day=19))
 The function ``get_formatted_date_str(source_date)`` will return the string representation in the German format ("d.m.Y"):
 
 ````python
-from ambient_toolbox.utils import get_formatted_date_str
+import datetime
+from ambient_toolbox.utils.date import get_formatted_date_str
 
 date_str = get_formatted_date_str(datetime.date(year=2020, month=9, day=19))
 # date_str = "19.09.2020"
@@ -89,7 +97,7 @@ The function ``get_time_from_seconds(seconds)`` will create a string representat
 in the format "HH:mm:ss":
 
 ````python
-from ambient_toolbox.utils import get_formatted_date_str
+from ambient_toolbox.utils.date import get_time_from_seconds
 
 time_str = get_time_from_seconds(3661)
 # time_str = "01:01:01"
@@ -109,7 +117,10 @@ without the timezone is used:
 TIME_ZONE = 'Europe/Berlin'
 
 # my_code.py
-source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=pytz.UTC)
+import datetime
+from ambient_toolbox.utils.date import datetime_format
+
+source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
 datetime_str = datetime_format(source_date, '%d.%m.%Y %H:%M')  # will return '26.06.2020 10:00'
 ````
 
@@ -119,7 +130,7 @@ The function ``get_start_and_end_date_from_calendar_week(year, calendar_week)`` 
 and Sunday of a given calendar week:
 
 ````python
-from ambient_toolbox.utils import get_start_and_end_date_from_calendar_week
+from ambient_toolbox.utils.date import get_start_and_end_date_from_calendar_week
 
 monday, sunday = get_start_and_end_date_from_calendar_week(2020, 38)
 # monday = datetime.date(2020, 09, 14); sunday = datetime.date(2020, 9, 20)
@@ -132,7 +143,7 @@ The function ``get_next_calendar_week(compare_date)`` will return the the calend
 
 ````python
 import datetime
-from ambient_toolbox.utils import get_next_calendar_week
+from ambient_toolbox.utils.date import get_next_calendar_week
 
 next_calendar_week = get_next_calendar_week(datetime.date(year=2020, month=9, day=19))
 # next_calendar_week = 39
@@ -145,7 +156,7 @@ The function ``next_weekday(given_date, weekday)`` will return a date object of 
 ````python
 import calendar
 import datetime
-from ambient_toolbox.utils import next_weekday
+from ambient_toolbox.utils.date import next_weekday
 
 next_friday = next_weekday(datetime.date(year=2020, month=9, day=19), calendar.FRIDAY)
 # next_friday = datetime.date(year=2020, month=9, day=25)
@@ -160,7 +171,7 @@ float. So from April 15th to May 1st it's 0.5 months. Attention: The `end_date` 
 ````python
 import calendar
 import datetime
-from ambient_toolbox.utils import date_month_delta
+from ambient_toolbox.utils.date import date_month_delta
 
 months = date_month_delta(datetime.date(year=2020, month=8, day=1), datetime.date(year=2020, month=10, day=1))
 # months = 2.0
@@ -173,7 +184,7 @@ The month is either the current month (if no date_object is passed), or the mont
 Dates passed need to be datetime.date objects (not datetime.datetime)!
 
 ````python
-from ambient_toolbox.utils import get_first_and_last_of_month
+from ambient_toolbox.utils.date import get_first_and_last_of_month
 
 # Today is 04.04.2022
 first_of_month, last_of_month = get_first_and_last_of_month()
@@ -195,13 +206,44 @@ You can optionally use the argument ``str_format``, then the current date will b
 function will return a string. Please provide a ``strftime``-compatible value.
 
 ````python
-from ambient_toolbox.utils import next_weekday
+from ambient_toolbox.utils.date import tz_today
 
 # Here we'll get an object
 current_date = tz_today()
 
 # Here we'll get a string
 current_date = tz_today('%d.%m.%Y')
+````
+
+### Get current year
+
+The function ``get_current_year()`` will return the current year as an integer.
+
+This is especially useful in model defaults where you want to put a callable instead of a fixed value.
+
+````python
+from ambient_toolbox.utils.date import get_current_year
+
+current_year = get_current_year()
+````
+
+
+### Check if a date is on a weekend
+
+The function ``check_date_is_weekend()`` will return a boolean value determining if the given date is on a weekend.
+
+You can customise the default weekend days via the parameter `weekend_days`.
+
+````python
+import calendar
+import datetime
+from ambient_toolbox.utils.date import check_date_is_weekend
+
+# This will result in False
+is_on_weekend = check_date_is_weekend(datetime.date(2024, 9, 19))
+
+# Imagine you live in certain areas of Malaysia, you can configure the weekend days
+is_on_weekend = check_date_is_weekend(datetime.date(2024, 9, 19), weekend_days=(calendar.FRIDAY, calendar.SUNDAY))
 ````
 
 ## Object ownership helper
