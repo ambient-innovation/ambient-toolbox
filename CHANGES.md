@@ -1,5 +1,8 @@
 # Changelog
 
+**11.4.0** (2024-09-24)
+  * Added system check to enforce naming conventions for DateFields and DateTimeFields
+
 **11.3.0** (2024-09-17)
   * Added date util functions `get_current_year` and `check_date_is_weekend`
   * Improved date utils docs

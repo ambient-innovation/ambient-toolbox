@@ -121,3 +121,13 @@ class ModelWithSaveWithoutSignalsMixin(SaveWithoutSignalsMixin, models.Model):
 @receiver(pre_save, sender=ModelWithSaveWithoutSignalsMixin)
 def increase_value_on_pre_save(sender, instance, **kwargs):
     instance.value += 1
+
+
+class ModelNameTimeBasedFieldTest(models.Model):
+    wrongly_named_date_field = models.DateField()
+    wrongly_named_datetime_field = models.DateTimeField()
+    timestamp_date = models.DateField()
+    timestamped_at = models.DateTimeField()
+
+    def __str__(self):
+        return self.id
