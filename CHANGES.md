@@ -1,5 +1,10 @@
 # Changelog
 
+**11.5.0** (2024-09-29)
+
+* Added system check to ensure that all model relation fields have a related name, either directly set or via the model
+  meta-option "default_related_name".
+
 **11.4.0** (2024-09-24)
   * Added system check to enforce naming conventions for DateFields and DateTimeFields
 

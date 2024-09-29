@@ -131,3 +131,20 @@ class ModelNameTimeBasedFieldTest(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class ModelWithoutRelatedNameOnFieldAndMeta(models.Model):
+    relation_field = models.ForeignKey("auth.User", related_name=None, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.id
+
+
+class ModelWithoutRelatedNameOnFieldButWithMeta(models.Model):
+    relation_field = models.ForeignKey("auth.User", related_name=None, on_delete=models.CASCADE)
+
+    class Meta:
+        default_related_name = "model_without_related_name_on_field_but_with_metas"
+
+    def __str__(self):
+        return self.id
