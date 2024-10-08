@@ -1,7 +1,9 @@
 # Changelog
 
-**11.5.0** (2024-09-29)
+**11.5.1** (2024-10-08)
+* Added Python 3.13 support
 
+**11.5.0** (2024-09-29)
 * Added system check to ensure that all model relation fields have a related name, either directly set or via the model
   meta-option "default_related_name".
 
