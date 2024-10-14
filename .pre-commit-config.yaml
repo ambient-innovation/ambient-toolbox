@@ -24,11 +24,23 @@ repos:
     hooks:
       - id: pyupgrade
         args: [ --py39-plus ]
-        stages: [ push ]
+        stages: [ pre-push ]
 
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.21.0
     hooks:
       - id: django-upgrade
         args: [--target-version, "4.2"]
-        stages: [ push ]
+        stages: [ pre-push ]
+
+  - repo: https://github.com/adamchainz/djade-pre-commit
+    rev: 1.3.0
+    hooks:
+    -   id: djade
+        args: [--target-version, "4.2"]
+        exclude: |
+          (?x)^(
+            charts/.*
+            |.*\.py
+            |.github/ci\.py
+          )$
