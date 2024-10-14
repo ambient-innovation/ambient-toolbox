@@ -3,9 +3,7 @@ name: Unit tests
 on:
   push:
     branches:
-    - main
-    tags:
-    - '**'
+    - master
   pull_request:
 
 concurrency:
