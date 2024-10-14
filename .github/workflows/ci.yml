@@ -2,13 +2,19 @@ name: Unit tests
 
 on:
   push:
-    branches: [ '**' ]
+    branches:
+    - main
+    tags:
+    - '**'
   pull_request:
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   linting:
     runs-on: ubuntu-22.04
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v4
 
