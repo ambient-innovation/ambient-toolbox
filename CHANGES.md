@@ -2,6 +2,9 @@
 
 **11.5.1** (2024-10-08)
 * Added Python 3.13 support
+* Added Djade linter to pre-commit
+* Improved GitHub action triggers
+* Updated dev dependencies and linters
 
 **11.5.0** (2024-09-29)
 * Added system check to ensure that all model relation fields have a related name, either directly set or via the model
