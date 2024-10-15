@@ -94,8 +94,20 @@ def get_start_and_end_date_from_calendar_week(year: int, calendar_week: int) -> 
     """
     Returns the first and last day of a given calendar week
     """
-    monday = datetime.datetime.strptime(f"{year}-{calendar_week}-1", "%Y-%W-%w").astimezone().date()
-    return monday, monday + datetime.timedelta(days=6.9)
+    start_of_week = datetime.datetime.strptime(f"{year}-{calendar_week}-1", "%Y-%W-%w").astimezone().date()
+
+    if calendar_week == 1:
+        # Calculating first_day_of_week for calendar_week == 1 is always tricky, as the first calendar week
+        # can actually start in the n-1 year. The above .strptime() can not handle this however, and would always
+        # return the first of January.
+        # For this case, we consider the fourth of january, as it will _always_ be in the first calendar week
+        # (see: https://en.wikipedia.org/wiki/ISO_week_date#First_week)
+
+        fourth_of_january = datetime.date(year=year, month=1, day=4)
+
+        start_of_week = fourth_of_january - relativedelta(days=fourth_of_january.weekday())
+
+    return start_of_week, start_of_week + relativedelta(days=6)
 
 
 def get_next_calendar_week(compare_date: datetime.date) -> int:

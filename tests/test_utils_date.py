@@ -38,6 +38,10 @@ class DateUtilTest(TestCase):
         self.assertEqual(monday, datetime.date(year=2018, month=1, day=1))
         self.assertEqual(sunday, datetime.date(year=2018, month=1, day=7))
 
+        monday, sunday = get_start_and_end_date_from_calendar_week(2020, 1)
+        self.assertEqual(monday, datetime.date(year=2019, month=12, day=30))
+        self.assertEqual(sunday, datetime.date(year=2020, month=1, day=5))
+
         monday, sunday = get_start_and_end_date_from_calendar_week(2017, 30)
         self.assertEqual(monday, datetime.date(year=2017, month=7, day=24))
         self.assertEqual(sunday, datetime.date(year=2017, month=7, day=30))
