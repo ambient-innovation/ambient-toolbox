@@ -3,7 +3,7 @@
 **11.5.2** (2024-10-15)
   * Improved date determination of `get_start_and_end_date_from_calendar_week`
 
-**11.5.1** (2024-10-08)
+**11.5.1** (2024-10-14)
 * Added Python 3.13 support
 * Added Djade linter to pre-commit
 * Improved GitHub action triggers
