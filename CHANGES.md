@@ -1,5 +1,8 @@
 # Changelog
 
+**11.5.3** (2024-11-12)
+  * Fixed bug leading to non-working system checks in date-time and related name checks
+
 **11.5.2** (2024-10-15)
   * Improved date determination of `get_start_and_end_date_from_calendar_week`
 

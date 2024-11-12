@@ -1,3 +1,6 @@
+import warnings
+from unittest import mock
+
 from django.core import checks
 from django.test import SimpleTestCase, override_settings
 
@@ -44,3 +47,27 @@ class CheckModelTimeBasedFieldsTest(SimpleTestCase):
         # Assert warngins
         self.assertEqual(len(error_list), 1)
         self.assertEqual(error_list[0].id, "ambient_toolbox.W001")
+
+    @override_settings(LOCAL_APPS=["testapp"])
+    def test_check_local_apps_are_detected(self):
+        # Call system check
+        error_list = check_model_time_based_fields()
+
+        # Assert warngins
+        self.assertEqual(len(error_list), 2)
+        self.assertEqual(error_list[0].id, "ambient_toolbox.W002")
+        self.assertEqual(error_list[1].id, "ambient_toolbox.W001")
+
+    @override_settings(INSTALLED_APPS="")
+    def test_check_no_local_apps_found(self):
+        # Call system check
+        with mock.patch.object(warnings, "warn") as mocked_warning:
+            error_list = check_model_time_based_fields()
+
+        # Assert warngins
+        self.assertEqual(len(error_list), 0)
+        mocked_warning.assert_called_once_with(
+            "No local apps detected. Therefore, no model fields will be checked for date-time-conventions.",
+            Warning,
+            stacklevel=2,
+        )

@@ -1,3 +1,5 @@
+import warnings
+
 from django.apps import apps
 from django.conf import settings
 from django.core import checks
@@ -10,9 +12,23 @@ def check_model_time_based_fields(*args, **kwargs):
     Inspired by: https://lukeplant.me.uk/blog/posts/enforcing-conventions-in-django-projects-with-introspection/
     """
 
-    project_apps = [
-        app.split(".")[-1] for app in settings.INSTALLED_APPS if app.startswith(settings.ROOT_URLCONF.split(".")[0])
-    ]
+    # If local apps are set up separately...
+    if getattr(settings, "LOCAL_APPS", None):
+        project_apps = [app.split(".")[-1] for app in settings.LOCAL_APPS]
+    # Otherwise, we try some magic...
+    else:
+        project_apps = [
+            app.split(".")[-1] for app in settings.INSTALLED_APPS if app.startswith(settings.ROOT_URLCONF.split(".")[0])
+        ]
+
+    # If we still don't get any apps, inform the user
+    if len(project_apps) == 0:
+        warnings.warn(
+            "No local apps detected. Therefore, no model fields will be checked for date-time-conventions.",
+            Warning,
+            stacklevel=2,
+        )
+
     issue_list = []
 
     # Allowlists
