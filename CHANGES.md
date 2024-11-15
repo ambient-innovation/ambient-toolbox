@@ -1,5 +1,8 @@
 # Changelog
 
+**11.5.4** (2024-11-15)
+  * Internal updates via `ambient-package-update`
+
 **11.5.3** (2024-11-12)
   * Fixed bug leading to non-working system checks in date-time and related name checks
 

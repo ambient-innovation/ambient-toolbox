@@ -1,3 +1,3 @@
 """Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."""
 
-__version__ = "11.5.3"
+__version__ = "11.5.4"
