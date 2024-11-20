@@ -1,4 +1,4 @@
 include README.md
 include LICENSE.md
 recursive-exclude * *.pyc
-recursive-include ambient_toolbox *.py *.html *.js *.cfg *.mo *.po
+recursive-include ambient-toolbox *.py *.html *.js *.cfg *.mo *.po

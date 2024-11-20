@@ -11,7 +11,7 @@ from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
 
 METADATA = PackageMetadata(
-    package_name="ambient_toolbox",
+    package_name="ambient-toolbox",
     github_package_group="ambient-innovation",
     company="Ambient Innovation: GmbH",
     authors=[

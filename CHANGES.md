@@ -1,5 +1,9 @@
 # Changelog
 
+**11.5.5** (2024-11-20)
+  * Moved permission check to "apps.ready()" method
+  * Internal updates via `ambient-package-update`
+
 **11.5.4** (2024-11-15)
   * Internal updates via `ambient-package-update`
 

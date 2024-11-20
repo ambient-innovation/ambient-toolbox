@@ -8,10 +8,10 @@ class AmbientToolboxConfig(AppConfig):
     name = "ambient_toolbox"
     verbose_name = _("Ambient Toolbox")
 
+    def ready(self):
+        if getattr(settings, "STATIC_ROLE_PERMISSIONS_PATH", None) and not (
+            getattr(settings, "STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK", False)
+        ):
+            from ambient_toolbox.static_role_permissions.system_check import check_permissions_against_models
 
-if getattr(settings, "STATIC_ROLE_PERMISSIONS_PATH", None) and not (
-    getattr(settings, "STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK", False)
-):
-    from ambient_toolbox.static_role_permissions.system_check import check_permissions_against_models
-
-    register(check_permissions_against_models, Tags.models)
+            register(check_permissions_against_models, Tags.models)

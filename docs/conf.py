@@ -16,7 +16,7 @@ import sys
 import django
 from django.conf import settings
 
-sys.path.insert(0, os.path.abspath(".."))  # so that we can access the "ambient_toolbox" package
+sys.path.insert(0, os.path.abspath(".."))  # so that we can access the "ambient-toolbox" package
 settings.configure(
     INSTALLED_APPS=[
         "django.contrib.admin",
