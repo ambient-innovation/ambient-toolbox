@@ -1,5 +1,8 @@
 # Changelog
 
+**11.6.0** (2024-11-20)
+  * Added `detect_ghost_tables` management command
+
 **11.5.5** (2024-11-20)
   * Moved permission check to "apps.ready()" method
   * Internal updates via `ambient-package-update`
