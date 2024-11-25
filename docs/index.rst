@@ -16,6 +16,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
 
    features/setup.md
    features/admin.md
+   features/cleanup.md
    features/context_manager.md
    features/context_processors.md
    features/database_anonymisation.md
