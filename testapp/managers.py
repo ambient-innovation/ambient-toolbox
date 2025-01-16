@@ -1,5 +1,11 @@
-from django.db.models import QuerySet
+from django.db import models
+
+from ambient_toolbox.managers import GetOrNoneManagerMixin
 
 
-class ModelWithSelectorQuerySet(QuerySet):
+class ModelWithSelectorQuerySet(models.QuerySet):
+    pass
+
+
+class ModelWithGetOrNoneManager(GetOrNoneManagerMixin, models.Manager):
     pass

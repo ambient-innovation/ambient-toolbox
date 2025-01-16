@@ -173,3 +173,31 @@ it all the time.
 
 Usually you would use this manager for metadata like categories. As pointed out above, you could use the base manager
 class BUT if you have to add some user-level permissions later on, you reduce the risk of bad patterns in your code.
+
+#### Get or none
+
+Often you'll find yourself in the situation that you need to get exactly one object from the database but need to handle
+the case, that this object is not there (any more).
+
+Imagine, you pass an object ID to a function. Once this function starts, you need to ensure that this object is
+still in the database and hasn't been deleted by some other process in the meantime.
+
+Usually, folks would fall back on adding a `first()` to the query and then check if the queryset is `None`. This will
+add an ordering parameter to the underlying SQL, which is not necessary and will cause more work for the database.
+
+
+```python
+class MyManager(GetOrNoneManagerMixin, models.Manager):
+    pass
+```
+
+Therefore, you can use the `GetOrNoneManagerMixin` mixin in your model manager, which provides you with a neat
+method called `get_or_none`, similar to Django's `get_or_create`.
+
+You can add as many parameters as you like, just as you can to with `get_or_create`:
+
+```python
+obj = MyModel.objects.get_or_none(pk=42)
+
+obj = MyModel.objects.get_or_none(is_active=True, username="Neo.Anderson")
+```
