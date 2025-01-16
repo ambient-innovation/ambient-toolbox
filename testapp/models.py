@@ -8,7 +8,7 @@ from ambient_toolbox.mixins.bleacher import BleacherMixin
 from ambient_toolbox.mixins.models import PermissionModelMixin, SaveWithoutSignalsMixin
 from ambient_toolbox.mixins.validation import CleanOnSaveMixin
 from ambient_toolbox.models import CommonInfo
-from testapp.managers import ModelWithSelectorQuerySet
+from testapp.managers import ModelWithGetOrNoneManager, ModelWithSelectorQuerySet
 from testapp.selectors import ModelWithSelectorGloballyVisibleSelector
 
 
@@ -145,6 +145,15 @@ class ModelWithoutRelatedNameOnFieldButWithMeta(models.Model):
 
     class Meta:
         default_related_name = "model_without_related_name_on_field_but_with_metas"
+
+    def __str__(self):
+        return self.id
+
+
+class ModelWithGetOrNoneManagerModel(models.Model):
+    my_field = models.BooleanField(default=False)
+
+    objects = ModelWithGetOrNoneManager()
 
     def __str__(self):
         return self.id

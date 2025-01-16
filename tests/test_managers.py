@@ -5,7 +5,7 @@ from ambient_toolbox.managers import (
     AbstractUserSpecificManager,
     AbstractUserSpecificQuerySet,
 )
-from testapp.models import MySingleSignalModel
+from testapp.models import ModelWithGetOrNoneManagerModel, MySingleSignalModel
 
 
 class AbstractUserSpecificQuerySetTest(TestCase):
@@ -94,3 +94,37 @@ class GloballyVisibleQuerySetTest(TestCase):
             MySingleSignalModel.objects.deletable_for(self.user).count(),
             len(self.object_list),
         )
+
+
+class GetOrNoneMixinTest(TestCase):
+    def test_get_or_none_via_pk(self):
+        new_obj = ModelWithGetOrNoneManagerModel.objects.create(my_field=True)
+
+        queried_obj = ModelWithGetOrNoneManagerModel.objects.get_or_none(pk=new_obj.id)
+
+        self.assertEqual(new_obj, queried_obj)
+
+    def test_get_or_none_via_multiple_query_params(self):
+        new_obj = ModelWithGetOrNoneManagerModel.objects.create(my_field=True)
+
+        queried_obj = ModelWithGetOrNoneManagerModel.objects.get_or_none(pk=new_obj.id, my_field=True)
+
+        self.assertEqual(new_obj, queried_obj)
+
+    def test_get_or_none_no_results(self):
+        ModelWithGetOrNoneManagerModel.objects.create(my_field=True)
+
+        queried_obj = ModelWithGetOrNoneManagerModel.objects.get_or_none(my_field=False)
+
+        self.assertIsNone(queried_obj)
+
+    def test_get_or_none_multiple_results(self):
+        ModelWithGetOrNoneManagerModel.objects.bulk_create(
+            (ModelWithGetOrNoneManagerModel(my_field=True), ModelWithGetOrNoneManagerModel(my_field=True))
+        )
+
+        with self.assertRaisesMessage(
+            ModelWithGetOrNoneManagerModel.MultipleObjectsReturned,
+            "get() returned more than one ModelWithGetOrNoneManagerModel -- it returned 2!",
+        ):
+            ModelWithGetOrNoneManagerModel.objects.get_or_none(my_field=True)

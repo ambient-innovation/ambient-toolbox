@@ -1,5 +1,8 @@
 # Changelog
 
+**11.7.0** (2025-01-16)
+  * Added `GetOrNoneManagerMixin` manager mixin to provide `get_or_none()`
+
 **11.6.0** (2024-11-20)
   * Added `detect_ghost_tables` management command
 
