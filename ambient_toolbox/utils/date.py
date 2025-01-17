@@ -92,21 +92,32 @@ def datetime_format(target_datetime: datetime.datetime, dt_format: str) -> str:
 
 def get_start_and_end_date_from_calendar_week(year: int, calendar_week: int) -> (datetime.date, datetime.date):
     """
-    Returns the first and last day of a given calendar week
+    Determines the start and end dates of a specific calendar week in a given year.
     """
-    start_of_week = datetime.datetime.strptime(f"{year}-{calendar_week}-1", "%Y-%W-%w").astimezone().date()
 
-    if calendar_week == 1:
-        # Calculating first_day_of_week for calendar_week == 1 is always tricky, as the first calendar week
-        # can actually start in the n-1 year. The above .strptime() can not handle this however, and would always
-        # return the first of January.
-        # For this case, we consider the fourth of january, as it will _always_ be in the first calendar week
-        # (see: https://en.wikipedia.org/wiki/ISO_week_date#First_week)
+    # Create a date object for the first day of the given year
+    first_day_of_year = datetime.date(year=year, month=1, day=1)
 
-        fourth_of_january = datetime.date(year=year, month=1, day=4)
+    # Determine which day of the week the first day of the year falls on
+    # (0 = Monday, 6 = Sunday)
+    weekday = first_day_of_year.weekday()
 
-        start_of_week = fourth_of_january - relativedelta(days=fourth_of_january.weekday())
+    # Calculate the adjustment to find the Monday closest to the first day of the year
+    if weekday <= 3:
+        # If the day is Monday to Thursday (inclusive) move backward to reach the nearest Monday
+        adjustment = -weekday
+    else:
+        # If the day is Friday, Saturday, or Sunday move forward to reach the next Monday
+        adjustment = 7 - weekday
 
+    # Calculate the date of the closest (or same) Monday
+    closest_monday = first_day_of_year + datetime.timedelta(days=adjustment)
+
+    # Calculate the start of the requested calendar week
+    # (adjusting the closest Monday by the number of weeks required)
+    start_of_week = closest_monday + relativedelta(weeks=calendar_week - 1)
+
+    # Return the start date of the week and the date 6 days later (end of the week)
     return start_of_week, start_of_week + relativedelta(days=6)
 
 

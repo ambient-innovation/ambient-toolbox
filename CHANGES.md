@@ -1,5 +1,8 @@
 # Changelog
 
+**11.7.1** (2025-01-17)
+  * Fixed bug in `get_start_and_end_date_from_calendar_week` leading to the first calendar week being determined incorrectly
+
 **11.7.0** (2025-01-16)
   * Added `GetOrNoneManagerMixin` manager mixin to provide `get_or_none()`
 
