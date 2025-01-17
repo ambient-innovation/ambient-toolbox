@@ -46,6 +46,14 @@ class DateUtilTest(TestCase):
         self.assertEqual(monday, datetime.date(year=2017, month=7, day=24))
         self.assertEqual(sunday, datetime.date(year=2017, month=7, day=30))
 
+        monday, sunday = get_start_and_end_date_from_calendar_week(2025, 3)
+        self.assertEqual(monday, datetime.date(year=2025, month=1, day=13))
+        self.assertEqual(sunday, datetime.date(year=2025, month=1, day=19))
+
+        monday, sunday = get_start_and_end_date_from_calendar_week(2026, 3)
+        self.assertEqual(monday, datetime.date(year=2026, month=1, day=12))
+        self.assertEqual(sunday, datetime.date(year=2026, month=1, day=18))
+
     def test_get_next_calendar_week_any_week(self):
         self.assertEqual(get_next_calendar_week(datetime.date(year=2020, month=9, day=19)), 39)
 
