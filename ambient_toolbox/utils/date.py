@@ -103,7 +103,7 @@ def get_start_and_end_date_from_calendar_week(year: int, calendar_week: int) -> 
     weekday = first_day_of_year.weekday()
 
     # Calculate the adjustment to find the Monday closest to the first day of the year
-    if weekday <= 3:
+    if weekday <= calendar.Day.THURSDAY:
         # If the day is Monday to Thursday (inclusive) move backward to reach the nearest Monday
         adjustment = -weekday
     else:
