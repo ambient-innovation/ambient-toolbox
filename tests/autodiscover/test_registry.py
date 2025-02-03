@@ -68,7 +68,7 @@ def test_function_registry_autodiscover_target_is_python_module():
     cache.clear()
 
     function_registry = FunctionRegistry()
-    function_registry.autodiscover(target_name="autodiscover")
+    function_registry.autodiscover(registry_group="autodiscover")
 
     # Assert two functions registered
     assert len(function_registry.registry) == 2  # noqa: PLR2004
@@ -94,7 +94,7 @@ def test_function_registry_autodiscover_target_is_python_file():
     cache.clear()
 
     function_registry = FunctionRegistry()
-    function_registry.autodiscover(target_name="more_registered_functions")
+    function_registry.autodiscover(registry_group="more_registered_functions")
 
     # Assert two functions registered
     assert len(function_registry.registry) == 1
@@ -112,7 +112,7 @@ def test_function_registry_autodiscover_target_name_contains_subpackages():
     cache.clear()
 
     function_registry = FunctionRegistry()
-    function_registry.autodiscover(target_name="handlers.commands")
+    function_registry.autodiscover(registry_group="handlers.commands")
 
     # Assert two functions registered
     assert len(function_registry.registry) == 1
@@ -131,7 +131,7 @@ def test_function_registry_autodiscover_no_local_apps(*args):
     cache.clear()
 
     function_registry = FunctionRegistry()
-    function_registry.autodiscover(target_name="autodiscover")
+    function_registry.autodiscover(registry_group="autodiscover")
 
     assert len(function_registry.registry) == 0
 
@@ -145,7 +145,7 @@ def test_function_registry_autodiscover_caching_avoid_importing_again(mocked_rel
     )
 
     function_registry = FunctionRegistry()
-    function_registry.autodiscover(target_name="autodiscover")
+    function_registry.autodiscover(registry_group="autodiscover")
 
     assert mocked_reload_module.call_count == 0
     assert mocked_import_module.call_count == 0
@@ -169,3 +169,12 @@ def test_function_registry_autodiscover_load_handlers_from_cache_dummy_cache(*ar
     registered_functions = function_registry._load_handlers_from_cache()
 
     assert len(registered_functions) == 0
+
+
+def test_get_registered_callables_found_and_executable():
+    function_registry = FunctionRegistry()
+    callables = function_registry.get_registered_callables(target_name="autodiscover")
+
+    assert len(callables) == 2  # noqa: PLR2004
+    assert callables[0]() == "testapp"
+    assert callables[1]() == "other"

@@ -60,7 +60,9 @@ class FunctionRegistry:
 
         return decorator
 
-    def autodiscover(self, *, target_name: str) -> None:
+    # TODO: ich könnte "registry_group" in den constructor schieben - dann würde ich ne registry pro
+    #  notification/events etc haben
+    def autodiscover(self, *, registry_group: str) -> None:
         """
         Detects message registries which have been registered via the "register_*" decorator.
         """
@@ -83,13 +85,13 @@ class FunctionRegistry:
                 continue
 
             # TODO: document me
-            target_path = target_name.replace(".", "/")
+            target_path = registry_group.replace(".", "/")
 
             try:
                 # Detected python code is a single file
                 # TODO: document me
                 if os.path.exists(app_path / f"{target_path}.py"):
-                    module_path = f"{app_config.name}.{target_name}"
+                    module_path = f"{app_config.name}.{registry_group}"
                     self._force_import(module_path=module_path)
 
                 # Detected python code is a python module
@@ -97,7 +99,7 @@ class FunctionRegistry:
                     if module[-3:] != ".py":
                         continue
                     module_name = module.replace(".py", "")
-                    module_path = f"{app_config.name}.{target_name}.{module_name}"
+                    module_path = f"{app_config.name}.{registry_group}.{module_name}"
                     self._force_import(module_path=module_path)
 
             except FileNotFoundError:
@@ -135,3 +137,19 @@ class FunctionRegistry:
             return {}
         # TODO: use dataclass here
         return json.loads(cached_data)
+
+    def get_registered_callables(self, *, target_name: str) -> list[typing.Callable]:
+        """
+        Returns a list of Callables (functions and classes)
+        """
+        self.autodiscover(registry_group=target_name)
+
+        callables = []
+        # TODO: use FunctionDefinition class
+        function_definition: dict[str:str]
+        for group in self.registry.keys():
+            for function_definition in self.registry[group]:
+                module = importlib.import_module(function_definition["module"])
+                callables.append(getattr(module, function_definition["name"]))
+
+        return callables
