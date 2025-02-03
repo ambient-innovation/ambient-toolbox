@@ -1,5 +1,6 @@
-from django.conf import settings
 from django.utils.module_loading import import_string
+
+from ambient_toolbox.static_role_permissions.settings import get_static_role_permissions_path
 
 
 def load_static_role_permissions() -> dict[str, set[str]]:
@@ -19,7 +20,7 @@ def load_static_role_permissions() -> dict[str, set[str]]:
             ...
         },
     """
-    dotted_path = getattr(settings, "STATIC_ROLE_PERMISSIONS_PATH", None)
+    dotted_path = get_static_role_permissions_path()
     assert dotted_path, "STATIC_ROLE_PERMISSIONS_PATH is not set in settings.py"
 
     permission = import_string(dotted_path)
