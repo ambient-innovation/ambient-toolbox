@@ -37,10 +37,11 @@ dependencies = [
 ]
 
 
+
+
 [project.optional-dependencies]
 dev = [
    'typer~=0.12',
-   'freezegun~=1.5',
    'pytest-django~=4.9',
    'pytest-mock~=3.14',
    'coverage~=7.6',
@@ -110,8 +111,10 @@ lint.select = [
     "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
     "TRY",     # Clean try/except
     "ERA",     # Commented out code
+    "INP"      # Ban PEP-420 implicit namespace packages
 ]
 lint.ignore = [
+    'A005', # ruff flags valid Python modules
     'N999', # Project name contains underscore, not fixable
     'A003', # Django attributes shadow python builtins
     'DJ001', # Django model text-based fields shouldn't be nullable
@@ -152,6 +155,7 @@ lint.fixable = [
     "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
     "TRY",     # Clean try/except
     "ERA",     # Commented out code
+    "INP"      # Ban PEP-420 implicit namespace packages
 ]
 lint.unfixable = []
 
@@ -200,6 +204,37 @@ skip-magic-trailing-comma = false
 
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = [
+  # Allow seemingly unused imports
+  "F401",
+]
+
+"**/tests/**/test_*.py" = [
+  # Allow boolean positional params in tests (for assertIs())
+  "FBT003",
+]
+
+"scripts/*.py" = [
+  # Checks for packages that are missing an __init__.py file
+  "INP001",
+]
+
+".ambient-package-update/*.py" = [
+  # Checks for packages that are missing an __init__.py file
+  "INP001",
+]
+
+"docs/*.py" = [
+  # Checks for packages that are missing an __init__.py file
+  "INP001",
+]
+
+"**/tests/missing_init/*.py" = [
+  # Missing by design for a test case
+  "INP001",
+]
 
 [tool.tox]
 legacy_tox_ini = """

@@ -2,7 +2,7 @@ from typing import Optional
 
 from django.apps import AppConfig, apps
 from django.contrib.auth import get_permission_codename
-from django.core.checks import Warning
+from django.core.checks import Warning  # noqa: A004
 
 from ambient_toolbox.static_role_permissions.permissions import load_static_role_permissions
 

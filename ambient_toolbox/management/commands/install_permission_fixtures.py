@@ -32,9 +32,9 @@ class Command(BaseCommand):
             print(f'Reading fixture declaration "{declaration_path}"...')
             declaration_class: GroupPermissionDeclaration = locate(declaration_path)
 
-            assert isinstance(
-                declaration_class, type(GroupPermissionDeclaration)
-            ), f'Could\'t load group declaration "{declaration_path}".'
+            assert isinstance(declaration_class, type(GroupPermissionDeclaration)), (
+                f'Could\'t load group declaration "{declaration_path}".'
+            )
 
             print(f'> Installing permissions of group "{declaration_class.name}"...')
             service = PermissionSetupService(group_declaration=declaration_class, dry_run=dry_run)
