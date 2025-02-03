@@ -111,7 +111,7 @@ If any permission does not exist in the Django permission system, a warning will
 
 This is useful to ensure compatibility with the Django ecosystem and to avoid typos in the permissions.
 
-The system check can be disabled by setting `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to `True` in the settings.
+The system check can be disabled by setting `STATIC_ROLE_PERMISSIONS_ENABLE_SYSTEM_CHECK` to `False` in the settings.
 
 ## Why use this library?
 
