@@ -13,7 +13,7 @@ from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredI
 METADATA = PackageMetadata(
     package_name="ambient-toolbox",
     github_package_group="ambient-innovation",
-    company="Ambient Innovation: GmbH",
+    licenser="Ambient Innovation: GmbH",
     authors=[
         PackageAuthor(
             name="Ambient Digital",
@@ -21,7 +21,7 @@ METADATA = PackageMetadata(
         ),
     ],
     maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
-    min_coverage=68.21,
+    min_coverage=72.02,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
