@@ -4,6 +4,7 @@
   * **Breaking change:**  Renamed `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to
   `STATIC_ROLE_PERMISSIONS_ENABLE_SYSTEM_CHECK` since negations are harder to understand
   * Improved implementation of role permission settings
+  * Minor internal changes due to new ruff rules
 
 **11.7.1** (2025-01-17)
   * Fixed bug in `get_start_and_end_date_from_calendar_week` leading to the first calendar week being determined incorrectly
