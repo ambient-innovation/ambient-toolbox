@@ -14,7 +14,8 @@ from ambient_toolbox.autodiscover.settings import get_autodiscover_app_base_path
 from ambient_toolbox.autodiscover.utils import unique_append_to_inner_list
 
 
-@dataclasses.dataclass(kw_only=True)
+# TODO: use (kw_only=True) once Python 3.9 compat was dropped
+@dataclasses.dataclass
 class FunctionDefinition:
     """
     Projection to store registered functions in a JSON-serialisable way
