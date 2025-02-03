@@ -67,14 +67,14 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
         for permission in self.permission_list:
             if "." not in permission:
                 raise TestSetupConfigurationError(
-                    f'View "{self.view_class}" contains ill-formatted permission ' f'"{permission}".'
+                    f'View "{self.view_class}" contains ill-formatted permission "{permission}".'
                 )
             app_label, codename = permission.split(".")
             permission_qs = Permission.objects.filter(content_type__app_label=app_label, codename=codename)
 
             if not permission_qs.exists():
                 raise TestSetupConfigurationError(
-                    f'View "{self.view_class}" contains invalid permission ' f'"{permission}".'
+                    f'View "{self.view_class}" contains invalid permission "{permission}".'
                 )
 
     def test_passes_login_barrier_is_called(self):

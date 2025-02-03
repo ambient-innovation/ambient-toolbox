@@ -103,7 +103,7 @@ class CoverageService:
         pipeline = json.loads(pipeline_response.content)
         coverages_total = float(pipeline["coverage"] if pipeline["coverage"] else 0.0)
         print(f"Pipeline-API-URL: {pipeline_url}")
-        print(f'Pipeline-URL: {pipeline["web_url"]}')
+        print(f"Pipeline-URL: {pipeline['web_url']}")
 
         if job_name == "":
             print(
@@ -113,9 +113,9 @@ class CoverageService:
 
         coverage_job = coverages.get(job_name)
 
-        print(f'Job-URL: {coverage_job["web_url"]}')
+        print(f"Job-URL: {coverage_job['web_url']}")
 
-        job_url = f'{self.base_api_url}/projects/{self.project_id}/jobs/{coverage_job["id"]}/trace'
+        job_url = f"{self.base_api_url}/projects/{self.project_id}/jobs/{coverage_job['id']}/trace"
         job_with_token_url = f"{job_url}?private_token={self.token}"
         job_response = httpx.get(job_with_token_url)
         job_status_code = job_response.status_code
@@ -155,8 +155,8 @@ class CoverageService:
             1: {"text": "climbed", "color": "\033[92m"},
         }
         return (
-            f'{change[sign]["color"]} {prefix} {change[sign]["text"]} '
-            f'from {target:2.2f}% to {current:2.2f}% (Diff: {diff:2.2f}%).\033[0m'
+            f"{change[sign]['color']} {prefix} {change[sign]['text']} "
+            f"from {target:2.2f}% to {current:2.2f}% (Diff: {diff:2.2f}%).\033[0m"
         )
 
     @staticmethod

@@ -61,6 +61,7 @@ METADATA = PackageMetadata(
         ],
     },
     ruff_ignore_list=[
+        RuffIgnoredInspection(key="A005", comment="ruff flags valid Python modules"),
         RuffIgnoredInspection(key="N999", comment="Project name contains underscore, not fixable"),
         RuffIgnoredInspection(key="A003", comment="Django attributes shadow python builtins"),
         RuffIgnoredInspection(key="DJ001", comment="Django model text-based fields shouldn't be nullable"),

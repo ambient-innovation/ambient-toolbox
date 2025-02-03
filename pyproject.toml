@@ -114,6 +114,7 @@ lint.select = [
     "INP"      # Ban PEP-420 implicit namespace packages
 ]
 lint.ignore = [
+    'A005', # ruff flags valid Python modules
     'N999', # Project name contains underscore, not fixable
     'A003', # Django attributes shadow python builtins
     'DJ001', # Django model text-based fields shouldn't be nullable
@@ -227,6 +228,10 @@ line-ending = "auto"
 
 "docs/*.py" = [
   # Checks for packages that are missing an __init__.py file
+  "INP001",
+]
+"**/tests/missing_init/*.py" = [
+  # Missing by design for a test case
   "INP001",
 ]
 [tool.tox]
