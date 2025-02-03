@@ -13,7 +13,7 @@ from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredI
 METADATA = PackageMetadata(
     package_name="ambient-toolbox",
     github_package_group="ambient-innovation",
-    company="Ambient Innovation: GmbH",
+    licenser="Ambient Innovation: GmbH",
     authors=[
         PackageAuthor(
             name="Ambient Digital",
@@ -61,6 +61,7 @@ METADATA = PackageMetadata(
         ],
     },
     ruff_ignore_list=[
+        RuffIgnoredInspection(key="A005", comment="ruff flags valid Python modules"),
         RuffIgnoredInspection(key="N999", comment="Project name contains underscore, not fixable"),
         RuffIgnoredInspection(key="A003", comment="Django attributes shadow python builtins"),
         RuffIgnoredInspection(key="DJ001", comment="Django model text-based fields shouldn't be nullable"),
