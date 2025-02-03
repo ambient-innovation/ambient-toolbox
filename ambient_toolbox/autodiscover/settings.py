@@ -1,9 +1,10 @@
 from pathlib import Path
+from typing import Union
 
 from django.conf import settings
 
 
-def get_autodiscover_enabled() -> Path | str:
+def get_autodiscover_enabled() -> Union[Path, str]:
     """
     Switch to enable or disable function autodiscovery.
     Since the registry will be called on every request, we want to save overhead for projects that don't use it.
@@ -11,7 +12,7 @@ def get_autodiscover_enabled() -> Path | str:
     return getattr(settings, "AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED", False)
 
 
-def get_autodiscover_app_base_path() -> Path | str:
+def get_autodiscover_app_base_path() -> Union[Path, str]:
     """
     Base path of the application autodiscover should look for registered handlers.
     """
