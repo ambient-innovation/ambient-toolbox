@@ -29,8 +29,6 @@ class FunctionRegistry:
     Singleton for registering messages classes in.
     """
 
-    # TODO: turn singleton on via settings var (only load when True)
-
     _instance: "FunctionRegistry" = None
 
     def __init__(self):
