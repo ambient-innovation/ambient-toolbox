@@ -8,7 +8,10 @@ from ambient_package_update.metadata.constants import (
 from ambient_package_update.metadata.maintainer import PackageMaintainer
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
-from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
+from ambient_package_update.metadata.ruff_ignored_inspection import (
+    RuffFilePatternIgnoredInspection,
+    RuffIgnoredInspection,
+)
 
 METADATA = PackageMetadata(
     package_name="ambient-toolbox",
@@ -75,6 +78,14 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(
             key="TRY003",
             comment="Checks for long exception messages that are not defined in the exception class itself.",
+        ),
+    ],
+    ruff_file_based_ignore_list=[
+        RuffFilePatternIgnoredInspection(
+            pattern="**/tests/missing_init/*.py",
+            rules=[
+                RuffIgnoredInspection(key="INP001", comment="Missing by design for a test case"),
+            ],
         ),
     ],
 )
