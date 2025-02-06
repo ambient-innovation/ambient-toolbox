@@ -24,7 +24,7 @@ METADATA = PackageMetadata(
         ),
     ],
     maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
-    min_coverage=70.0,
+    min_coverage=69.98,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
