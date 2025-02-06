@@ -21,7 +21,7 @@ METADATA = PackageMetadata(
         ),
     ],
     maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
-    min_coverage=68.21,
+    min_coverage=70.0,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
@@ -31,8 +31,6 @@ METADATA = PackageMetadata(
     dependencies=[
         f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
         "python-dateutil>=2.5.3",
-        # We keep this until we drop Python 3.8
-        "pytz",
     ],
     supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
     supported_python_versions=SUPPORTED_PYTHON_VERSIONS,

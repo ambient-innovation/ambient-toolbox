@@ -33,7 +33,6 @@ license = {"file" = "LICENSE.md"}
 dependencies = [
     'Django>=4.2',
     'python-dateutil>=2.5.3',
-    'pytz',
 ]
 
 

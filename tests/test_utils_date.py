@@ -1,7 +1,6 @@
 import calendar
 import datetime
 
-import pytz
 from django.test import TestCase
 from django.test.utils import override_settings
 from freezegun import freeze_time
@@ -206,17 +205,17 @@ class DateUtilTest(TestCase):
 
     @override_settings(TIME_ZONE="UTC")
     def test_datetime_format_regular(self):
-        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=pytz.UTC)
+        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
         self.assertEqual(datetime_format(source_date, "%d.%m.%Y %H:%M"), "26.06.2020 08:00")
 
     @override_settings(TIME_ZONE="Europe/Cologne")
     def test_datetime_format_wrong_timezone(self):
-        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
+        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
         self.assertEqual(datetime_format(source_date, "%d.%m.%Y %H:%M"), "26.06.2020 08:00")
 
     @override_settings(TIME_ZONE="Europe/Berlin")
     def test_datetime_format_different_timezone(self):
-        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=pytz.UTC)
+        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
         self.assertEqual(datetime_format(source_date, "%d.%m.%Y %H:%M"), "26.06.2020 10:00")
 
     @freeze_time("2022-12-14")
