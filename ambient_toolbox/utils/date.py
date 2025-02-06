@@ -2,13 +2,12 @@ import calendar
 import datetime
 from calendar import monthrange
 from typing import Optional, Union
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-import pytz
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from pytz import UnknownTimeZoneError
 
 
 class DateHelper:
@@ -84,8 +83,8 @@ def datetime_format(target_datetime: datetime.datetime, dt_format: str) -> str:
     Uses strftime, but considers timezone (only for datetime objects)
     """
     try:
-        dt_format = target_datetime.astimezone(tz=pytz.timezone(settings.TIME_ZONE)).strftime(dt_format)
-    except UnknownTimeZoneError:
+        dt_format = target_datetime.astimezone(ZoneInfo(settings.TIME_ZONE)).strftime(dt_format)
+    except ZoneInfoNotFoundError:
         dt_format = target_datetime.strftime(dt_format)
     return dt_format
 

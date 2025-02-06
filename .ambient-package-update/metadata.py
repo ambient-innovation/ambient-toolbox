@@ -8,7 +8,10 @@ from ambient_package_update.metadata.constants import (
 from ambient_package_update.metadata.maintainer import PackageMaintainer
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
-from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
+from ambient_package_update.metadata.ruff_ignored_inspection import (
+    RuffFilePatternIgnoredInspection,
+    RuffIgnoredInspection,
+)
 
 METADATA = PackageMetadata(
     package_name="ambient-toolbox",
@@ -21,7 +24,7 @@ METADATA = PackageMetadata(
         ),
     ],
     maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
-    min_coverage=68.21,
+    min_coverage=69.98,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
@@ -31,8 +34,6 @@ METADATA = PackageMetadata(
     dependencies=[
         f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
         "python-dateutil>=2.5.3",
-        # We keep this until we drop Python 3.8
-        "pytz",
     ],
     supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
     supported_python_versions=SUPPORTED_PYTHON_VERSIONS,
@@ -42,6 +43,7 @@ METADATA = PackageMetadata(
             *DEV_DEPENDENCIES,
             "gevent~=23.9",
             "httpx~=0.27",
+            "freezegun~=1.5",
         ],
         "drf": [
             "djangorestframework>=3.8.2",
@@ -77,6 +79,14 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(
             key="TRY003",
             comment="Checks for long exception messages that are not defined in the exception class itself.",
+        ),
+    ],
+    ruff_file_based_ignore_list=[
+        RuffFilePatternIgnoredInspection(
+            pattern="**/tests/missing_init/*.py",
+            rules=[
+                RuffIgnoredInspection(key="INP001", comment="Missing by design for a test case"),
+            ],
         ),
     ],
 )

@@ -109,7 +109,7 @@ time_str = get_time_from_seconds(65)
 ### Format datetime objects timezone-aware
 
 The function ``datetime_format(target_datetime, dt_format)`` formats the given datetime according to the given format
-with ``strftime`` but takes the django timezone settings into account. If the timeszone cannot be interpreted, a fallback
+with ``strftime`` but takes the django timezone settings into account. If the timezone cannot be interpreted, a fallback
 without the timezone is used:
 
 ````python
@@ -138,7 +138,7 @@ monday, sunday = get_start_and_end_date_from_calendar_week(2020, 38)
 
 ### Get next calendar week
 
-The function ``get_next_calendar_week(compare_date)`` will return the the calendar week following the week of the given
+The function ``get_next_calendar_week(compare_date)`` will return the calendar week following the week of the given
 ``compare_date`` as an integer.
 
 ````python

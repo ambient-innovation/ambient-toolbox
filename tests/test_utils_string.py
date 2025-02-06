@@ -1,6 +1,5 @@
 import datetime
 
-import pytz
 from django.test import TestCase
 
 from ambient_toolbox.utils.string import (
@@ -90,11 +89,14 @@ class UtilsStringTest(TestCase):
         self.assertEqual(date_to_string(None, "no date"), "no date")
 
     def test_datetime_to_string_regular(self):
-        self.assertEqual(datetime_to_string(datetime.datetime(2020, 9, 19, 8, tzinfo=pytz.UTC)), "19.09.2020 08:00")
+        self.assertEqual(
+            datetime_to_string(datetime.datetime(2020, 9, 19, 8, tzinfo=datetime.timezone.utc)), "19.09.2020 08:00"
+        )
 
     def test_datetime_to_string_other_format(self):
         self.assertEqual(
-            datetime_to_string(datetime.datetime(2020, 9, 19, 8, tzinfo=pytz.UTC), str_format="%Y-%m-%d"), "2020-09-19"
+            datetime_to_string(datetime.datetime(2020, 9, 19, 8, tzinfo=datetime.timezone.utc), str_format="%Y-%m-%d"),
+            "2020-09-19",
         )
 
     def test_datetime_to_string_replacement_undefined(self):
