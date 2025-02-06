@@ -2,6 +2,7 @@
 
 **12.0.1** (2025-02-06)
   * Dropped `pytz` dependency and refactored some code to work with Python >= 3.9 builtins
+  * Fixed some typos in the docs
   * Extended metadata for ambient-package-update
 
 **12.0.0** (2025-02-03)
