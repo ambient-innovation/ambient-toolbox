@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.0** (2025-02-07)
+  * New feature: Function registry with autodiscovery
+
 **12.0.1** (2025-02-06)
   * Dropped `pytz` dependency and refactored some code to work with Python >= 3.9 builtins
   * Fixed some typos in the docs
@@ -8,7 +11,6 @@
 **12.0.0** (2025-02-03)
   * **Breaking change:**  Renamed `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to
   `STATIC_ROLE_PERMISSIONS_ENABLE_SYSTEM_CHECK` since negations are harder to understand
-  * New feature: Function registry with autodiscovery
   * Improved implementation of role permission settings
   * Minor internal changes due to new ruff rules
 
