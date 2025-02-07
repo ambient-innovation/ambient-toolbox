@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.1** (2025-02-07)
+  * Added test for context processor
+
 **12.1.0** (2025-02-07)
   * New feature: Function registry with autodiscovery
 
