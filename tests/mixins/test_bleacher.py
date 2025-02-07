@@ -1,5 +1,6 @@
 from unittest import mock
 
+import pytest
 from django.test import TestCase
 
 from ambient_toolbox.mixins.bleacher import BleacherMixin
@@ -8,12 +9,13 @@ from testapp.models import BleacherMixinModel
 
 class BleacherMixinTest(TestCase):
     @mock.patch.object(BleacherMixin, "DEFAULT_ALLOWED_TAGS", ["a", "b", "p"])
+    @pytest.mark.filterwarnings("ignore:Please use a set instead of a list or tuple")
     def test_init_allowed_tags_casted_to_set(self, *args):
         obj = BleacherMixinModel()
         self.assertEqual({"a", "b", "p"}, obj.allowed_tags)
         self.assertIs(True, isinstance(obj.allowed_tags, set))
 
-    @mock.patch.object(BleacherMixin, "DEFAULT_ALLOWED_ATTRIBUTES", {"img": ("alt",)})
+    @mock.patch.object(BleacherMixin, "DEFAULT_ALLOWED_ATTRIBUTES", {"img": {"alt"}})
     def test_init_allowed_attributes_casted_to_set(self):
         obj = BleacherMixinModel()
         self.assertEqual({"img": {"alt"}}, obj.allowed_attributes)
@@ -40,7 +42,7 @@ class BleacherMixinTest(TestCase):
         obj = BleacherMixinModel.objects.create(content="<modal>Test</modal>")
         self.assertEqual("<modal>Test</modal>", obj.content)
 
-    @mock.patch.object(BleacherMixinModel, "DEFAULT_ALLOWED_ATTRIBUTES", {"img": ("alt",)})
+    @mock.patch.object(BleacherMixinModel, "DEFAULT_ALLOWED_ATTRIBUTES", {"img": {"alt"}})
     def test_save_custom_attribute_allowed(self):
         obj = BleacherMixinModel.objects.create(content='<img alt="Noodle" />')
         self.assertEqual('<img alt="Noodle">', obj.content)

@@ -13,7 +13,7 @@ class ForeignKeyRelatedModelTabularInline(FetchParentObjectInlineMixin, admin.Ta
     model = ForeignKeyRelatedModel
 
 
-class TestFetchParentObjectInlineMixinAdmin(admin.ModelAdmin):
+class FetchParentObjectTestInlineMixinAdmin(admin.ModelAdmin):
     inlines = (ForeignKeyRelatedModelTabularInline,)
 
 
@@ -28,7 +28,7 @@ class FetchParentObjectInlineMixinTest(RequestProviderMixin, TestCase):
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
-        admin.site.register(MySingleSignalModel, TestFetchParentObjectInlineMixinAdmin)
+        admin.site.register(MySingleSignalModel, FetchParentObjectTestInlineMixinAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -38,7 +38,7 @@ class FetchParentObjectInlineMixinTest(RequestProviderMixin, TestCase):
 
     def test_parent_model_is_set(self):
         obj = MySingleSignalModel.objects.create(value=1)
-        model_admin = TestFetchParentObjectInlineMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        model_admin = FetchParentObjectTestInlineMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
 
         request = self.get_request(self.super_user)
         inline_list = model_admin.inlines
