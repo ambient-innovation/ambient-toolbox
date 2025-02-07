@@ -1,5 +1,8 @@
 # Changelog
 
+**12.0.2** (2025-02-07)
+  * Refactored test suite and some code to remove pytest warnings
+
 **12.0.1** (2025-02-06)
   * Dropped `pytz` dependency and refactored some code to work with Python >= 3.9 builtins
   * Fixed some typos in the docs
