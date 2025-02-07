@@ -8,13 +8,13 @@ from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import ForeignKeyRelatedModel, MySingleSignalModel
 
 
-class TestCreateForm(forms.Form):
+class CreateTestForm(forms.Form):
     class Meta:
         custom_add_form = True
 
 
-class TestAdminCreateFormMixinAdmin(AdminCreateFormMixin, admin.ModelAdmin):
-    add_form = TestCreateForm
+class AdminTestCreateFormMixinAdmin(AdminCreateFormMixin, admin.ModelAdmin):
+    add_form = CreateTestForm
 
 
 class AdminCreateFormMixinTest(RequestProviderMixin, TestCase):
@@ -24,7 +24,7 @@ class AdminCreateFormMixinTest(RequestProviderMixin, TestCase):
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
-        admin.site.register(ForeignKeyRelatedModel, TestAdminCreateFormMixinAdmin)
+        admin.site.register(ForeignKeyRelatedModel, AdminTestCreateFormMixinAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -33,7 +33,7 @@ class AdminCreateFormMixinTest(RequestProviderMixin, TestCase):
         admin.site.unregister(ForeignKeyRelatedModel)
 
     def test_add_form_used_in_create_case(self):
-        model_admin = TestAdminCreateFormMixinAdmin(model=ForeignKeyRelatedModel, admin_site=admin.site)
+        model_admin = AdminTestCreateFormMixinAdmin(model=ForeignKeyRelatedModel, admin_site=admin.site)
 
         form = model_admin.get_form(self.get_request(self.super_user))
 
@@ -42,7 +42,7 @@ class AdminCreateFormMixinTest(RequestProviderMixin, TestCase):
         self.assertTrue(form.Meta.custom_add_form)
 
     def test_add_form_not_used_in_edit_case(self):
-        model_admin = TestAdminCreateFormMixinAdmin(model=ForeignKeyRelatedModel, admin_site=admin.site)
+        model_admin = AdminTestCreateFormMixinAdmin(model=ForeignKeyRelatedModel, admin_site=admin.site)
 
         form = model_admin.get_form(
             self.get_request(self.super_user), obj=ForeignKeyRelatedModel(single_signal=MySingleSignalModel(value=1))

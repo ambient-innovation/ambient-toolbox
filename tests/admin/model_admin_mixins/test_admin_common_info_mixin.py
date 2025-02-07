@@ -16,7 +16,7 @@ class CommonInfoBasedModelForm(forms.ModelForm):
         fields = ("value",)
 
 
-class TestCommonInfoAdminMixinAdmin(CommonInfoAdminMixin, admin.ModelAdmin):
+class CommonInfoTestAdminMixinAdmin(CommonInfoAdminMixin, admin.ModelAdmin):
     pass
 
 
@@ -28,7 +28,7 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
         cls.user = User.objects.create(username="my_user")
         cls.request = cls.get_request(cls.user)
 
-        admin.site.register(CommonInfoBasedModel, TestCommonInfoAdminMixinAdmin)
+        admin.site.register(CommonInfoBasedModel, CommonInfoTestAdminMixinAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -37,7 +37,7 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
         admin.site.unregister(CommonInfoBasedModel)
 
     def test_readonly_fields_are_set(self):
-        model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+        model_admin = CommonInfoTestAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 
         self.assertIn("created_by", model_admin.get_readonly_fields(self.request))
         self.assertIn("created_at", model_admin.get_readonly_fields(self.request))
@@ -46,12 +46,12 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
         self.assertIn("lastmodified_at", model_admin.get_readonly_fields(self.request))
 
     def test_get_user_obj_regular(self):
-        model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+        model_admin = CommonInfoTestAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 
         self.assertEqual(self.request.user, model_admin.get_user_obj(request=self.request))
 
     def test_created_by_is_set_on_creation(self):
-        model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+        model_admin = CommonInfoTestAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 
         obj = model_admin.save_form(self.request, CommonInfoBasedModelForm(), False)
 
@@ -59,7 +59,7 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
         self.assertEqual(obj.lastmodified_by, self.user)
 
     def test_created_by_is_not_altered_on_update(self):
-        model_admin = TestCommonInfoAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+        model_admin = CommonInfoTestAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
 
         other_user = User.objects.create(username="other_user")
         with mock.patch.object(CommonInfoBasedModel, "get_current_user", return_value=other_user):

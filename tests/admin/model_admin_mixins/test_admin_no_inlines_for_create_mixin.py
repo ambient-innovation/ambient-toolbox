@@ -11,7 +11,7 @@ class ForeignKeyRelatedModelTabularInline(admin.TabularInline):
     model = ForeignKeyRelatedModel
 
 
-class TestAdminNoInlinesForCreateMixinAdmin(AdminNoInlinesForCreateMixin, admin.ModelAdmin):
+class AdminTestNoInlinesForCreateMixinAdmin(AdminNoInlinesForCreateMixin, admin.ModelAdmin):
     inlines = (ForeignKeyRelatedModelTabularInline,)
 
 
@@ -22,7 +22,7 @@ class AdminNoInlinesForCreateMixinTest(RequestProviderMixin, TestCase):
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
-        admin.site.register(MySingleSignalModel, TestAdminNoInlinesForCreateMixinAdmin)
+        admin.site.register(MySingleSignalModel, AdminTestNoInlinesForCreateMixinAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -31,12 +31,12 @@ class AdminNoInlinesForCreateMixinTest(RequestProviderMixin, TestCase):
         admin.site.unregister(MySingleSignalModel)
 
     def test_inlines_are_removed_on_create(self):
-        model_admin = TestAdminNoInlinesForCreateMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        model_admin = AdminTestNoInlinesForCreateMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
 
         self.assertEqual(model_admin.get_inline_instances(self.get_request(self.super_user), obj=None), [])
 
     def test_inlines_are_not_removed_on_edit(self):
-        model_admin = TestAdminNoInlinesForCreateMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        model_admin = AdminTestNoInlinesForCreateMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
 
         self.assertEqual(
             len(model_admin.get_inline_instances(self.get_request(self.super_user), obj=MySingleSignalModel(value=1))),

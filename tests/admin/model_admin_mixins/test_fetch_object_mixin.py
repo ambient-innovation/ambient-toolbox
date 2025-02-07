@@ -9,7 +9,7 @@ from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MySingleSignalModel
 
 
-class TestFetchObjectMixinAdmin(FetchObjectMixin, admin.ModelAdmin):
+class FetchObjectTestMixinAdmin(FetchObjectMixin, admin.ModelAdmin):
     pass
 
 
@@ -24,7 +24,7 @@ class FetchObjectMixinTest(RequestProviderMixin, TestCase):
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
-        admin.site.register(MySingleSignalModel, TestFetchObjectMixinAdmin)
+        admin.site.register(MySingleSignalModel, FetchObjectTestMixinAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -34,7 +34,7 @@ class FetchObjectMixinTest(RequestProviderMixin, TestCase):
 
     def test_model_is_set(self):
         obj = MySingleSignalModel.objects.create(value=1)
-        model_admin = TestFetchObjectMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        model_admin = FetchObjectTestMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
 
         request = self.get_request(self.super_user)
 
