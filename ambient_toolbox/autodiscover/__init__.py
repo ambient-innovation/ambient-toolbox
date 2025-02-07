@@ -1,3 +1,3 @@
-from ambient_toolbox.autodiscover.registry import FunctionRegistry
+from ambient_toolbox.autodiscover.registry import DecoratorBasedRegistry
 
-function_registry = FunctionRegistry()
+decorator_based_registry = DecoratorBasedRegistry()

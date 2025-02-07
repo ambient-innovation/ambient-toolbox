@@ -73,8 +73,8 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(
             key="RUF012", comment="Mutable class attributes should be annotated with `typing.ClassVar`"
         ),
-        RuffIgnoredInspection(key="TD002", comment="Missing author in TODO"),
-        RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TODO"),
+        RuffIgnoredInspection(key="TD002", comment="Missing author in TO-DOs"),
+        RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TO-DOs"),
         RuffIgnoredInspection(key="TRY002", comment="Checks for code that raises Exception directly."),
         RuffIgnoredInspection(
             key="TRY003",

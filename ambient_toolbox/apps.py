@@ -24,6 +24,6 @@ class AmbientToolboxConfig(AppConfig):
         if get_autodiscover_enabled():
             # Register all decorated functions before they get imported by something else which will break the
             # registration process since decorators are only executed the first time.
-            from ambient_toolbox.autodiscover import function_registry
+            from ambient_toolbox.autodiscover import decorator_based_registry
 
-            function_registry.autodiscover()
+            decorator_based_registry.autodiscover()

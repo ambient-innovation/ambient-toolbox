@@ -16,7 +16,7 @@ from ambient_toolbox.autodiscover.utils import unique_append_to_inner_list
 
 # TODO: use (kw_only=True) once Python 3.9 compat was dropped
 @dataclasses.dataclass
-class FunctionDefinition:
+class CallableDefinition:
     """
     Projection to store registered functions in a JSON-serialisable way
     """
@@ -25,12 +25,12 @@ class FunctionDefinition:
     name: str
 
 
-class FunctionRegistry:
+class DecoratorBasedRegistry:
     """
     Singleton for registering messages classes in.
     """
 
-    _instance: "FunctionRegistry" = None
+    _instance: "DecoratorBasedRegistry" = None
 
     def __init__(self):
         self.registry: dict = {}
@@ -40,11 +40,11 @@ class FunctionRegistry:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def register_function(self, *, registry_group: str) -> typing.Callable:
+    def register(self, *, registry_group: str) -> typing.Callable:
         def decorator(decoratee) -> typing.Callable:
             # Add decoratee to dependency list
             function_definition = dataclasses.asdict(
-                FunctionDefinition(module=decoratee.__module__, name=decoratee.__name__)
+                CallableDefinition(module=decoratee.__module__, name=decoratee.__name__)
             )
 
             # Add decoratee path to registry
@@ -53,15 +53,13 @@ class FunctionRegistry:
             )
 
             logger = get_logger()
-            logger.debug("Registered function '%s'", decoratee.__name__)
+            logger.debug("Registered callable '%s'", decoratee.__name__)
 
             # Return decoratee
             return decoratee
 
         return decorator
 
-    # TODO: ich könnte "registry_group" in den constructor schieben - dann würde ich ne registry pro
-    #  notification/events etc haben
     def autodiscover(self, *, registry_group: str) -> None:
         """
         Detects message registries which have been registered via the "register_*" decorator.
@@ -80,16 +78,14 @@ class FunctionRegistry:
         for app_config in apps.get_app_configs():
             app_path = Path(app_config.path).resolve()
 
-            # If it's not a local app, we don't care -> todo: document me
+            # If it's not a local app, we don't care
             if project_path not in app_path.parents:
                 continue
 
-            # TODO: document me
             target_path = registry_group.replace(".", "/")
 
             try:
                 # Detected python code is a single file
-                # TODO: document me
                 if os.path.exists(app_path / f"{target_path}.py"):
                     module_path = f"{app_config.name}.{registry_group}"
                     self._force_import(module_path=module_path)
@@ -135,21 +131,20 @@ class FunctionRegistry:
         cached_data = cache.get(get_autodiscover_cache_key())
         if cached_data is None:
             return {}
-        # TODO: use dataclass here
         return json.loads(cached_data)
 
-    def get_registered_callables(self, *, target_name: str) -> list[typing.Callable]:
+    def get_registered_callables(self, *, registry_group: str) -> list[typing.Callable]:
         """
         Returns a list of Callables (functions and classes)
         """
-        self.autodiscover(registry_group=target_name)
+        self.autodiscover(registry_group=registry_group)
 
         callables = []
-        function_definition: dict[str:str]
+        callable_definition: dict[str:str]
         for group in self.registry.keys():
             for group_data in self.registry[group]:
-                function_definition: FunctionDefinition = FunctionDefinition(**group_data)
-                module = importlib.import_module(function_definition.module)
-                callables.append(getattr(module, function_definition.name))
+                callable_definition: CallableDefinition = CallableDefinition(**group_data)
+                module = importlib.import_module(callable_definition.module)
+                callables.append(getattr(module, callable_definition.name))
 
         return callables
