@@ -145,11 +145,11 @@ class FunctionRegistry:
         self.autodiscover(registry_group=target_name)
 
         callables = []
-        # TODO: use FunctionDefinition class
         function_definition: dict[str:str]
         for group in self.registry.keys():
-            for function_definition in self.registry[group]:
-                module = importlib.import_module(function_definition["module"])
-                callables.append(getattr(module, function_definition["name"]))
+            for group_data in self.registry[group]:
+                function_definition: FunctionDefinition = FunctionDefinition(**group_data)
+                module = importlib.import_module(function_definition.module)
+                callables.append(getattr(module, function_definition.name))
 
         return callables

@@ -83,11 +83,15 @@ def test_function_registry_autodiscover_target_is_python_module():
     } == function_registry.registry["testapp"][0]
 
     # Assert one function registered for "other"
-    assert len(function_registry.registry["other"]) == 1
+    assert len(function_registry.registry["other"]) == 2  # noqa: PLR2004
     assert {
         "module": "testapp.autodiscover.registered_functions",
         "name": "registered_dummy_function_other",
     } == function_registry.registry["other"][0]
+    assert {
+        "module": "testapp.autodiscover.registered_functions",
+        "name": "DummyClass",
+    } == function_registry.registry["other"][1]
 
 
 def test_function_registry_autodiscover_target_is_python_file():
@@ -171,10 +175,12 @@ def test_function_registry_autodiscover_load_handlers_from_cache_dummy_cache(*ar
     assert len(registered_functions) == 0
 
 
+@override_settings(CACHES={"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}})
 def test_get_registered_callables_found_and_executable():
     function_registry = FunctionRegistry()
     callables = function_registry.get_registered_callables(target_name="autodiscover")
 
-    assert len(callables) == 2  # noqa: PLR2004
+    assert len(callables) == 3  # noqa: PLR2004
     assert callables[0]() == "testapp"
     assert callables[1]() == "other"
+    assert str(callables[2]()) == "DummyClass"

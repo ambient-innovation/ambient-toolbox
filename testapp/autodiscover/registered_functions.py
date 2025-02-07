@@ -13,4 +13,5 @@ def registered_dummy_function_other():
 
 @function_registry.register_function(registry_group="other")
 class DummyClass:
-    pass
+    def __str__(self) -> str:
+        return "DummyClass"
