@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.0** (2025-02-07)
+  * New feature: Function registry with autodiscovery
+
 **12.0.2** (2025-02-07)
   * Refactored test suite and some code to remove pytest warnings
 

@@ -24,7 +24,7 @@ METADATA = PackageMetadata(
         ),
     ],
     maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
-    min_coverage=69.98,
+    min_coverage=71.75,
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
@@ -73,8 +73,8 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(
             key="RUF012", comment="Mutable class attributes should be annotated with `typing.ClassVar`"
         ),
-        RuffIgnoredInspection(key="TD002", comment="Missing author in TODO"),
-        RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TODO"),
+        RuffIgnoredInspection(key="TD002", comment="Missing author in TO-DOs"),
+        RuffIgnoredInspection(key="TD003", comment="Missing issue link on the line following this TO-DOs"),
         RuffIgnoredInspection(key="TRY002", comment="Checks for code that raises Exception directly."),
         RuffIgnoredInspection(
             key="TRY003",

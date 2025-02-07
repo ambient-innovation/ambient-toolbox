@@ -122,8 +122,8 @@ lint.ignore = [
     "DTZ001", # TODO will affect "tz_today()" method
     "DTZ005", # TODO will affect "tz_today()" method
     "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
-    "TD002", # Missing author in TODO
-    "TD003", # Missing issue link on the line following this TODO
+    "TD002", # Missing author in TO-DOs
+    "TD003", # Missing issue link on the line following this TO-DOs
     "TRY002", # Checks for code that raises Exception directly.
     "TRY003", # Checks for long exception messages that are not defined in the exception class itself.
 ]
