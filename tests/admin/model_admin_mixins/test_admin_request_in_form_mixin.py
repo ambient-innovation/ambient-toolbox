@@ -8,7 +8,7 @@ from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MySingleSignalModel
 
 
-class TestAdminRequestInFormMixinAdmin(AdminRequestInFormMixin, admin.ModelAdmin):
+class AdminTestRequestInFormMixinAdmin(AdminRequestInFormMixin, admin.ModelAdmin):
     pass
 
 
@@ -19,7 +19,7 @@ class AdminRequestInFormMixinTest(RequestProviderMixin, TestCase):
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
-        admin.site.register(MySingleSignalModel, TestAdminRequestInFormMixinAdmin)
+        admin.site.register(MySingleSignalModel, AdminTestRequestInFormMixinAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -28,7 +28,7 @@ class AdminRequestInFormMixinTest(RequestProviderMixin, TestCase):
         admin.site.unregister(MySingleSignalModel)
 
     def test_request_is_in_form(self):
-        model_admin = TestAdminRequestInFormMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        model_admin = AdminTestRequestInFormMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
         form = model_admin.get_form(self.get_request(self.super_user))
 
         self.assertIsInstance(form.request, HttpRequest)

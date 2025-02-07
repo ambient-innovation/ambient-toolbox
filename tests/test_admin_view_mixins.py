@@ -9,7 +9,7 @@ from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MySingleSignalModel
 
 
-class TestView(AdminViewMixin, generic.TemplateView):
+class ViewTestView(AdminViewMixin, generic.TemplateView):
     model = MySingleSignalModel
     admin_page_title = "My fancy title"
     template_name = "testapp/test_template.html"
@@ -20,7 +20,7 @@ class AdminViewMixinTest(RequestProviderMixin, TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.view = TestView()
+        cls.view = ViewTestView()
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
         cls.regular_user = User.objects.create(username="test_user", is_superuser=False)

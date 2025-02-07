@@ -6,7 +6,7 @@ from django.views import generic
 from ambient_toolbox.tests.mixins import ClassBasedViewTestMixin
 
 
-class TestView(generic.TemplateView):
+class ViewTestView(generic.TemplateView):
     def get(self, request, *args, **kwargs):
         return HttpResponse(status=202)
 
@@ -18,7 +18,7 @@ class TestView(generic.TemplateView):
 
 
 class ClassBasedViewTestMixinTest(ClassBasedViewTestMixin, TestCase):
-    view_class = TestView
+    view_class = ViewTestView
 
     @classmethod
     def setUpTestData(cls):

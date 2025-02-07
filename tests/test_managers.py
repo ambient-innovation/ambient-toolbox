@@ -32,11 +32,11 @@ class AbstractUserSpecificQuerySetTest(TestCase):
             self.cqs.deletable_for(self.user)
 
 
-class TestUserSpecificManager(AbstractUserSpecificManager):
+class UserTestSpecificManager(AbstractUserSpecificManager):
     pass
 
 
-TestUserSpecificManager = TestUserSpecificManager.from_queryset(AbstractUserSpecificQuerySet)
+UserTestSpecificManager = UserTestSpecificManager.from_queryset(AbstractUserSpecificQuerySet)
 
 
 class AbstractUserSpecificManagerTest(TestCase):
@@ -44,7 +44,7 @@ class AbstractUserSpecificManagerTest(TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.manager = TestUserSpecificManager()
+        cls.manager = UserTestSpecificManager()
         cls.user = User.objects.create(username="my-username")
 
     def test_visible_for_regular(self):

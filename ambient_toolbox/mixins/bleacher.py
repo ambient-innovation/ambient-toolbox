@@ -65,7 +65,7 @@ class BleacherMixin:
             if isinstance(attribute_list, (list, tuple)):
                 self.allowed_attributes[tag] = set(attribute_list)
                 warnings.warn(
-                    "Please use a set instead of a list for the BleacherMixin.ALLOWED_ATTRIBUTES attribute.",
+                    "Please use a set instead of a list or tuple for the BleacherMixin.ALLOWED_ATTRIBUTES attribute.",
                     category=DeprecationWarning,
                     stacklevel=1,
                 )

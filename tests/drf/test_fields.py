@@ -9,7 +9,7 @@ from ambient_toolbox.drf.fields import RecursiveField
 from testapp.models import ModelWithFkToSelf, ModelWithOneToOneToSelf
 
 
-class TestManyTrueSerializer(serializers.ModelSerializer):
+class ManyTrueTestSerializer(serializers.ModelSerializer):
     children = RecursiveField(many=True)
 
     class Meta:
@@ -21,7 +21,7 @@ class TestManyTrueSerializer(serializers.ModelSerializer):
 
 
 @pytest.mark.skip
-class TestManyFalseSerializer(serializers.ModelSerializer):
+class ManyFalseTestSerializer(serializers.ModelSerializer):
     peer = RecursiveField()
 
     class Meta:
@@ -48,7 +48,7 @@ class RecursiveFieldTest(TestCase):
         mocked_create.assert_called_once_with({})
 
     def test_many_true_regular(self):
-        serializer = TestManyTrueSerializer()
+        serializer = ManyTrueTestSerializer()
 
         self.assertIn("children", serializer.fields)
         self.assertIsInstance(serializer.fields["children"], ListSerializer)
@@ -58,7 +58,7 @@ class RecursiveFieldTest(TestCase):
         mwfts_1 = ModelWithFkToSelf.objects.create(parent=None)
         mwfts_2 = ModelWithFkToSelf.objects.create(parent=mwfts_1)
 
-        serializer = TestManyTrueSerializer(instance=mwfts_1)
+        serializer = ManyTrueTestSerializer(instance=mwfts_1)
         representation = serializer.to_representation(instance=mwfts_1)
 
         self.assertIsInstance(representation, dict)
@@ -68,7 +68,7 @@ class RecursiveFieldTest(TestCase):
         self.assertEqual(representation["children"][0]["children"], [])
 
     def test_many_false_regular(self):
-        serializer = TestManyFalseSerializer()
+        serializer = ManyFalseTestSerializer()
 
         self.assertIn("peer", serializer.fields)
         self.assertIsInstance(serializer.fields["peer"], RecursiveField)
@@ -77,7 +77,7 @@ class RecursiveFieldTest(TestCase):
         mwotos_no_peer = ModelWithOneToOneToSelf.objects.create(peer=None)
         mwotos_has_peer = ModelWithOneToOneToSelf.objects.create(peer=mwotos_no_peer)
 
-        serializer = TestManyFalseSerializer(instance=mwotos_has_peer)
+        serializer = ManyFalseTestSerializer(instance=mwotos_has_peer)
         representation = serializer.to_representation(instance=mwotos_has_peer)
 
         self.assertIsInstance(representation, dict)

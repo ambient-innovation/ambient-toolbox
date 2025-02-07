@@ -11,11 +11,11 @@ from ambient_toolbox.tests.mixins import RequestProviderMixin
 from testapp.models import MyMultipleSignalModel, MySingleSignalModel
 
 
-class TestReadOnlyAdmin(ReadOnlyAdmin):
+class ReadOnlyTestAdmin(ReadOnlyAdmin):
     model = MySingleSignalModel
 
 
-class TestEditableOnlyAdmin(EditableOnlyAdmin):
+class EditableOnlyTestAdmin(EditableOnlyAdmin):
     model = MySingleSignalModel
 
 
@@ -26,8 +26,8 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
 
         cls.super_user = User.objects.create(username="super_user", is_superuser=True)
 
-        admin.site.register(MySingleSignalModel, TestReadOnlyAdmin)
-        admin.site.register(MyMultipleSignalModel, TestEditableOnlyAdmin)
+        admin.site.register(MySingleSignalModel, ReadOnlyTestAdmin)
+        admin.site.register(MyMultipleSignalModel, EditableOnlyTestAdmin)
 
     @classmethod
     def tearDownClass(cls):
@@ -39,7 +39,7 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
     def test_read_only_admin_all_fields_readonly(self):
         obj = MySingleSignalModel(value=1)
 
-        admin_class = TestReadOnlyAdmin(model=obj, admin_site=admin.site)
+        admin_class = ReadOnlyTestAdmin(model=obj, admin_site=admin.site)
         readonly_fields = admin_class.get_readonly_fields(request=self.get_request(), obj=obj)
 
         self.assertEqual(len(readonly_fields), 2)
@@ -47,7 +47,7 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
         self.assertIn("value", readonly_fields)
 
     def test_read_only_admin_no_change_permissions(self):
-        admin_class = TestReadOnlyAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        admin_class = ReadOnlyTestAdmin(model=MySingleSignalModel, admin_site=admin.site)
 
         request = self.get_request(self.super_user)
 
@@ -57,7 +57,7 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
 
     def test_editable_only_admin_delete_action_removed(self):
         obj = MyMultipleSignalModel(value=1)
-        admin_class = TestEditableOnlyAdmin(model=obj, admin_site=admin.site)
+        admin_class = EditableOnlyTestAdmin(model=obj, admin_site=admin.site)
 
         request = self.get_request(self.super_user)
         actions = admin_class.get_actions(request=request)
@@ -65,7 +65,7 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
         self.assertNotIn("delete_selected", actions)
 
     def test_editable_only_admin_no_change_permissions(self):
-        admin_class = TestEditableOnlyAdmin(model=MyMultipleSignalModel, admin_site=admin.site)
+        admin_class = EditableOnlyTestAdmin(model=MyMultipleSignalModel, admin_site=admin.site)
 
         request = self.get_request(self.super_user)
 

@@ -8,7 +8,7 @@ from django.conf import settings
 from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 
 
-class TestStructureValidator:
+class StructureTestValidator:
     file_whitelist: list
     issue_list: list
 
