@@ -1,5 +1,6 @@
 from unittest.mock import PropertyMock, patch
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 from freezegun import freeze_time
@@ -69,3 +70,24 @@ class CommonInfoTest(TestCase):
         self.assertEqual(obj.lastmodified_at.month, 6)
         self.assertEqual(obj.lastmodified_at.day, 26)
         self.assertEqual(obj.lastmodified_at.hour, 10)
+
+    def test_save_common_info_set_user_fields_user_and_pk(self):
+        obj = CommonInfoBasedModel.objects.create(value=1, value_b=1)
+        obj.set_user_fields(user=User(username="username"))
+
+        self.assertIsNone(obj.created_by)
+        self.assertIsNone(obj.lastmodified_by)
+
+    def test_save_common_info_set_user_fields_no_user_but_pk(self):
+        obj = CommonInfoBasedModel.objects.create(value=1, value_b=1)
+        obj.set_user_fields(user=None)
+
+        self.assertIsNone(obj.created_by)
+        self.assertIsNone(obj.lastmodified_by)
+
+    def test_save_common_info_set_user_fields_no_user_no_pk(self):
+        obj = CommonInfoBasedModel(value=1, value_b=1)
+        obj.set_user_fields(user=None)
+
+        self.assertIsNone(obj.created_by)
+        self.assertIsNone(obj.lastmodified_by)
