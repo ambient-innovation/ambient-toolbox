@@ -62,7 +62,7 @@ Next, you need to create a django management command for your service to be able
 
 ````python
 from django.core.management.base import BaseCommand
-from apps.core.services import PortalScrubbingService
+from apps.core.services import MyScrubbingService
 
 
 class Command(BaseCommand):
