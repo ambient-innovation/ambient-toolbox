@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.2** (2025-03-19)
+  * Fixed wrong import in scrubber docs
+
 **12.1.1** (2025-02-07)
   * Added test for context processor
 
