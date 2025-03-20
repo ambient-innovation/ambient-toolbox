@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.3** (2025-03-20)
+  * Fixed typos in the documentation
+
 **12.1.2** (2025-03-19)
   * Fixed wrong import in scrubber docs
 
