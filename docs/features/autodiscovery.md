@@ -53,10 +53,10 @@ register handlers. Use different group names (aka namespaces) and you are good t
 
 ### AMBIENT_TOOLBOX_APP_BASE_PATH
 
-Queuebie needs to know where your project lives to detect local Django apps. It defaults to `settings.BASE_PATH`
+The toolbox needs to know where your project lives to detect local Django apps. It defaults to `settings.BASE_PATH`
 but you can overwrite it with a string or a `Pathlib` object.
 
-**Attention: Queuebie will only look in local Django apps for callables to register!**
+**Attention: ambient-toolbox will only look in local Django apps for callables to register!**
 
 ```python
 from pathlib import Path
@@ -66,9 +66,10 @@ AMBIENT_TOOLBOX_APP_BASE_PATH = Path(__file__).resolve(strict=True).parent
 
 ### AMBIENT_TOOLBOX_CACHE_KEY
 
-Queuebie will cache all detected message handlers in Django's default cache. The default cache key is "
-toolbox_autodiscovery".
-You can overwrite it with this variable.
+ambient-toolbox will cache all detected message handlers in Django's default cache.
+The default cache key is "toolbox_autodiscovery".
+
+You can overwrite it with this variable:
 
 ```python
 AMBIENT_TOOLBOX_CACHE_KEY = "my_very_special_cache_key"
@@ -76,8 +77,10 @@ AMBIENT_TOOLBOX_CACHE_KEY = "my_very_special_cache_key"
 
 ### AMBIENT_TOOLBOX_LOGGER_NAME
 
-Queuebie defines a Django logger with the default name "queuebie". If you want to rename that logger, you can set this
-variable.
+ambient-toolbox defines a Django logger with the default name "toolbox_autodiscover".
+If you want to rename that logger, you can set this variable.
+
+You can overwrite it with this variable:
 
 ```python
 AMBIENT_TOOLBOX_LOGGER_NAME = "my_very_special_logger"
