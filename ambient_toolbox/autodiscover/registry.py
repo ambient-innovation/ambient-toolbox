@@ -60,7 +60,7 @@ class DecoratorBasedRegistry:
 
         return decorator
 
-    def autodiscover(self, *, registry_group: str) -> None:
+    def autodiscover(self, *, namespaces: list[str]) -> None:
         """
         Detects message registries which have been registered via the "register_*" decorator.
         """
@@ -82,24 +82,25 @@ class DecoratorBasedRegistry:
             if project_path not in app_path.parents:
                 continue
 
-            target_path = registry_group.replace(".", "/")
+            for namespace in namespaces:
+                target_path = namespace.replace(".", "/")
 
-            try:
-                # Detected python code is a single file
-                if os.path.exists(app_path / f"{target_path}.py"):
-                    module_path = f"{app_config.name}.{registry_group}"
-                    self._force_import(module_path=module_path)
+                try:
+                    # Detected python code is a single file
+                    if os.path.exists(app_path / f"{target_path}.py"):
+                        module_path = f"{app_config.name}.{namespace}"
+                        self._force_import(module_path=module_path)
 
-                # Detected python code is a python module
-                for module in os.listdir(app_path / target_path):
-                    if module[-3:] != ".py":
-                        continue
-                    module_name = module.replace(".py", "")
-                    module_path = f"{app_config.name}.{registry_group}.{module_name}"
-                    self._force_import(module_path=module_path)
+                    # Detected python code is a python module
+                    for module in os.listdir(app_path / target_path):
+                        if module[-3:] != ".py":
+                            continue
+                        module_name = module.replace(".py", "")
+                        module_path = f"{app_config.name}.{namespace}.{module_name}"
+                        self._force_import(module_path=module_path)
 
-            except FileNotFoundError:
-                pass
+                except FileNotFoundError:
+                    pass
 
         # Log to shell which functions have been detected
         logger.debug("Function autodiscovery running...")
@@ -137,7 +138,7 @@ class DecoratorBasedRegistry:
         """
         Returns a list of Callables (functions and classes)
         """
-        self.autodiscover(registry_group=registry_group)
+        self.autodiscover(namespaces=[registry_group])
 
         callables = []
         callable_definition: dict[str:str]

@@ -2,7 +2,7 @@ from django.apps import AppConfig
 from django.core.checks import Tags, register
 from django.utils.translation import gettext_lazy as _
 
-from ambient_toolbox.autodiscover.settings import get_autodiscover_enabled
+from ambient_toolbox.autodiscover.settings import get_autodiscover_enabled, get_namespaces
 from ambient_toolbox.static_role_permissions.settings import (
     get_static_role_permissions_enable_system_check,
     get_static_role_permissions_path,
@@ -26,4 +26,4 @@ class AmbientToolboxConfig(AppConfig):
             # registration process since decorators are only executed the first time.
             from ambient_toolbox.autodiscover import decorator_based_registry
 
-            decorator_based_registry.autodiscover()
+            decorator_based_registry.autodiscover(namespaces=get_namespaces())
