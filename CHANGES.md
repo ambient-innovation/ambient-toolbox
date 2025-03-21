@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.4** (2025-03-21)
+  * Fixed a show-stopper bug in the autodiscover feature
+
 **12.1.3** (2025-03-20)
   * Fixed typos in the documentation
 

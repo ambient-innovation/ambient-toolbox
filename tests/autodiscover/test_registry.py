@@ -1,3 +1,4 @@
+import importlib
 import json
 from pathlib import Path
 from unittest import mock
@@ -5,6 +6,8 @@ from unittest import mock
 from django.core.cache import cache
 from django.test import override_settings
 
+from ambient_toolbox.apps import AmbientToolboxConfig
+from ambient_toolbox.autodiscover import decorator_based_registry
 from ambient_toolbox.autodiscover.registry import DecoratorBasedRegistry
 from ambient_toolbox.autodiscover.settings import get_autodiscover_cache_key
 
@@ -15,6 +18,57 @@ def dummy_function(*args):
 
 def dummy_function_2(*args):
     return None
+
+
+@override_settings(AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED=True)
+@override_settings(AMBIENT_TOOLBOX_NAMESPACES=["autodiscover"])
+def test_app_autodiscover_single_namespace():
+    cache.clear()
+
+    app_config = AmbientToolboxConfig(app_name="ambient_toolbox", app_module=importlib.import_module("ambient_toolbox"))
+    app_config.ready()
+
+    assert isinstance(decorator_based_registry, DecoratorBasedRegistry)
+
+    assert "other" in decorator_based_registry.registry
+    assert "testapp" in decorator_based_registry.registry
+    assert "no_module" not in decorator_based_registry.registry
+
+
+@override_settings(AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED=True)
+@override_settings(AMBIENT_TOOLBOX_NAMESPACES=["autodiscover", "more_registered_functions"])
+def test_app_autodiscover_multiple_namespaces():
+    cache.clear()
+
+    app_config = AmbientToolboxConfig(app_name="ambient_toolbox", app_module=importlib.import_module("ambient_toolbox"))
+    app_config.ready()
+
+    assert isinstance(decorator_based_registry, DecoratorBasedRegistry)
+
+    assert "other" in decorator_based_registry.registry
+    assert "testapp" in decorator_based_registry.registry
+    assert "no_module" in decorator_based_registry.registry
+
+
+@override_settings(AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED=True)
+@override_settings(AMBIENT_TOOLBOX_NAMESPACES=["autodiscover"])
+def test_app_enable_flag_enabled():
+    app_config = AmbientToolboxConfig(app_name="ambient_toolbox", app_module=importlib.import_module("ambient_toolbox"))
+
+    with mock.patch.object(DecoratorBasedRegistry, "autodiscover") as mocked_autodiscover:
+        app_config.ready()
+
+    mocked_autodiscover.assert_called_once_with(namespaces=["autodiscover"])
+
+
+@override_settings(AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED=False)
+def test_app_enable_flag_disabled():
+    app_config = AmbientToolboxConfig(app_name="ambient_toolbox", app_module=importlib.import_module("ambient_toolbox"))
+
+    with mock.patch.object(DecoratorBasedRegistry, "autodiscover") as mocked_autodiscover:
+        app_config.ready()
+
+    mocked_autodiscover.assert_not_called()
 
 
 def test_decorator_based_registry_init_regular():
@@ -68,7 +122,7 @@ def test_decorator_based_registry_autodiscover_target_is_python_module():
     cache.clear()
 
     decorator_based_registry = DecoratorBasedRegistry()
-    decorator_based_registry.autodiscover(registry_group="autodiscover")
+    decorator_based_registry.autodiscover(namespaces=["autodiscover"])
 
     # Assert two functions registered
     assert len(decorator_based_registry.registry) == 2  # noqa: PLR2004
@@ -98,7 +152,7 @@ def test_decorator_based_registry_autodiscover_target_is_python_file():
     cache.clear()
 
     decorator_based_registry = DecoratorBasedRegistry()
-    decorator_based_registry.autodiscover(registry_group="more_registered_functions")
+    decorator_based_registry.autodiscover(namespaces=["more_registered_functions"])
 
     # Assert two functions registered
     assert len(decorator_based_registry.registry) == 1
@@ -116,7 +170,7 @@ def test_decorator_based_registry_autodiscover_registry_group_contains_subpackag
     cache.clear()
 
     decorator_based_registry = DecoratorBasedRegistry()
-    decorator_based_registry.autodiscover(registry_group="handlers.commands")
+    decorator_based_registry.autodiscover(namespaces=["handlers.commands"])
 
     # Assert two functions registered
     assert len(decorator_based_registry.registry) == 1
@@ -135,7 +189,7 @@ def test_decorator_based_registry_autodiscover_no_local_apps(*args):
     cache.clear()
 
     decorator_based_registry = DecoratorBasedRegistry()
-    decorator_based_registry.autodiscover(registry_group="autodiscover")
+    decorator_based_registry.autodiscover(namespaces=["autodiscover"])
 
     assert len(decorator_based_registry.registry) == 0
 
@@ -151,7 +205,7 @@ def test_decorator_based_registry_autodiscover_caching_avoid_importing_again(
     )
 
     decorator_based_registry = DecoratorBasedRegistry()
-    decorator_based_registry.autodiscover(registry_group="autodiscover")
+    decorator_based_registry.autodiscover(namespaces=["autodiscover"])
 
     assert mocked_reload_module.call_count == 0
     assert mocked_import_module.call_count == 0

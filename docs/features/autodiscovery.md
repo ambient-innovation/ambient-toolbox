@@ -64,6 +64,17 @@ from pathlib import Path
 AMBIENT_TOOLBOX_APP_BASE_PATH = Path(__file__).resolve(strict=True).parent
 ```
 
+### AMBIENT_TOOLBOX_NAMESPACES
+
+The toolbox needs to know all the places to look for functions to register.
+
+If you have "notifications" living in `my_app/notifications.py` or `my_app/notifications/my_file.py`,
+you have to set here `notifictations` as the namespace.
+
+```python
+AMBIENT_TOOLBOX_NAMESPACES = ["my_namespace", "my.sub.namespace"]
+```
+
 ### AMBIENT_TOOLBOX_CACHE_KEY
 
 ambient-toolbox will cache all detected message handlers in Django's default cache.

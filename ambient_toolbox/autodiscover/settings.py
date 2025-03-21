@@ -12,6 +12,13 @@ def get_autodiscover_enabled() -> Union[Path, str]:
     return getattr(settings, "AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED", False)
 
 
+def get_namespaces() -> list[str]:
+    """
+    Lists all namespaces groups which are valid for the given project.
+    """
+    return getattr(settings, "AMBIENT_TOOLBOX_NAMESPACES", [])
+
+
 def get_autodiscover_app_base_path() -> Union[Path, str]:
     """
     Base path of the application autodiscover should look for registered handlers.
