@@ -23,6 +23,8 @@ def dummy_function_2(*args):
 @override_settings(AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED=True)
 @override_settings(AMBIENT_TOOLBOX_NAMESPACES=["autodiscover"])
 def test_app_autodiscover_single_namespace():
+    cache.clear()
+
     app_config = AmbientToolboxConfig(app_name="ambient_toolbox", app_module=importlib.import_module("ambient_toolbox"))
     app_config.ready()
 
@@ -36,6 +38,8 @@ def test_app_autodiscover_single_namespace():
 @override_settings(AMBIENT_TOOLBOX_AUTODISCOVER_ENABLED=True)
 @override_settings(AMBIENT_TOOLBOX_NAMESPACES=["autodiscover", "more_registered_functions"])
 def test_app_autodiscover_multiple_namespaces():
+    cache.clear()
+
     app_config = AmbientToolboxConfig(app_name="ambient_toolbox", app_module=importlib.import_module("ambient_toolbox"))
     app_config.ready()
 
