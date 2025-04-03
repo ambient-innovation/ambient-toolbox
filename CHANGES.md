@@ -1,5 +1,9 @@
 # Changelog
 
+**12.1.5** (2025-04-03)
+  * Maintenance updates via ambient-package-update
+  * Improved some conditions in permission fixtures feature
+
 **12.1.4** (2025-03-21)
   * Fixed a show-stopper bug in the autodiscover feature
 

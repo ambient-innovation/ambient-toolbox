@@ -61,11 +61,11 @@ class PermissionSetupService:
 
         if not self.dry_run:
             # Persist changes on removed permissions
-            if len(removed_permissions):
+            if removed_permissions:
                 group.permissions.remove(*removed_permissions)
 
             # Persist changes on added permissions
-            if len(new_permissions):
+            if new_permissions:
                 group.permissions.add(*new_permissions)
 
         # Return changes
