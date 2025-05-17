@@ -61,8 +61,42 @@ MIDDLEWARE = (
 )
 
 # Mail backend
-EMAIL_BACKEND_DOMAIN_WHITELIST = ""
 EMAIL_BACKEND_REDIRECT_ADDRESS = ""
+EMAIL_BACKEND_DOMAIN_ALLOWLIST = ""
+
+_EMAIL_BACKEND_DOMAIN_WHITELIST = ""
+@property
+def EMAIL_BACKEND_DOMAIN_WHITELIST():
+    """
+    The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+    Until then, keep this for backwards compatibility but warn users about future deprecation.
+    """
+
+    import warnings
+    warnings.warn(
+        "The 'EMAIL_BACKEND_DOMAIN_WHITELIST' setting is deprecated and will be removed in a future version. Use 'EMAIL_BACKEND_DOMAIN_ALLOWLIST' instead.",
+        category=DeprecationWarning,
+        stacklevel=1,
+    )
+    return _EMAIL_BACKEND_DOMAIN_WHITELIST
+
+
+@EMAIL_BACKEND_DOMAIN_WHITELIST.setter
+def EMAIL_BACKEND_DOMAIN_WHITELIST(value):
+    """
+    The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+    Until then, keep this for backwards compatibility but warn users about future deprecation.
+    """
+
+    import warnings
+    from django.conf import settings
+
+    warnings.warn(
+        "The 'EMAIL_BACKEND_DOMAIN_WHITELIST' setting is deprecated and will be removed in a future version. Use 'EMAIL_BACKEND_DOMAIN_ALLOWLIST' instead.",
+        category=DeprecationWarning,
+        stacklevel=1,
+    )
+    settings._EMAIL_BACKEND_DOMAIN_WHITELIST = value
 
 TIME_ZONE = "UTC"
 

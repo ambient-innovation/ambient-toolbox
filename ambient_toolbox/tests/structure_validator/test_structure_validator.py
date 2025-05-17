@@ -1,5 +1,6 @@
 import os
 import sys
+import warnings
 from pathlib import Path
 from typing import Union
 
@@ -9,20 +10,69 @@ from ambient_toolbox.tests.structure_validator import settings as toolbox_settin
 
 
 class StructureTestValidator:
-    file_whitelist: list
+    _file_whitelist: list
+
+    file_allowlist: list
     issue_list: list
 
     def __init__(self):
-        self.file_whitelist = self._get_file_whitelist()
+        self._file_whitelist = self._get_file_allowlist()
+
+        self.file_allowlist = self._get_file_allowlist()
         self.issue_list = []
+
+    # --------------------- deprecated methods START
+
+    @property
+    def file_whitelist(self):
+        """
+        The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+        Until then, keep this for backwards compatibility but warn users about future deprecation.
+        """
+
+        warnings.warn(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version. Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        return self._file_whitelist
+
+    @file_whitelist.setter
+    def file_whitelist(self, value):
+        """
+        The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+        Until then, keep this for backwards compatibility but warn users about future deprecation.
+        """
+
+        warnings.warn(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version. Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        self._file_whitelist = value
 
     @staticmethod
     def _get_file_whitelist() -> list:
-        default_whitelist = ["__init__"]
+        """
+        The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+        Until then, keep this for backwards compatibility but warn users about future deprecation.
+        """
+        warnings.warn(
+            "_get_file_whitelist() is deprecated and will be removed in a future version. Use _get_file_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        return StructureTestValidator._get_file_allowlist()
+
+    # --------------------- deprecated methods END
+
+    @staticmethod
+    def _get_file_allowlist() -> list:
+        default_allowlist = ["__init__"]
         try:
-            return default_whitelist + settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+            return default_allowlist + settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
         except AttributeError:
-            return default_whitelist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+            return default_allowlist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
 
     @staticmethod
     def _get_base_dir() -> Union[Path, str]:
@@ -54,7 +104,7 @@ class StructureTestValidator:
             return toolbox_settings.TEST_STRUCTURE_VALIDATOR_APP_LIST
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
-        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_whitelist:
+        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_allowlist:
             file_path = f"{root}\\{file}".replace("\\", "/")
             self.issue_list.append(f'Python file without "test_" prefix found: {file_path!r}.')
             return False
