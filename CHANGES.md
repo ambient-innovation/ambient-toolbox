@@ -2,6 +2,7 @@
 
 **12.1.6** (2025-05-17)
   * Refactor all "white-XY" related code to "allow-XY"
+  * Refactor all "black-XY" related code to "block-XY"
   * Introduce deprecation warnings for all "white-XY" terms
 
 **12.1.5** (2025-04-03)
