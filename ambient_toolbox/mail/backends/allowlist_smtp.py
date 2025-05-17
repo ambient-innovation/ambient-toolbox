@@ -27,7 +27,8 @@ class AllowlistEmailBackend(SMTPEmailBackend):
         Until then, keep this for backwards compatibility but warn users about future deprecation.
         """
         warnings.warn(
-            "get_domain_whitelist() is deprecated and will be removed in a future version. Use get_domain_allowlist() instead.",
+            "get_domain_whitelist() is deprecated and will be removed in a future version."
+            "Use get_domain_allowlist() instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )
@@ -40,7 +41,8 @@ class AllowlistEmailBackend(SMTPEmailBackend):
         Until then, keep this for backwards compatibility but warn users about future deprecation.
         """
         warnings.warn(
-            "whitify_mail_addresses() is deprecated and will be removed in a future version. Use allowify_mail_addresses() instead.",
+            "whitify_mail_addresses() is deprecated and will be removed in a future version."
+            "Use allowify_mail_addresses() instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )

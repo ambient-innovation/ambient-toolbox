@@ -21,7 +21,8 @@ class CurrentUserMiddleware(CurrentRequestMiddleware):
 
     def __init__(self, get_response: Callable[["HttpRequest"], "HttpResponse"]):
         warnings.warn(
-            "CurrentUserMiddleware is deprecated and will be removed in a future version. Use CurrentRequestMiddleware instead.",
+            "CurrentUserMiddleware is deprecated and will be removed in a future version."
+            "Use CurrentRequestMiddleware instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )

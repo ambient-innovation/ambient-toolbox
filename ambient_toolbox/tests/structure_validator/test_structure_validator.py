@@ -31,7 +31,8 @@ class StructureTestValidator:
         """
 
         warnings.warn(
-            "The 'file_whitelist' attribute is deprecated and will be removed in a future version. Use 'file_allowlist' instead.",
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )
@@ -45,7 +46,8 @@ class StructureTestValidator:
         """
 
         warnings.warn(
-            "The 'file_whitelist' attribute is deprecated and will be removed in a future version. Use 'file_allowlist' instead.",
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )
@@ -58,7 +60,8 @@ class StructureTestValidator:
         Until then, keep this for backwards compatibility but warn users about future deprecation.
         """
         warnings.warn(
-            "_get_file_whitelist() is deprecated and will be removed in a future version. Use _get_file_allowlist() instead.",
+            "_get_file_whitelist() is deprecated and will be removed in a future version."
+            "Use _get_file_allowlist() instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )
