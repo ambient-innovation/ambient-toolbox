@@ -65,6 +65,8 @@ EMAIL_BACKEND_REDIRECT_ADDRESS = ""
 EMAIL_BACKEND_DOMAIN_ALLOWLIST = ""
 
 _EMAIL_BACKEND_DOMAIN_WHITELIST = ""
+
+
 @property
 def EMAIL_BACKEND_DOMAIN_WHITELIST():  # noqa: N802
     """
@@ -73,6 +75,7 @@ def EMAIL_BACKEND_DOMAIN_WHITELIST():  # noqa: N802
     """
 
     import warnings
+
     warnings.warn(
         "The 'EMAIL_BACKEND_DOMAIN_WHITELIST' setting is deprecated and will be removed in a future version."
         "Use 'EMAIL_BACKEND_DOMAIN_ALLOWLIST' instead.",
@@ -90,6 +93,7 @@ def EMAIL_BACKEND_DOMAIN_WHITELIST(value):  # noqa: N802
     """
 
     import warnings
+
     from django.conf import settings
 
     warnings.warn(
@@ -99,6 +103,7 @@ def EMAIL_BACKEND_DOMAIN_WHITELIST(value):  # noqa: N802
         stacklevel=1,
     )
     settings._EMAIL_BACKEND_DOMAIN_WHITELIST = value
+
 
 TIME_ZONE = "UTC"
 

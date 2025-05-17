@@ -1,6 +1,5 @@
 import warnings
 
-
 from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend
 
 

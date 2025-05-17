@@ -4,7 +4,9 @@ from typing import Optional
 from django.db.models import ForeignKey, Model
 
 
-def object_to_dict(obj, blacklisted_fields: Optional[list] = None, blocklisted_fields: Optional[list] = None, include_id: bool = False) -> dict:
+def object_to_dict(
+    obj, blacklisted_fields: Optional[list] = None, blocklisted_fields: Optional[list] = None, include_id: bool = False
+) -> dict:
     """
     Returns a dict with all data defined in the model class as a key-value-dict
     Attention: Does not work for M2M fields!
