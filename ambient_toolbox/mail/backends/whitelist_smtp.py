@@ -12,7 +12,7 @@ class WhitelistEmailBackend(AllowlistEmailBackend):
 
     def __init__(self, fail_silently=False, **kwargs):
         warnings.warn(
-            "WhitelistEmailBackend is deprecated. Use AllowlistEmailBackend instead.",
+            "WhitelistEmailBackend is deprecated and will be removed in a future version. Use AllowlistEmailBackend instead.",
             category=DeprecationWarning,
             stacklevel=1,
         )
