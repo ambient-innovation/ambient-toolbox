@@ -10,15 +10,15 @@ class UtilModelTest(TestCase):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj), {"value": obj.value})
 
-    def test_object_to_dict_blacklist(self):
+    def test_object_to_dict_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj, ["value"]), {})
 
-    def test_object_to_dict_with_id_with_blacklist(self):
+    def test_object_to_dict_with_id_with_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj, ["value"], True), {"id": obj.id})
 
-    def test_with_id_no_blacklist(self):
+    def test_with_id_no_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj, include_id=True), {"id": obj.id, "value": obj.value})
 
