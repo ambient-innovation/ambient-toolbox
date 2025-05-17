@@ -2,7 +2,7 @@
 
 ## Backends
 
-### WhitelistEmailBackend
+### AllowlistEmailBackend
 
 In some cases it is useful to debug and test email functionality on local or test environments. Additionally, your
 project could contain logic, that triggers emails in the background, so it is very important, that you don't send emails
@@ -14,8 +14,8 @@ define an email address (must be a catchall inbox), where the restricted emails 
 Example:
 
 ```python
-EMAIL_BACKEND = "ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend"
-EMAIL_BACKEND_DOMAIN_WHITELIST = ["ambient.digital"]
+EMAIL_BACKEND = "ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend"
+EMAIL_BACKEND_DOMAIN_ALLOWLIST = ["ambient.digital"]
 EMAIL_BACKEND_REDIRECT_ADDRESS = "%s@testuser.ambient.digital"
 ```
 
