@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from freezegun import freeze_time
 
+from ambient_toolbox.utils import get_previous_quarter_for_date
 from ambient_toolbox.utils.date import (
     add_days,
     add_minutes,
@@ -299,3 +300,19 @@ class DateUtilTest(TestCase):
     def test_check_date_is_weekend_negative(self):
         compare_date = datetime.date(year=2024, month=9, day=21)
         self.assertIs(check_date_is_weekend(compare_date), True)
+
+    def test_get_previous_quarter_starting_date_for_date_get_first_quarter(self):
+        date = datetime.date(year=2025, month=4, day=1)
+        self.assertEqual(get_previous_quarter_for_date(date=date), datetime.date(2025, 1, 1))
+
+    def test_get_previous_quarter_starting_date_for_date_get_second_quarter(self):
+        date = datetime.date(year=2025, month=7, day=1)
+        self.assertEqual(get_previous_quarter_for_date(date=date), datetime.date(2025, 4, 1))
+
+    def test_get_previous_quarter_starting_date_for_date_get_third_quarter(self):
+        date = datetime.date(year=2025, month=10, day=1)
+        self.assertEqual(get_previous_quarter_for_date(date=date), datetime.date(2025, 7, 1))
+
+    def test_get_previous_quarter_starting_date_for_date_get_fourth_quarter(self):
+        date = datetime.date(year=2025, month=1, day=1)
+        self.assertEqual(get_previous_quarter_for_date(date=date), datetime.date(2025, 10, 1))
