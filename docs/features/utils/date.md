@@ -228,6 +228,22 @@ current_year = get_current_year()
 ````
 
 
+### Get previous quarter starting date for date
+
+The function ``get_previous_quarter_starting_date_for_date()`` will return the starting date of the quarter before the
+current quarter of the given date.
+This is especially useful in quarterly running tasks that need to look up data from the previous quarter.
+
+For example:
+````python
+import datetime
+from ambient-toolbox.utils import get_previous_quarter_starting_date_for_date
+
+previous_quarter_starting_date = get_previous_quarter_starting_date_for_date(date=datetime.date(2025,5,20))
+````
+Will result in returning ``datetime.date(2025,1,1)``
+
+
 ### Check if a date is on a weekend
 
 The function ``check_date_is_weekend()`` will return a boolean value determining if the given date is on a weekend.
