@@ -232,7 +232,8 @@ current_year = get_current_year()
 
 The function ``get_previous_quarter_starting_date_for_date()`` will return the starting date of the quarter before the
 current quarter of the given date.
-This is especially useful in quarterly running tasks that need to look up data from the previous quarter.
+This is especially useful in quarterly running tasks that need to look up data dating back to the starting date of
+the previous quarter.
 
 For example:
 ````python
