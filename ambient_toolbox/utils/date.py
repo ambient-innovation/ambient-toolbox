@@ -204,3 +204,26 @@ def check_date_is_weekend(compare_date: datetime.date, weekend_days=(calendar.SA
     which default to European weekend days.
     """
     return compare_date.weekday() in weekend_days
+
+
+def get_previous_quarter_starting_date_for_date(*, date: datetime.date) -> datetime.date:
+    """
+    Returns the starting date of the previous quarter in relation to the current quarter of a given date.
+    """
+    year = date.year
+    month = date.month
+    # Q1: 1.1. - 3.31 -> Q4
+    if month <= calendar.MARCH:
+        month = calendar.OCTOBER
+        year -= 1
+    # Q2: 4.1. - 6.30 -> Q1
+    elif month <= calendar.JUNE:
+        month = calendar.JANUARY
+    # Q3: 7.1. - 9.30 -> Q2
+    elif month <= calendar.SEPTEMBER:
+        month = calendar.APRIL
+    # Q4: 10.1. - 12.31 -> Q3
+    else:
+        month = calendar.JULY
+
+    return datetime.date(year, month=month, day=1)

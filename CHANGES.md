@@ -1,5 +1,8 @@
 # Changelog
 
+**12.2.0** (2025-05-20)
+  * New function returning the starting date of the previous quarter for a given date
+
 **12.1.5** (2025-04-03)
   * Maintenance updates via ambient-package-update
   * Improved some conditions in permission fixtures feature
