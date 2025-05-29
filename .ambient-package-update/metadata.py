@@ -41,7 +41,7 @@ METADATA = PackageMetadata(
     optional_dependencies={
         "dev": [
             *DEV_DEPENDENCIES,
-            "gevent~=23.9",
+            "gevent~=25.1",
             "httpx~=0.27",
             "freezegun~=1.5",
         ],
