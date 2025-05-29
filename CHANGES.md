@@ -33,7 +33,7 @@
   * Extended metadata for ambient-package-update
 
 **12.0.0** (2025-02-03)
-  * **Breaking change:**  Renamed `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to
+  * **Breaking change:** Renamed `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to
   `STATIC_ROLE_PERMISSIONS_ENABLE_SYSTEM_CHECK` since negations are harder to understand
   * Improved implementation of role permission settings
   * Minor internal changes due to new ruff rules
