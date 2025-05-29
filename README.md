@@ -115,7 +115,7 @@ Example: run single hook
 
     pre-commit run ruff --all-files
 
-Example: run all hooks of pre-push stage
+Example: run all hooks of push stage
 
     pre-commit run --all-files --hook-stage push
 

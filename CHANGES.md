@@ -1,8 +1,13 @@
 # Changelog
 
+**12.1.6** (2025-05-17)
+  * Refactor all "white-XY" related code to "allow-XY"
+  * Refactor all "black-XY" related code to "block-XY"
+  * Introduce deprecation warnings for all "white-XY" and "black-XY" terms
+
 **12.1.5** (2025-04-03)
   * Maintenance updates via ambient-package-update
-  * Improved some conditions in permission fixtures feature
+  * Improved some conditions in the permission fixtures feature
 
 **12.1.4** (2025-03-21)
   * Fixed a show-stopper bug in the autodiscover feature
@@ -28,7 +33,7 @@
   * Extended metadata for ambient-package-update
 
 **12.0.0** (2025-02-03)
-  * **Breaking change:**  Renamed `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to
+  * **Breaking change:** Renamed `STATIC_ROLE_PERMISSIONS_DISABLE_SYSTEM_CHECK` to
   `STATIC_ROLE_PERMISSIONS_ENABLE_SYSTEM_CHECK` since negations are harder to understand
   * Improved implementation of role permission settings
   * Minor internal changes due to new ruff rules

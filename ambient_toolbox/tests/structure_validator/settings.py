@@ -1,7 +1,7 @@
 from django.conf import settings
 
 # Test validator
-TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = []
+TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST = []
 try:
     TEST_STRUCTURE_VALIDATOR_BASE_DIR = settings.BASE_DIR
 except AttributeError:
