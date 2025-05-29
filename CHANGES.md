@@ -2,6 +2,7 @@
 
 **12.1.6** (2025-05-29)
   * Maintenance updates via ambient-package-update
+  * Updated gevent due to compiling issues in the pipeline
 
 **12.1.5** (2025-04-03)
   * Maintenance updates via ambient-package-update
