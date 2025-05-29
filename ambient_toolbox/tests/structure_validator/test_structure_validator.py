@@ -70,7 +70,7 @@ class StructureTestValidator:
     def _build_path_to_test_package(self, app: str) -> Path:
         return self._get_base_dir() / Path(app.replace(".", "/")) / "tests"
 
-    def process(self) -> None:
+    def process(self) -> None:  # noqa: C901
         backend_package = self._get_base_app_name()
         app_list = self._get_app_list()
 
