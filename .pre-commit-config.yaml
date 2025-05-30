@@ -62,4 +62,5 @@ repos:
             "--pattern",
             '^^(?!(?:feature|hotfix|bugfix|refactor|maintenance)/[\w\d\-_#]+).*$',
           ]
+        stages: [pre-push]
       - id: trailing-whitespace

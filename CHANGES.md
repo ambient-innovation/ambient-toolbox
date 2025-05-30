@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.8** (2025-05-30)
+  * Fixed linter issue via ambient-package-update
+
 **12.1.7** (2025-05-30)
   * Maintenance updates via ambient-package-update
 
