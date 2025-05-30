@@ -1,5 +1,8 @@
 # Changelog
 
+**12.1.7** (2025-05-30)
+  * Maintenance updates via ambient-package-update
+
 **12.1.6** (2025-05-29)
   * Maintenance updates via ambient-package-update
   * Updated gevent due to compiling issues in the pipeline

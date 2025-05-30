@@ -75,4 +75,3 @@ How to compile translation files:
 * Navigate to `ambient-toolbox`
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `ambient_toolbox/locale`
-
