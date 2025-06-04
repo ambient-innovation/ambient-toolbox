@@ -1,5 +1,8 @@
 # Changelog
 
+**12.2.1** (2025-06-04)
+  * Added dependency extra for GitLab coverage
+
 **12.2.0** (2025-06-04)
   * Added management command to wrap GitLab coverage validation
 

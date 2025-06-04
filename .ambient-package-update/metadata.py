@@ -42,7 +42,7 @@ METADATA = PackageMetadata(
         "dev": [
             *DEV_DEPENDENCIES,
             "gevent~=25.1",
-            "httpx~=0.27",
+            "httpx~=0.28",
             "freezegun~=1.5",
         ],
         "drf": [
@@ -54,6 +54,9 @@ METADATA = PackageMetadata(
         ],
         "bleacher": [
             "nh3>=0.2,<1",
+        ],
+        "gitlab-coverage": [
+            "httpx~=0.28",
         ],
         "sentry": [
             "sentry-sdk>=1.19.1",
