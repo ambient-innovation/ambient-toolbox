@@ -16,7 +16,7 @@ class PermissionSetupService:
         self.dry_run = dry_run
 
     @transaction.atomic
-    def process(self) -> (list[Permission], list[Permission]):
+    def process(self) -> (list[Permission], list[Permission]):  # noqa: C901
         # Fetch or create group
         group, created = Group.objects.get_or_create(name=self.group_declaration.name)
 

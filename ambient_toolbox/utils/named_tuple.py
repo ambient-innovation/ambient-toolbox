@@ -2,7 +2,7 @@ from collections import OrderedDict, namedtuple
 from typing import Any
 
 
-def get_namedtuple_choices(name, choices_tuple):
+def get_namedtuple_choices(name, choices_tuple):  # noqa: C901
     """
     Made by Ross Crawford-d'Heureuse.
 

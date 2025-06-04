@@ -1,7 +1,26 @@
 # Changelog
 
-**12.2.0** (2025-05-20)
+**12.3.0** (2025-06-04)
   * New function returning the starting date of the previous quarter for a given date
+
+**12.2.1** (2025-06-04)
+  * Added dependency extra for GitLab coverage
+
+**12.2.0** (2025-06-04)
+  * Added management command to wrap GitLab coverage validation
+
+**12.1.9** (2025-05-30)
+  * Fixed linter issue via ambient-package-update
+
+**12.1.8** (2025-05-30)
+  * Fixed linter issue via ambient-package-update
+
+**12.1.7** (2025-05-30)
+  * Maintenance updates via ambient-package-update
+
+**12.1.6** (2025-05-29)
+  * Maintenance updates via ambient-package-update
+  * Updated gevent due to compiling issues in the pipeline
 
 **12.1.5** (2025-04-03)
   * Maintenance updates via ambient-package-update
