@@ -1,5 +1,8 @@
 # Changelog
 
+**12.2.0** (2025-06-04)
+  * Added management command to wrap GitLab coverage validation
+
 **12.1.9** (2025-05-30)
   * Fixed linter issue via ambient-package-update
 
