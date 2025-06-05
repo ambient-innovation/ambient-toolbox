@@ -1,5 +1,8 @@
 # Changelog
 
+**12.3.0** (2025-06-04)
+  * New function returning the starting date of the previous quarter for a given date
+
 **12.2.1** (2025-06-04)
   * Added dependency extra for GitLab coverage
 
