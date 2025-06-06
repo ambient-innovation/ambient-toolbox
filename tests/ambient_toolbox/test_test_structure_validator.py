@@ -11,21 +11,21 @@ class TestStructureValidatorTest(TestCase):
     def test_init_regular(self):
         service = StructureTestValidator()
 
-        self.assertEqual(service.file_whitelist, ["__init__"])
+        self.assertEqual(service.file_allowlist, ["__init__"])
         self.assertEqual(service.issue_list, [])
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
-    def test_get_file_whitelist_from_settings(self):
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_get_file_allowlist_from_settings(self):
         service = StructureTestValidator()
-        file_whitelist = service._get_file_whitelist()
+        file_allowlist = service._get_file_allowlist()
 
-        self.assertEqual(file_whitelist, ["__init__", "my_file"])
+        self.assertEqual(file_allowlist, ["__init__", "my_file"])
 
-    def test_get_file_whitelist_fallback(self):
+    def test_get_file_allowlist_fallback(self):
         service = StructureTestValidator()
-        file_whitelist = service._get_file_whitelist()
+        file_allowlist = service._get_file_allowlist()
 
-        self.assertEqual(file_whitelist, ["__init__"])
+        self.assertEqual(file_allowlist, ["__init__"])
 
     @override_settings(TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH)
     def test_get_base_dir_from_settings(self):
@@ -91,8 +91,8 @@ class TestStructureValidatorTest(TestCase):
         self.assertTrue(result)
         self.assertEqual(len(service.issue_list), 0)
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
-    def test_check_missing_test_prefix_wrong_prefix_but_whitelisted(self):
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_check_missing_test_prefix_wrong_prefix_but_allowlisted(self):
         service = StructureTestValidator()
         result = service._check_missing_test_prefix(
             root="root/path",

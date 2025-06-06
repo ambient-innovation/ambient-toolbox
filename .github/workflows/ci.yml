@@ -54,6 +54,8 @@ jobs:
             django-version: 51
           - python-version: "3.13"
             django-version: 42
+          - python-version: "3.13"
+            django-version: 51 # TODO CT: Is this really necessary?
 
     steps:
       - uses: actions/checkout@v4
