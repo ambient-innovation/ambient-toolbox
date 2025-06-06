@@ -49,9 +49,9 @@ Example: run single hook on all files
 
     pre-commit run ruff --all-files
 
-Example: run all hooks on all files
+Example: run all hooks of push stage on all files
 
-    pre-commit run --all-files
+    pre-commit run --all-files --hook-stage push
 
 ## Update documentation
 
