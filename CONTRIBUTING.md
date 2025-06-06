@@ -45,11 +45,11 @@ You can check whether hooks work as intended using the [run](https://pre-commit.
 
     pre-commit run [hook-id] [options]
 
-Example: run single hook
+Example: run single hook on all files
 
     pre-commit run ruff --all-files
 
-Example: run all hooks of pre-push stage
+Example: run all hooks on all files
 
     pre-commit run --all-files
 
