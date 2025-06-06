@@ -21,7 +21,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Run pre-commit hooks
-        run: pre-commit run --all-files --hook-stage push
+        run: pre-commit run --all-files
 
   validate_migrations:
     name: Validate migrations
@@ -34,7 +34,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: python -m pip install -U pip-tools && pip-compile --extra dev,drf,graphql,bleacher,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking && pip-sync
+        run: python -m pip install -U pip-tools && pip-compile --extra dev,drf,graphql,bleacher,gitlab-coverage,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking && pip-sync
 
       - name: Validate migration integrity
         run: python manage.py makemigrations --check --dry-run
