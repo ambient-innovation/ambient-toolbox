@@ -1,3 +1,4 @@
+import warnings
 from unittest import mock
 
 from django.core.mail import EmailMultiAlternatives
@@ -13,6 +14,42 @@ from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend
     EMAIL_BACKEND_REDIRECT_ADDRESS="%s@testuser.valid.domain",
 )
 class MailBackendAllowlistBackendTest(TestCase):
+    # --------------------- deprecated methods START
+
+    def test_get_domain_whitelist_warns_about_deprecation_and_calls_get_domain_allowlist(self):
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+            mock.patch.object(AllowlistEmailBackend, "get_domain_allowlist") as mocked_get_domain_allowlist,
+        ):
+            AllowlistEmailBackend.get_domain_whitelist()
+
+        mocked_warn.assert_called_once_with(
+            "get_domain_whitelist() is deprecated and will be removed in a future version."
+            "Use get_domain_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        mocked_get_domain_allowlist.assert_called_once()
+
+    def test_whitify_mail_addresses_warns_about_deprecation_and_calls_allowify_mail_addresses(self):
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+            mock.patch.object(AllowlistEmailBackend, "allowify_mail_addresses") as mocked_allowify_mail_addresses,
+        ):
+            AllowlistEmailBackend.whitify_mail_addresses(mail_address_list=[])
+
+        mocked_warn.assert_called_once_with(
+            "whitify_mail_addresses() is deprecated and will be removed in a future version."
+            "Use allowify_mail_addresses() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        mocked_allowify_mail_addresses.assert_called_once_with(mail_address_list=[])
+
+    # --------------------- deprecated methods END
+
     def test_allowify_mail_addresses_replace(self):
         email_1 = "albertus.magnus@example.com"
         email_2 = "thomas_von_aquin@example.com"
