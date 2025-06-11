@@ -1,9 +1,19 @@
 # Changelog
 
 **12.2.2** (2025-06-07)
-  * Refactor all "white-XY" related code to "allow-XY"
-  * Refactor all "black-XY" related code to "block-XY"
-  * Introduce deprecation warnings for all "white-XY" and "black-XY" terms
+  * **Breaking changes in `mail.backends.whitelist_smtp.WhitelistEmailBackend`:**
+    * Renamed `WhitelistEmailBackend` to `AllowlistEmailBackend` and moved to `mail.backends.allowlist_smtp`
+    * Renamed `get_domain_whitelist` method to `get_domain_allowlist`
+    * Renamed `whitify_mail_addresses` method to `allowify_mail_addresses`
+  * **Breaking changes in `settings.py`:**
+    * Rename `EMAIL_BACKEND_DOMAIN_WHITELIST` setting to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
+    * Rename `TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST` setting to `TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST`
+  *  **Breaking changes in `tests.structure_validator/test_structure_validator.StructureTestValidator`:**
+    * Rename `file_whitelist` property to `file_allowlist`
+    * Rename `_get_file_whitelist` method to `_get_file_allowlist`
+  * **Breaking change:** Rename `blacklisted_fields` kwarg of `utils.object_to_dict` to `blocklisted_fields`
+
+  - Introduce deprecation warnings for all "white-XY" and "black-XY" terms
 
 **12.2.1** (2025-06-04)
   * Added dependency extra for GitLab coverage
