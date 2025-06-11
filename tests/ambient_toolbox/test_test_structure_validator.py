@@ -1,31 +1,119 @@
+import warnings
 from pathlib import Path
 from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase, override_settings
 
+from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
 class TestStructureValidatorTest(TestCase):
+    # --------------------- deprecated methods START
+
+    def test_accessing_test_structure_validator_file_whitelist_setting_warns_and_returns_whitelist_value(self):
+        toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = "some_allowlist"
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            returned_settings = toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+
+        mocked_warn.assert_called_once_with(
+            "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in"
+            "a future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(returned_settings, "some_allowlist")
+
+    def test_setting_test_structure_validator_file_whitelist_setting_warns_and_sets_whitelist_value(self):
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = "some_allowlist"
+
+        mocked_warn.assert_called_once_with(
+            "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in "
+            "a future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST, "some_allowlist")
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_accessing_file_whitelist_property_warns_and_returns__file_whitelist(self):
+        instance = StructureTestValidator()
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            returned_allowlist = instance.file_whitelist
+
+        mocked_warn.assert_called_once_with(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(returned_allowlist, ["__init__", "my_file"])
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_setting_file_whitelist_property_warns_and_sets__file_whitelist(self):
+        validator_instance = StructureTestValidator()
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            validator_instance.file_whitelist = ["some_file"]
+
+        mocked_warn.assert_called_once_with(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(validator_instance._file_whitelist, ["some_file"])
+
+    def test_get_file_whitelist_warns_and_calls_get_file_allowlist(self):
+        instance = StructureTestValidator()
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+            mock.patch.object(StructureTestValidator, "_get_file_allowlist") as mocked_get_file_allowlist,
+        ):
+            instance._get_file_whitelist()
+
+        mocked_warn.assert_called_once_with(
+            "_get_file_whitelist() is deprecated and will be removed in a future version."
+            "Use _get_file_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        mocked_get_file_allowlist.assert_called_once()
+
+    # --------------------- deprecated methods END
+
     def test_init_regular(self):
         service = StructureTestValidator()
 
-        self.assertEqual(service.file_whitelist, ["__init__"])
+        self.assertEqual(service.file_allowlist, ["__init__"])
         self.assertEqual(service.issue_list, [])
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
-    def test_get_file_whitelist_from_settings(self):
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_get_file_allowlist_from_settings(self):
         service = StructureTestValidator()
-        file_whitelist = service._get_file_whitelist()
+        file_allowlist = service._get_file_allowlist()
 
-        self.assertEqual(file_whitelist, ["__init__", "my_file"])
+        self.assertEqual(file_allowlist, ["__init__", "my_file"])
 
-    def test_get_file_whitelist_fallback(self):
+    def test_get_file_allowlist_fallback(self):
         service = StructureTestValidator()
-        file_whitelist = service._get_file_whitelist()
+        file_allowlist = service._get_file_allowlist()
 
-        self.assertEqual(file_whitelist, ["__init__"])
+        self.assertEqual(file_allowlist, ["__init__"])
 
     @override_settings(TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH)
     def test_get_base_dir_from_settings(self):
@@ -91,8 +179,8 @@ class TestStructureValidatorTest(TestCase):
         self.assertTrue(result)
         self.assertEqual(len(service.issue_list), 0)
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
-    def test_check_missing_test_prefix_wrong_prefix_but_whitelisted(self):
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_check_missing_test_prefix_wrong_prefix_but_allowlisted(self):
         service = StructureTestValidator()
         result = service._check_missing_test_prefix(
             root="root/path",
