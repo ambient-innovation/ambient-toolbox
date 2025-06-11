@@ -6,6 +6,7 @@ from django.core.mail.backends.smtp import EmailBackend
 from django.test import TestCase, override_settings
 
 from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend
+from ambient_toolbox.mail.backends.whitelist_smtp import WhitelistEmailBackend
 
 
 @override_settings(
@@ -15,6 +16,21 @@ from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend
 )
 class MailBackendAllowlistBackendTest(TestCase):
     # --------------------- deprecated methods START
+
+    def test_instantiating_whitelistmeailbackend_warns_and_inherits_from_allowlistemailbackend(self):
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            instance = WhitelistEmailBackend()
+
+        mocked_warn.assert_called_once_with(
+            "WhitelistEmailBackend is deprecated and will be removed in a future version."
+            "Use AllowlistEmailBackend instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        issubclass(type(instance), AllowlistEmailBackend)
 
     def test_get_domain_whitelist_warns_about_deprecation_and_calls_get_domain_allowlist(self):
         with (
