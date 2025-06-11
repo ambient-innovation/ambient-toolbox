@@ -5,11 +5,43 @@ from unittest import mock
 from django.conf import settings
 from django.test import TestCase, override_settings
 
+from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
 class TestStructureValidatorTest(TestCase):
     # --------------------- deprecated methods START
+
+    def test_accessing_test_structure_validator_file_whitelist_setting_warns_and_returns_whitelist_value(self):
+        toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = "some_allowlist"
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            returned_settings = toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+
+        mocked_warn.assert_called_once_with(
+            "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in"
+            "a future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(returned_settings, "some_allowlist")
+
+    def test_setting_test_structure_validator_file_whitelist_setting_warns_and_sets_whitelist_value(self):
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = "some_allowlist"
+
+        mocked_warn.assert_called_once_with(
+            "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in "
+            "a future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST, "some_allowlist")
 
     @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
     def test_accessing_file_whitelist_property_warns_and_returns__file_whitelist(self):
