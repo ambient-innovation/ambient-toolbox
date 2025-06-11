@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from unittest import mock
 
@@ -8,6 +9,61 @@ from ambient_toolbox.tests.structure_validator.test_structure_validator import S
 
 
 class TestStructureValidatorTest(TestCase):
+    # --------------------- deprecated methods START
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_accessing_file_whitelist_property_warns_and_returns__file_whitelist(self):
+        instance = StructureTestValidator()
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            returned_allowlist = instance.file_whitelist
+
+        mocked_warn.assert_called_once_with(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(returned_allowlist, ["__init__", "my_file"])
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_setting_file_whitelist_property_warns_and_sets__file_whitelist(self):
+        validator_instance = StructureTestValidator()
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+        ):
+            validator_instance.file_whitelist = ["some_file"]
+
+        mocked_warn.assert_called_once_with(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(validator_instance._file_whitelist, ["some_file"])
+
+    def test_get_file_whitelist_warns_and_calls_get_file_allowlist(self):
+        instance = StructureTestValidator()
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+            mock.patch.object(StructureTestValidator, "_get_file_allowlist") as mocked_get_file_allowlist,
+        ):
+            instance._get_file_whitelist()
+
+        mocked_warn.assert_called_once_with(
+            "_get_file_whitelist() is deprecated and will be removed in a future version."
+            "Use _get_file_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        mocked_get_file_allowlist.assert_called_once()
+
+    # --------------------- deprecated methods END
+
     def test_init_regular(self):
         service = StructureTestValidator()
 
