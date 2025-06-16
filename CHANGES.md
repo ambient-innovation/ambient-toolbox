@@ -1,5 +1,8 @@
 # Changelog
 
+**12.2.2** (2025-06-16)
+  * Added missing variable to GitLab coverage docs
+
 **12.2.1** (2025-06-04)
   * Added dependency extra for GitLab coverage
 

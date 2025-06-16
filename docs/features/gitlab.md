@@ -55,6 +55,8 @@ check coverage:
 
 > GITLAB_CI_COVERAGE_TARGET_BRANCH = develop
 
+> CI_COVERAGE_JOB_NAME = [pipeline step name for your backend tests job]
+
 * Done. Enjoy!
 
 Hint: For merge-commits (i.e.: Merge develop into master), or hotfixes into branches that are not your default, manually
