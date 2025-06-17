@@ -1,5 +1,8 @@
 # Changelog
 
+**12.2.3** (2025-06-17)
+  * Fixed issue with null variable in GitLab coverage service
+
 **12.2.2** (2025-06-16)
   * Added missing variable to GitLab coverage docs
 
