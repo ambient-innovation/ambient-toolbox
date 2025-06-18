@@ -112,6 +112,12 @@ class CoverageService:
             return coverages_total, coverages_total, None
 
         coverage_job = coverages.get(job_name)
+        if not coverage_job:
+            print(
+                "\033[91mATTN: Failed to get coverage by job name, "
+                "using Total Coverage and skipping Coverage Diff\033[0m"
+            )
+            return coverages_total, coverages_total, None
 
         print(f"Job-URL: {coverage_job['web_url']}")
 
