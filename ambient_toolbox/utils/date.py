@@ -10,6 +10,26 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
+class MonthHelper:
+    """
+    Constants for month numbers to secure backwards compatibility with Python 3.11,
+    which did not have built-in month constants.
+    """
+
+    JANUARY = 1
+    FEBRUARY = 2
+    MARCH = 3
+    APRIL = 4
+    MAY = 5
+    JUNE = 6
+    JULY = 7
+    AUGUST = 8
+    SEPTEMBER = 9
+    OCTOBER = 10
+    NOVEMBER = 11
+    DECEMBER = 12
+
+
 class DateHelper:
     """
     Constants to use for django ORMs `__weekday` lookup to avoid usage of integers directly.
@@ -204,3 +224,26 @@ def check_date_is_weekend(compare_date: datetime.date, weekend_days=(calendar.SA
     which default to European weekend days.
     """
     return compare_date.weekday() in weekend_days
+
+
+def get_previous_quarter_starting_date_for_date(*, date: datetime.date) -> datetime.date:
+    """
+    Returns the starting date of the previous quarter in relation to the current quarter of a given date.
+    """
+    year = date.year
+    month = date.month
+    # Q1: 1.1. - 3.31 -> Q4
+    if month <= MonthHelper.MARCH:
+        month = MonthHelper.OCTOBER
+        year -= 1
+    # Q2: 4.1. - 6.30 -> Q1
+    elif month <= MonthHelper.JUNE:
+        month = MonthHelper.JANUARY
+    # Q3: 7.1. - 9.30 -> Q2
+    elif month <= MonthHelper.SEPTEMBER:
+        month = MonthHelper.APRIL
+    # Q4: 10.1. - 12.31 -> Q3
+    else:
+        month = MonthHelper.JULY
+
+    return datetime.date(year, month=month, day=1)

@@ -1,5 +1,8 @@
 # Changelog
 
+**12.3.0** (2025-06-18)
+  * New function returning the starting date of the previous quarter for a given date
+
 **12.2.3** (2025-06-17)
   * Fixed issue with null variable in GitLab coverage service
 
