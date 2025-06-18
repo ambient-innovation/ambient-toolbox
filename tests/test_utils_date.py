@@ -315,4 +315,4 @@ class DateUtilTest(TestCase):
 
     def test_get_previous_quarter_starting_date_for_date_get_fourth_quarter(self):
         date = datetime.date(year=2025, month=1, day=1)
-        self.assertEqual(get_previous_quarter_starting_date_for_date(date=date), datetime.date(2025, 10, 1))
+        self.assertEqual(get_previous_quarter_starting_date_for_date(date=date), datetime.date(2024, 10, 1))
