@@ -52,6 +52,9 @@ METADATA = PackageMetadata(
             "graphene-django>=2.2.0",
             "django-graphql-jwt>=0.2.1",
         ],
+        "import-linter": [
+            "tomlkit~=0.13",
+        ],
         "bleacher": [
             "nh3>=0.2,<1",
         ],

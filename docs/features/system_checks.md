@@ -35,6 +35,16 @@ ALLOWED_MODEL_DATETIME_FIELD_ENDINGS = ["_at"]
 ALLOWED_MODEL_DATE_FIELD_ENDINGS = ["_date"]
 ````
 
+Make sure that you provide a list of your local apps (non-third-party ones) like this:
+
+````python
+# Main Django settings.py
+LOCAL_APPS = (
+    "myapp",
+    "other_app",
+)
+````
+
 ## Model relation naming conventions
 
 If you create a relation between two models (ForeignKey, ManyToMany, OneToOne), Django will name this relation with
@@ -59,4 +69,14 @@ class CommonConfig(AppConfig):
 
     def ready(self):
         register(check_model_related_names_for_related_name)
+````
+
+Make sure that you provide a list of your local apps (non-third-party ones) like this:
+
+````python
+# Main Django settings.py
+LOCAL_APPS = (
+    "myapp",
+    "other_app",
+)
 ````
