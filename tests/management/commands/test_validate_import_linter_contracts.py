@@ -13,7 +13,7 @@ class ValidateImportLinterContractsCommandTest(SimpleTestCase):
         call_command("validate_import_linter_contracts")
 
         mocked_validate_contracts.assert_called_with()
-        mocked_sys_exit.assert_called_with(True)
+        mocked_sys_exit.assert_called_with(False)
 
     @mock.patch.object(ImportLinterContractService, "validate_contracts", return_value=False)
     @mock.patch("sys.exit")
@@ -21,4 +21,4 @@ class ValidateImportLinterContractsCommandTest(SimpleTestCase):
         call_command("validate_import_linter_contracts")
 
         mocked_validate_contracts.assert_called_with()
-        mocked_sys_exit.assert_called_with(False)
+        mocked_sys_exit.assert_called_with(True)

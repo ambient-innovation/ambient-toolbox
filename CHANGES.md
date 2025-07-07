@@ -1,5 +1,8 @@
 # Changelog
 
+**12.4.2** (2025-07-07)
+  * Fixed import-linter tests and increased project coverage border
+
 **12.4.1** (2025-07-07)
   * Fixed issue with import-linter validation command
 
