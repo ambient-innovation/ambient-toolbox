@@ -1,7 +1,7 @@
 import dataclasses
 
 
-# TODO: add kw_only=True once Python 3.9 is dropped
+# TODO: use (kw_only=True) once Python 3.9 compat was dropped
 @dataclasses.dataclass()
 class ImportLinterContract:
     name: str

@@ -79,6 +79,3 @@ class ImportLinterContractService:
         target_toml_data = self._create_contracts(data=current_toml_data)
 
         return current_toml_data == target_toml_data
-
-    # TODO: tests
-    # TODO: docs
