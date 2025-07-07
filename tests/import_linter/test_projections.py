@@ -6,7 +6,7 @@ def test_generate_contract_creates_expected_instance():
 
     assert isinstance(contract, ImportLinterContract)
     assert contract.name == "[GENERATED] Independent app 'my_app' not allowed"
-    assert contract.type == "forbidden"
+    assert contract.contract_type == "forbidden"
     assert contract.source_modules == "my_app"
     assert contract.forbidden_modules == ["other_app1", "other_app2"]
 
@@ -14,7 +14,7 @@ def test_generate_contract_creates_expected_instance():
 def test_to_dict_returns_expected_structure():
     contract = ImportLinterContract(
         name="custom name",
-        type="forbidden",
+        contract_type="forbidden",
         source_modules="app_a",
         forbidden_modules=["app_b", "app_c"],
     )
@@ -32,7 +32,7 @@ def test_to_dict_returns_expected_structure():
 def test_manual_init_is_possible():
     contract = ImportLinterContract(
         name="manual",
-        type="forbidden",
+        contract_type="forbidden",
         source_modules="src",
         forbidden_modules=[],
     )
