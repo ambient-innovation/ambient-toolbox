@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import settings
+from django.conf import settings
 
 
 def get_import_linter_root_packages() -> list[str]:
@@ -20,4 +20,4 @@ def get_import_linter_local_apps() -> list[str]:
 
 
 def get_import_linter_path_to_toml() -> Path:
-    return getattr(settings, "TOOLBOX_IMPORT_LINTER_PATH_TO_TOML", [])
+    return getattr(settings, "TOOLBOX_IMPORT_LINTER_PATH_TO_TOML", Path("./pyproject.toml"))

@@ -3,6 +3,7 @@ from pathlib import Path
 import tomlkit
 from tomlkit.exceptions import ParseError
 
+from ambient_toolbox.import_linter.projections import ImportLinterContract
 from ambient_toolbox.import_linter.settings import (
     get_import_linter_blocklisted_apps,
     get_import_linter_business_logic_apps,
@@ -21,15 +22,6 @@ class ImportLinterContractService:
         self.blocklisted_apps: list[str] = get_import_linter_blocklisted_apps()
         self.local_django_apps: list[str] = get_import_linter_local_apps()
         self.path_to_toml: Path = get_import_linter_path_to_toml()
-
-    @staticmethod
-    def _get_contract_data(*, app: str, others: list[str]) -> dict:
-        return {
-            "name": f"[GENERATED] Independent app {app!r} not allowed to know about other apps",
-            "type": "forbidden",
-            "source_modules": app,
-            "forbidden_modules": others,
-        }
 
     def _load_toml_from_pyproject_file(self) -> dict:
         if not self.path_to_toml.exists():
@@ -51,7 +43,10 @@ class ImportLinterContractService:
 
     def _create_contracts(self, *, data: dict) -> dict:
         # General import-linter settings
-        data["tool"]["importlinter"]["root_packages"] = self.root_packages
+        data.setdefault("tool", {}).setdefault("importlinter", {})
+        data["tool"]["importlinter"]["root_packages"] = [
+            app for app in self.root_packages if app not in self.blocklisted_apps
+        ]
         data["tool"]["importlinter"]["include_external_packages"] = True
 
         non_managed_contracts = [
@@ -61,11 +56,11 @@ class ImportLinterContractService:
         ]
 
         contracts = []
-        for app in self.local_django_apps:
+        for app in [app for app in self.local_django_apps if app not in self.blocklisted_apps]:
             if app in self.business_logic_apps:
                 continue
             forbidden = [a for a in self.local_django_apps if a != app and a not in self.blocklisted_apps]
-            contracts.append(self._get_contract_data(app=app, others=forbidden))
+            contracts.append(ImportLinterContract.generate_contract(app=app, forbidden_modules=forbidden).to_dict())
 
         data["tool"]["importlinter"]["contracts"] = non_managed_contracts + contracts
 
@@ -78,7 +73,7 @@ class ImportLinterContractService:
 
         self._write_to_pyproject_file(data=toml_data)
 
-    def check_contracts_need_update(self) -> bool:
+    def validate_contracts(self) -> bool:
         current_toml_data = self._load_toml_from_pyproject_file()
 
         target_toml_data = self._create_contracts(data=current_toml_data)
@@ -87,4 +82,3 @@ class ImportLinterContractService:
 
     # TODO: tests
     # TODO: docs
-    # TODO: wird das ganze ein management command? könnte als system check was langsam sein
