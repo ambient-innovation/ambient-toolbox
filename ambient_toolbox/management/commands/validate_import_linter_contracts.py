@@ -12,4 +12,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         service = ImportLinterContractService()
-        sys.exit(service.validate_contracts())
+        # 0 = success, 1 = error
+        sys.exit(not service.validate_contracts())

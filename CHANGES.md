@@ -1,5 +1,8 @@
 # Changelog
 
+**12.4.1** (2025-07-07)
+  * Fixed issue with import-linter validation command
+
 **12.4.0** (2025-07-07)
   * Added helpers for the "import-linter" package
   * Fixed missing setup info in system check docs
