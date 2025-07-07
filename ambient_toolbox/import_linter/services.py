@@ -1,3 +1,4 @@
+import copy
 from pathlib import Path
 
 import tomlkit
@@ -76,6 +77,6 @@ class ImportLinterContractService:
     def validate_contracts(self) -> bool:
         current_toml_data = self._load_toml_from_pyproject_file()
 
-        target_toml_data = self._create_contracts(data=current_toml_data)
+        target_toml_data = self._create_contracts(data=copy.deepcopy(current_toml_data))
 
         return current_toml_data == target_toml_data

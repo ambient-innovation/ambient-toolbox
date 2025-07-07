@@ -1,5 +1,8 @@
 # Changelog
 
+**12.4.4** (2025-07-07)
+  * Fixed a bug leading to import linter validation always returning "true"
+
 **12.4.3** (2025-07-07)
   * Added shell output for better UX for import linter validation command
 
