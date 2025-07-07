@@ -1,5 +1,8 @@
 # Changelog
 
+**12.4.3** (2025-07-07)
+  * Added shell output for better UX for import linter validation command
+
 **12.4.2** (2025-07-07)
   * Fixed import-linter tests and increased project coverage border
 
