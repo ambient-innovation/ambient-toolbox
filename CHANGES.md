@@ -1,5 +1,9 @@
 # Changelog
 
+**12.4.0** (2025-07-07)
+  * Added helpers for the "import-linter" package
+  * Fixed missing setup info in system check docs
+
 **12.3.0** (2025-06-18)
   * New function returning the starting date of the previous quarter for a given date
 

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit_core>=3.4"]
+requires = ["flit_core~=3.12"]
 build-backend = "flit_core.buildapi"
 
 [project]
@@ -35,9 +35,6 @@ dependencies = [
     'python-dateutil>=2.5.3',
 ]
 
-
-
-
 [project.optional-dependencies]
 dev = [
    'typer~=0.12',
@@ -63,6 +60,9 @@ drf = [
 graphql = [
    'graphene-django>=2.2.0',
    'django-graphql-jwt>=0.2.1',
+]
+import-linter = [
+   'tomlkit~=0.13',
 ]
 bleacher = [
    'nh3>=0.2,<1',
@@ -244,7 +244,7 @@ deps =
     django42: Django==4.2.*
     django51: Django==5.1.*
     django52: Django==5.2.*
-extras = dev,drf,graphql,bleacher,gitlab-coverage,sentry,view-layer,
+extras = dev,drf,graphql,import-linter,bleacher,gitlab-coverage,sentry,view-layer,
 commands =
     coverage run -m pytest --ds settings tests
 

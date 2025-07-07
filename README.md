@@ -12,7 +12,6 @@ Python toolbox of Ambient Digital containing an abundance of useful tools and ga
 * [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
 * Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
-
 ## Features
 
 * Useful classes and mixins for Django admin
@@ -51,18 +50,16 @@ The migration is really simple, just:
 
 - Add module to `INSTALLED_APPS` within the main django `settings.py`:
 
-    ```python
-    INSTALLED_APPS = (
-        # ...
-        "ambient_toolbox",
-    )
-    ```
-
+```python
+INSTALLED_APPS = (
+    # ...
+    "ambient_toolbox",
+)
+```
 
 - Apply migrations by running:
 
   `python ./manage.py migrate`
-
 
 ### Publish to ReadTheDocs.io
 

@@ -4,7 +4,7 @@
 
 - Create a Python virtualenv and activate it
 - Install "pip-tools" with `pip install -U pip-tools`
-- Compile the requirements with `pip-compile --extra dev,drf,graphql,bleacher,gitlab-coverage,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
+- Compile the requirements with `pip-compile --extra dev,drf,graphql,import-linter,bleacher,gitlab-coverage,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
 - Sync the dependencies with your virtualenv with `pip-sync`
 
 ## Add functionality
@@ -57,7 +57,6 @@ Example: run all hooks of pre-push stage
 
 - To build the documentation, run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
-
 
 ### Translation files
 
