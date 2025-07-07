@@ -61,6 +61,9 @@ graphql = [
    'graphene-django>=2.2.0',
    'django-graphql-jwt>=0.2.1',
 ]
+import-linter = [
+   'tomlkit~=0.13',
+]
 bleacher = [
    'nh3>=0.2,<1',
 ]
@@ -126,7 +129,7 @@ lint.ignore = [
     "TD002", # Missing author in TO-DOs
     "TD003", # Missing issue link on the line following this TO-DOs
     "TRY002", # Checks for code that raises Exception directly.
-    "TRY003", # Checks for long exception messages that are not defined in the exception class itself. # TODO: fixme
+    "TRY003", # Checks for long exception messages that are not defined in the exception class itself.
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -241,7 +244,7 @@ deps =
     django42: Django==4.2.*
     django51: Django==5.1.*
     django52: Django==5.2.*
-extras = dev,drf,graphql,bleacher,gitlab-coverage,sentry,view-layer,
+extras = dev,drf,graphql,import-linter,bleacher,gitlab-coverage,sentry,view-layer,
 commands =
     coverage run -m pytest --ds settings tests
 
