@@ -35,7 +35,7 @@ class BleacherMixin:
 
     DEFAULT_ALLOWED_ATTRIBUTES: dict[str, set[str]] = {
         **nh3.ALLOWED_ATTRIBUTES,
-        "*": ("class", "style", "id"),
+        "*": {"class", "style", "id"},
     }
 
     DEFAULT_ALLOWED_TAGS: list[str] = [

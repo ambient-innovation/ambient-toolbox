@@ -8,6 +8,11 @@ from testapp.models import BleacherMixinModel
 
 
 class BleacherMixinTest(TestCase):
+    @pytest.mark.filterwarnings("error:Please use a set instead of a list or tuple")
+    def test_default_settings_without_warning(self, *args):
+        # ensure there are no deprecation warnings with default settings
+        BleacherMixinModel()
+
     @mock.patch.object(BleacherMixin, "DEFAULT_ALLOWED_TAGS", ["a", "b", "p"])
     @pytest.mark.filterwarnings("ignore:Please use a set instead of a list or tuple")
     def test_init_allowed_tags_casted_to_set(self, *args):
