@@ -1,5 +1,8 @@
 # Changelog
 
+**12.4.5** (2025-08-15)
+  * Fix DeprecationWarning when using `BleacherMixin`
+
 **12.4.4** (2025-07-07)
   * Fixed a bug leading to import linter validation always returning "true"
 
