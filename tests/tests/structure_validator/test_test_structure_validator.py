@@ -79,6 +79,19 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertEqual(dir_list, ["__pycache__"])
 
+    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands", "special_tests"])
+    def test_get_misplaced_test_file_whitelist_from_settings(self):
+        service = StructureTestValidator()
+        whitelist = service._get_misplaced_test_file_whitelist()
+
+        self.assertEqual(whitelist, ["handlers/commands", "special_tests"])
+
+    def test_get_misplaced_test_file_whitelist_fallback(self):
+        service = StructureTestValidator()
+        whitelist = service._get_misplaced_test_file_whitelist()
+
+        self.assertEqual(whitelist, [])
+
     def test_check_missing_test_prefix_correct_prefix(self):
         service = StructureTestValidator()
         result = service._check_missing_test_prefix(
@@ -196,6 +209,27 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertIn("__init__.py missing in", complaint_list[2])
         self.assertIn("testapp/tests/missing_init", complaint_list[2])
+
+    @override_settings(
+        TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH,
+        TEST_STRUCTURE_VALIDATOR_APP_LIST=["testapp"],
+        TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME="",
+        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands"],
+    )
+    def test_process_functional_with_whitelist(self):
+        service = StructureTestValidator()
+        with self.assertRaises(SystemExit):
+            service.process()
+
+        self.assertEqual(len(service.issue_list), 2)
+
+        complaint_list = sorted(service.issue_list)
+
+        self.assertIn('Python file without "test_" prefix found:', complaint_list[0])
+        self.assertIn("testapp/tests/subdirectory/missing_test_prefix.py", complaint_list[0])
+
+        self.assertIn("__init__.py missing in", complaint_list[1])
+        self.assertIn("testapp/tests/missing_init", complaint_list[1])
 
     @mock.patch.object(StructureTestValidator, "_get_app_list", return_value=["invalidly_located_app"])
     def test_process_invalidly_located_app(self, mocked_get_app_list):
