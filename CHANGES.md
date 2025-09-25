@@ -1,5 +1,9 @@
 # Changelog
 
+**12.4.6** (2025-09-25)
+  * Added tests
+  * Reordered test files
+
 **12.4.5** (2025-08-15)
   * Fix DeprecationWarning when using `BleacherMixin`
 
