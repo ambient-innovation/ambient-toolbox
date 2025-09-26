@@ -7,7 +7,10 @@ from django.test import TestCase, override_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
-@override_settings(TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=["ambient-toolbox/.tox"])
+# Test matrix will create invalid files which we want to ignore
+@override_settings(
+    TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=["/home/runner/work/ambient-toolbox/ambient-toolbox/.tox"]
+)
 class TestStructureValidatorTest(TestCase):
     def test_init_regular(self):
         service = StructureTestValidator()
