@@ -7,6 +7,7 @@ from django.test import TestCase, override_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
+@override_settings(TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=["ambient-toolbox/.tox"])
 class TestStructureValidatorTest(TestCase):
     def test_init_regular(self):
         service = StructureTestValidator()
@@ -90,7 +91,7 @@ class TestStructureValidatorTest(TestCase):
         service = StructureTestValidator()
         dir_list = service._get_ignored_directory_list()
 
-        self.assertEqual(dir_list, ["__pycache__"])
+        self.assertIn("__pycache__", dir_list)
 
     @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands", "special_tests"])
     def test_get_misplaced_test_file_whitelist_from_settings(self):
@@ -211,7 +212,7 @@ class TestStructureValidatorTest(TestCase):
         with self.assertRaises(SystemExit):
             service.process()
 
-        self.assertGreaterEqual(len(service.issue_list), 4)
+        self.assertEqual(len(service.issue_list), 4)
 
         complaint_list = sorted(service.issue_list)
 
@@ -238,8 +239,7 @@ class TestStructureValidatorTest(TestCase):
         with self.assertRaises(SystemExit):
             service.process()
 
-        # Tox creates "wrong" files in the pipeline which we want to ignore
-        self.assertGreaterEqual(len(service.issue_list), 3)
+        self.assertEqual(len(service.issue_list), 3)
 
         complaint_list = sorted(service.issue_list)
 
