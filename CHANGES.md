@@ -1,6 +1,6 @@
 # Changelog
 
-**12.4.6** (2025-09-26)
+**12.5.0** (2025-09-26)
   * Extended test structure validator to detect test files outside a `tests/` directory
   * Added tests
   * Reordered test files
