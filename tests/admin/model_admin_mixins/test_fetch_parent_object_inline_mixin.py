@@ -53,3 +53,27 @@ class FetchParentObjectInlineMixinTest(RequestProviderMixin, TestCase):
             inline.get_formset(request=request, obj=obj)
 
         self.assertEqual(inline.parent_object, obj)
+
+    def test_get_parent_object_from_request_returns_none_when_no_kwargs(self):
+        """Test that get_parent_object_from_request returns None when resolved.kwargs is empty"""
+        model_admin = FetchParentObjectTestInlineMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        request = self.get_request(self.super_user)
+        inline = model_admin.inlines[0](parent_model=MySingleSignalModel, admin_site=admin.site)
+
+        return_obj = MockResolverResponse()
+        return_obj.kwargs = None
+        with mock.patch.object(model_admin.inlines[0], "_resolve_url", return_value=return_obj):
+            result = inline.get_parent_object_from_request(request)
+
+        self.assertIsNone(result)
+
+    def test_resolve_url_method_coverage(self):
+        """Test to ensure _resolve_url method is covered"""
+        model_admin = FetchParentObjectTestInlineMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        request = self.get_request(self.super_user)
+        inline = model_admin.inlines[0](parent_model=MySingleSignalModel, admin_site=admin.site)
+
+        # Call the actual _resolve_url method to cover line 56
+        with mock.patch("ambient_toolbox.admin.model_admins.mixins.resolve") as mock_resolve:
+            inline._resolve_url(request)
+            mock_resolve.assert_called_once_with(request.path_info)
