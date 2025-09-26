@@ -8,9 +8,7 @@ from ambient_toolbox.tests.structure_validator.test_structure_validator import S
 
 
 # Test matrix will create invalid files which we want to ignore
-@override_settings(
-    TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=["/home/runner/work/ambient-toolbox/ambient-toolbox/.tox"]
-)
+@override_settings(TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=[".tox"])
 class TestStructureValidatorTest(TestCase):
     def test_init_regular(self):
         service = StructureTestValidator()
