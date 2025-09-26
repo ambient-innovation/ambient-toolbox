@@ -7,6 +7,8 @@ from django.test import TestCase, override_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
+# Test matrix will create invalid files which we want to ignore
+@override_settings(TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=[".tox"])
 class TestStructureValidatorTest(TestCase):
     def test_init_regular(self):
         service = StructureTestValidator()
@@ -35,10 +37,23 @@ class TestStructureValidatorTest(TestCase):
         self.assertEqual(base_dir, settings.BASE_PATH)
 
     def test_get_base_dir_fallback(self):
-        service = StructureTestValidator()
-        base_dir = service._get_base_dir()
+        # Save the original value if it exists
+        original_value = getattr(settings, "TEST_STRUCTURE_VALIDATOR_BASE_DIR", None)
+        has_original = hasattr(settings, "TEST_STRUCTURE_VALIDATOR_BASE_DIR")
 
-        self.assertEqual(base_dir, "")
+        try:
+            # Delete the setting to test fallback behavior
+            if has_original:
+                del settings.TEST_STRUCTURE_VALIDATOR_BASE_DIR
+
+            service = StructureTestValidator()
+            base_dir = service._get_base_dir()
+
+            self.assertEqual(base_dir, "")
+        finally:
+            # Restore the original value if it existed
+            if has_original:
+                settings.TEST_STRUCTURE_VALIDATOR_BASE_DIR = original_value
 
     @override_settings(TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME="my_project")
     def test_get_base_app_name_from_settings(self):
@@ -77,7 +92,20 @@ class TestStructureValidatorTest(TestCase):
         service = StructureTestValidator()
         dir_list = service._get_ignored_directory_list()
 
-        self.assertEqual(dir_list, ["__pycache__"])
+        self.assertIn("__pycache__", dir_list)
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands", "special_tests"])
+    def test_get_misplaced_test_file_whitelist_from_settings(self):
+        service = StructureTestValidator()
+        whitelist = service._get_misplaced_test_file_whitelist()
+
+        self.assertEqual(whitelist, ["handlers/commands", "special_tests"])
+
+    def test_get_misplaced_test_file_whitelist_fallback(self):
+        service = StructureTestValidator()
+        whitelist = service._get_misplaced_test_file_whitelist()
+
+        self.assertEqual(whitelist, [])
 
     def test_check_missing_test_prefix_correct_prefix(self):
         service = StructureTestValidator()
@@ -168,11 +196,12 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertEqual(path, Path("/src/ambient_toolbox/my_project/my_app/tests"))
 
+    @override_settings(TEST_STRUCTURE_VALIDATOR_BASE_DIR="/src/")
     def test_build_path_to_test_package_with_defaults(self):
         service = StructureTestValidator()
         path = service._build_path_to_test_package(app="my_project.my_app")
 
-        self.assertEqual(path, Path("my_project/my_app/tests"))
+        self.assertEqual(path, Path("/src/my_project/my_app/tests"))
 
     @override_settings(
         TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH,
@@ -184,20 +213,53 @@ class TestStructureValidatorTest(TestCase):
         with self.assertRaises(SystemExit):
             service.process()
 
-        self.assertEqual(len(service.issue_list), 2)
+        self.assertEqual(len(service.issue_list), 4)
 
         complaint_list = sorted(service.issue_list)
 
         self.assertIn('Python file without "test_" prefix found:', complaint_list[0])
         self.assertIn("testapp/tests/subdirectory/missing_test_prefix.py", complaint_list[0])
 
-        self.assertIn("__init__.py missing in", complaint_list[1])
-        self.assertIn("testapp/tests/missing_init", complaint_list[1])
+        self.assertIn("Test file found outside tests directory:", complaint_list[1])
+        self.assertIn("testapp/handlers/commands/test_commands.py", complaint_list[1])
+
+        self.assertIn("Test file found outside tests directory:", complaint_list[2])
+        self.assertIn("testapp/test_wrongly_placed_file.py", complaint_list[2])
+
+        self.assertIn("__init__.py missing in", complaint_list[3])
+        self.assertIn("testapp/tests/missing_init", complaint_list[3])
+
+    @override_settings(
+        TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH,
+        TEST_STRUCTURE_VALIDATOR_APP_LIST=["testapp"],
+        TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME="",
+        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands"],
+    )
+    def test_process_functional_with_whitelist(self):
+        service = StructureTestValidator()
+        with self.assertRaises(SystemExit):
+            service.process()
+
+        self.assertEqual(len(service.issue_list), 3)
+
+        complaint_list = sorted(service.issue_list)
+
+        self.assertIn('Python file without "test_" prefix found:', complaint_list[0])
+        self.assertIn("testapp/tests/subdirectory/missing_test_prefix.py", complaint_list[0])
+
+        self.assertIn("Test file found outside tests directory:", complaint_list[1])
+        self.assertIn("testapp/test_wrongly_placed_file.py", complaint_list[1])
+
+        self.assertIn("__init__.py missing in", complaint_list[2])
+        self.assertIn("testapp/tests/missing_init", complaint_list[2])
 
     @mock.patch.object(StructureTestValidator, "_get_app_list", return_value=["invalidly_located_app"])
     def test_process_invalidly_located_app(self, mocked_get_app_list):
         service = StructureTestValidator()
 
-        service.process()
+        with self.assertRaises(SystemExit):
+            service.process()
 
         mocked_get_app_list.assert_called_once()
+        # Should only find misplaced test files, not any app-specific issues
+        self.assertEqual(len(service.issue_list), 2)

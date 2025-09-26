@@ -53,6 +53,13 @@ class StructureTestValidator:
         except AttributeError:
             return toolbox_settings.TEST_STRUCTURE_VALIDATOR_APP_LIST
 
+    @staticmethod
+    def _get_misplaced_test_file_whitelist() -> list:
+        try:
+            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+        except AttributeError:
+            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
         if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_whitelist:
             file_path = f"{root}\\{file}".replace("\\", "/")
@@ -67,12 +74,43 @@ class StructureTestValidator:
             return False
         return True
 
+    def _check_misplaced_test_files(self) -> None:
+        """Check for files starting with 'test_' that are not in or under a 'tests/' directory."""
+        base_dir = self._get_base_dir()
+        whitelist = self._get_misplaced_test_file_whitelist()
+
+        for root, dirs, files in os.walk(base_dir):
+            # Skip directories in the ignored list
+            for excluded_dir in self._get_ignored_directory_list():
+                if excluded_dir in dirs:
+                    dirs.remove(excluded_dir)
+
+            cleaned_root = root.replace("\\", "/")
+
+            # Check if current path contains 'tests' as a directory component
+            path_parts = Path(cleaned_root).parts
+            has_tests_parent = any(part == "tests" for part in path_parts)
+
+            if not has_tests_parent:
+                for file in files:
+                    if file.startswith("test_") and file.endswith(".py"):
+                        file_path = f"{cleaned_root}/{file}".replace("\\", "/")
+
+                        # Check if the file path matches any whitelist pattern
+                        is_whitelisted = any(whitelist_pattern in file_path for whitelist_pattern in whitelist)
+
+                        if not is_whitelisted:
+                            self.issue_list.append(f"Test file found outside tests directory: {file_path!r}.")
+
     def _build_path_to_test_package(self, app: str) -> Path:
         return self._get_base_dir() / Path(app.replace(".", "/")) / "tests"
 
     def process(self) -> None:  # noqa: C901
         backend_package = self._get_base_app_name()
         app_list = self._get_app_list()
+
+        # Check for misplaced test files first
+        self._check_misplaced_test_files()
 
         for app in app_list:
             if not app.startswith(backend_package):
