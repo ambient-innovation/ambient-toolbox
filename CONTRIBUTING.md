@@ -3,9 +3,8 @@
 ## Setup package for development
 
 - Create a Python virtualenv and activate it
-- Install "pip-tools" with `pip install -U pip-tools`
-- Compile the requirements with `pip-compile --extra dev,drf,graphql,import-linter,bleacher,gitlab-coverage,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
-- Sync the dependencies with your virtualenv with `pip-sync`
+- Install "uv" with `pip install -U uv`
+- Sync the requirements with `uv sync --frozen --group dev--group drf--group graphql--group import-linter--group bleacher--group gitlab-coverage--group sentry--group view-layer`
 
 ## Add functionality
 

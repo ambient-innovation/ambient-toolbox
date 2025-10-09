@@ -1,3 +1,2 @@
-pip install -U pip-tools
-pip-compile --extra dev,drf,graphql,import-linter,bleacher,gitlab-coverage,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking
-pip-sync
+pip install -U uv
+uv sync --frozen --group dev--group drf--group graphql--group import-linter--group bleacher--group gitlab-coverage--group sentry--group view-layer
