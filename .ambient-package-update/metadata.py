@@ -13,6 +13,8 @@ from ambient_package_update.metadata.ruff_ignored_inspection import (
     RuffIgnoredInspection,
 )
 
+claim = "Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."
+
 METADATA = PackageMetadata(
     package_name="ambient-toolbox",
     github_package_group="ambient-innovation",
@@ -28,8 +30,9 @@ METADATA = PackageMetadata(
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
+    claim=claim,
     readme_content=ReadmeContent(
-        tagline="Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.",
+        tagline=claim,
     ),
     dependencies=[
         f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
