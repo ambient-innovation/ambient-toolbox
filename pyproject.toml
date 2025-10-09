@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ambient-toolbox"
+name = "ambient_toolbox"
 authors = [
     {'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital'},
 ]
