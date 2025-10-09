@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from contextvars import ContextVar
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from django.http import HttpRequest, HttpResponse

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.contrib.auth.models import AbstractUser
 from django.http import HttpResponseRedirect
 from django.urls import resolve, reverse
@@ -97,7 +95,7 @@ class CommonInfoAdminMixin:
             "lastmodified_at",
         )
 
-    def get_user_obj(self, request) -> Optional[AbstractUser]:
+    def get_user_obj(self, request) -> AbstractUser | None:
         """
         Fetches the user object from the current request.
         Can be overwritten when a different user object is required.

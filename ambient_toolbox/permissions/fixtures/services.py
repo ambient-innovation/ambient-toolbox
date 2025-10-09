@@ -18,7 +18,7 @@ class PermissionSetupService:
     @transaction.atomic
     def process(self) -> (list[Permission], list[Permission]):  # noqa: C901
         # Fetch or create group
-        group, created = Group.objects.get_or_create(name=self.group_declaration.name)
+        group, _created = Group.objects.get_or_create(name=self.group_declaration.name)
 
         # Declare lists where we'll sort in the permissions
         defined_permission_list = []

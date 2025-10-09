@@ -1,6 +1,5 @@
 import datetime
 import os
-from typing import Optional, Union
 
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaultfilters import floatformat, slugify
@@ -27,7 +26,7 @@ def slugify_file_name(file_name: str, length: int = 40) -> str:
     return result
 
 
-def smart_truncate(text: Optional[str], max_length: int = 100, suffix: str = "...") -> str:
+def smart_truncate(text: str | None, max_length: int = 100, suffix: str = "...") -> str:
     """
     Returns a string of at most `max_length` characters, cutting
     only at word-boundaries. If the string was truncated, `suffix`
@@ -52,7 +51,7 @@ def smart_truncate(text: Optional[str], max_length: int = 100, suffix: str = "..
     return " ".join(words) + suffix
 
 
-def float_to_string(value: Optional[float], replacement: str = "0,00") -> str:
+def float_to_string(value: float | None, replacement: str = "0,00") -> str:
     """
     Converts a float to a properly, German-formatted string value
     # todo name is misleading, should contain "de"
@@ -62,7 +61,7 @@ def float_to_string(value: Optional[float], replacement: str = "0,00") -> str:
     return ("%.2f" % value).replace(".", ",") if value is not None else replacement
 
 
-def date_to_string(value: Optional[datetime.date], replacement: str = "-", str_format: str = "%d.%m.%Y") -> str:
+def date_to_string(value: datetime.date | None, replacement: str = "-", str_format: str = "%d.%m.%Y") -> str:
     """
     Converts a given date "value" to a string formatted with `str_format`.
     If the passed "value" is None, it will return `replacement`.
@@ -71,7 +70,7 @@ def date_to_string(value: Optional[datetime.date], replacement: str = "-", str_f
 
 
 def datetime_to_string(
-    value: Optional[datetime.datetime], replacement: str = "-", str_format: str = "%d.%m.%Y %H:%M"
+    value: datetime.datetime | None, replacement: str = "-", str_format: str = "%d.%m.%Y %H:%M"
 ) -> str:
     """
     Converts a given datetime "value" to a string formatted with `str_format`.
@@ -80,7 +79,7 @@ def datetime_to_string(
     return datetime_format(value, str_format) if value is not None else replacement
 
 
-def number_to_string(value: Optional[Union[int, float]], decimal_digits: int = 0, replacement: str = "-") -> str:
+def number_to_string(value: int | float | None, decimal_digits: int = 0, replacement: str = "-") -> str:
     """
     Converts a given int or float number to a string. Decimal places can be configured via `decimal_digits`.
     If the passed "value" is None, it will return `replacement`.
@@ -89,7 +88,7 @@ def number_to_string(value: Optional[Union[int, float]], decimal_digits: int = 0
     return intcomma(floatformat(value, decimal_digits)).strip(",") if value is not None else replacement
 
 
-def string_or_none_to_string(value: Optional[any], replacement: str = "-") -> str:
+def string_or_none_to_string(value: any | None, replacement: str = "-") -> str:
     """
     Converts a given "value" to a string.
     If the passed "value" is None, it will return `replacement`.

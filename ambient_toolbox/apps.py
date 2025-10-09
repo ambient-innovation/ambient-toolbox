@@ -16,7 +16,9 @@ class AmbientToolboxConfig(AppConfig):
     def ready(self):
         # System checks for static role permission feature
         if get_static_role_permissions_path() and get_static_role_permissions_enable_system_check():
-            from ambient_toolbox.static_role_permissions.system_check import check_permissions_against_models
+            from ambient_toolbox.static_role_permissions.system_check import (  # noqa: PLC0415
+                check_permissions_against_models,
+            )
 
             register(check_permissions_against_models, Tags.models)
 
@@ -24,6 +26,6 @@ class AmbientToolboxConfig(AppConfig):
         if get_autodiscover_enabled():
             # Register all decorated functions before they get imported by something else which will break the
             # registration process since decorators are only executed the first time.
-            from ambient_toolbox.autodiscover import decorator_based_registry
+            from ambient_toolbox.autodiscover import decorator_based_registry  # noqa: PLC0415
 
             decorator_based_registry.autodiscover(namespaces=get_namespaces())
