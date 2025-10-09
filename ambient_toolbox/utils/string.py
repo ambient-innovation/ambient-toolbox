@@ -88,7 +88,7 @@ def number_to_string(value: int | float | None, decimal_digits: int = 0, replace
     return intcomma(floatformat(value, decimal_digits)).strip(",") if value is not None else replacement
 
 
-def string_or_none_to_string(value: any | None, replacement: str = "-") -> str:
+def string_or_none_to_string(value, replacement: str = "-") -> str:
     """
     Converts a given "value" to a string.
     If the passed "value" is None, it will return `replacement`.
