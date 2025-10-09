@@ -245,7 +245,7 @@ wheel_build_env = ".pkg"
 runner = "uv-venv-lock-runner"
 groups = ["dev","drf","graphql","import-linter","bleacher","gitlab-coverage","sentry","view-layer",]
 commands = [
-    ["pytest", "--cov=ambient_toolbox", "--cov-report=term", "--cov-report=xml", "--ds", "settings","tests"]
+    ["pytest", "--cov=ambient_toolbox", "--cov-report=term", "--cov-report=xml", "--ds", "settings", "tests"]
 ]
 
 [tool.tox.env.django42]
