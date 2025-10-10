@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.2** (2025-10-10)
+  * Fixed a bug related to extra dependencies
+
 **12.5.1** (2025-10-09)
   * Maintenance updates via ambient-package-update
 
