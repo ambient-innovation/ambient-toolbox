@@ -70,3 +70,29 @@ class CommonInfoAdminMixinTest(RequestProviderMixin, TestCase):
 
         self.assertEqual(obj.created_by, other_user)
         self.assertEqual(obj.lastmodified_by, self.user)
+
+    def test_save_form_with_no_form_instance(self):
+        """Test that save_form handles cases where form.instance is None"""
+        model_admin = CommonInfoTestAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+
+        # Create a mock form with no instance
+        form = mock.Mock()
+        form.instance = None
+
+        result = model_admin.save_form(self.request, form, False)
+
+        # Should return the result from super().save_form without error
+        self.assertIsNotNone(result)
+
+    def test_save_form_with_no_user_in_request(self):
+        """Test that save_form handles cases where request.user is None"""
+        model_admin = CommonInfoTestAdminMixinAdmin(model=CommonInfoBasedModel, admin_site=admin.site)
+
+        request_without_user = self.get_request(self.user)
+        request_without_user.user = None
+
+        obj = model_admin.save_form(request_without_user, CommonInfoBasedModelForm(), False)
+
+        # When request.user is None, created_by and lastmodified_by should not be set
+        self.assertIsNone(obj.created_by)
+        self.assertIsNone(obj.lastmodified_by)
