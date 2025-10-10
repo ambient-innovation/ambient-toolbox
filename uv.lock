@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 
 [[package]]
@@ -31,6 +31,30 @@ source = { editable = "." }
 dependencies = [
     { name = "django" },
     { name = "python-dateutil" },
+]
+
+[package.optional-dependencies]
+bleacher = [
+    { name = "nh3" },
+]
+drf = [
+    { name = "djangorestframework" },
+]
+gitlab-coverage = [
+    { name = "httpx" },
+]
+graphql = [
+    { name = "django-graphql-jwt" },
+    { name = "graphene-django" },
+]
+import-linter = [
+    { name = "tomlkit" },
+]
+sentry = [
+    { name = "sentry-sdk" },
+]
+view-layer = [
+    { name = "django-crispy-forms" },
 ]
 
 [package.dev-dependencies]
@@ -75,8 +99,17 @@ view-layer = [
 [package.metadata]
 requires-dist = [
     { name = "django", specifier = ">=4.2" },
+    { name = "django-crispy-forms", marker = "extra == 'view-layer'", specifier = ">=1.4.0" },
+    { name = "django-graphql-jwt", marker = "extra == 'graphql'", specifier = ">=0.2.1" },
+    { name = "djangorestframework", marker = "extra == 'drf'", specifier = ">=3.8.2" },
+    { name = "graphene-django", marker = "extra == 'graphql'", specifier = ">=2.2.0" },
+    { name = "httpx", marker = "extra == 'gitlab-coverage'", specifier = "~=0.28" },
+    { name = "nh3", marker = "extra == 'bleacher'", specifier = ">=0.2,<1" },
     { name = "python-dateutil", specifier = ">=2.5.3" },
+    { name = "sentry-sdk", marker = "extra == 'sentry'", specifier = ">=1.19.1" },
+    { name = "tomlkit", marker = "extra == 'import-linter'", specifier = "~=0.13" },
 ]
+provides-extras = ["bleacher", "drf", "gitlab-coverage", "graphql", "import-linter", "sentry", "view-layer"]
 
 [package.metadata.requires-dev]
 bleacher = [{ name = "nh3", specifier = ">=0.2,<1" }]
