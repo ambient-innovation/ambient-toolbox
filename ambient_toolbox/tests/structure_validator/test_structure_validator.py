@@ -1,7 +1,6 @@
 import os
 import sys
 from pathlib import Path
-from typing import Union
 
 from django.conf import settings
 
@@ -25,7 +24,7 @@ class StructureTestValidator:
             return default_whitelist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
 
     @staticmethod
-    def _get_base_dir() -> Union[Path, str]:
+    def _get_base_dir() -> Path | str:
         try:
             return settings.TEST_STRUCTURE_VALIDATOR_BASE_DIR
         except AttributeError:
@@ -47,7 +46,7 @@ class StructureTestValidator:
             return default_dir_list + toolbox_settings.TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST
 
     @staticmethod
-    def _get_app_list() -> Union[list, tuple]:
+    def _get_app_list() -> list | tuple:
         try:
             return settings.TEST_STRUCTURE_VALIDATOR_APP_LIST
         except AttributeError:

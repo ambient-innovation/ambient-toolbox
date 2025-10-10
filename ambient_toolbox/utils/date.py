@@ -1,7 +1,6 @@
 import calendar
 import datetime
 from calendar import monthrange
-from typing import Optional, Union
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from dateutil.relativedelta import relativedelta
@@ -62,18 +61,16 @@ def tz_today(str_format=None):
 
 
 def add_months(
-    source_date: Union[datetime.date, datetime.datetime], months: Union[int, float]
-) -> Union[datetime.date, datetime.datetime]:
+    source_date: datetime.date | datetime.datetime, months: int | float
+) -> datetime.date | datetime.datetime:
     return source_date + relativedelta(months=months)
 
 
-def add_days(
-    source_date: Union[datetime.date, datetime.datetime], days: int
-) -> Union[datetime.date, datetime.datetime]:
+def add_days(source_date: datetime.date | datetime.datetime, days: int) -> datetime.date | datetime.datetime:
     return source_date + datetime.timedelta(days=days)
 
 
-def add_minutes(source_datetime: datetime.datetime, minutes: int) -> Union[datetime.date, datetime.datetime]:
+def add_minutes(source_datetime: datetime.datetime, minutes: int) -> datetime.date | datetime.datetime:
     return source_datetime + relativedelta(minutes=minutes)
 
 
@@ -85,7 +82,7 @@ def first_day_of_month(source_date: datetime.date) -> datetime.date:
     return datetime.date(source_date.year, source_date.month, 1)
 
 
-def get_formatted_date_str(source_date: Union[datetime.date, datetime.datetime]) -> str:
+def get_formatted_date_str(source_date: datetime.date | datetime.datetime) -> str:
     return source_date.strftime("%d.%m.%Y")
 
 
@@ -178,7 +175,7 @@ def date_month_delta(start_date: datetime.date, end_date: datetime.date) -> floa
     # Loop until all days are processed
     while date_diff > 0:
         # Get days of month we are currently looking at
-        iter_month, iter_month_days = monthrange(iter_date.year, iter_date.month)
+        _iter_month, iter_month_days = monthrange(iter_date.year, iter_date.month)
         # Calculate how many days are left to end of this month
         days_to_month_end = min((iter_month_days - (iter_date.day - 1)), date_diff)
         # Add percentage of the month these days cover to return variable
@@ -193,7 +190,7 @@ def date_month_delta(start_date: datetime.date, end_date: datetime.date) -> floa
     return delta
 
 
-def get_first_and_last_of_month(date_object: Optional[datetime.date] = None) -> tuple[datetime.date, datetime.date]:
+def get_first_and_last_of_month(date_object: datetime.date | None = None) -> tuple[datetime.date, datetime.date]:
     """
     Returns first and last day of a month as date objects.
     Will either return first/last of current month (if no datetime_object is passed), or will determine first/last of

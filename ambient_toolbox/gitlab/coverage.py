@@ -5,7 +5,6 @@ import subprocess
 import sys
 from difflib import ndiff
 from http import HTTPStatus
-from typing import Optional
 
 import httpx
 
@@ -56,7 +55,7 @@ class CoverageService:
         )
         return result.stdout.decode("utf-8").strip()
 
-    def get_pipeline_id_by_commit_sha(self, sha: str) -> Optional[int]:
+    def get_pipeline_id_by_commit_sha(self, sha: str) -> int | None:
         pipeline_url = f"{self.pipelines_url_with_token}&sha={sha}"
         response = httpx.get(pipeline_url)
         status_code = response.status_code

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.db import models
 
 
@@ -82,7 +80,7 @@ class GetOrNoneManagerMixin:
     Attention: This will throw an "MultipleObjectsReturned" exception if more than one object matches the query params.
     """
 
-    def get_or_none(self, **kwargs) -> Optional[models.Model]:
+    def get_or_none(self, **kwargs) -> models.Model | None:
         """
         Helper to fetch an object by its primary key.
         Returns None if the object does not exist.

@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.1** (2025-10-09)
+  * Maintenance updates via ambient-package-update
+
 **12.5.0** (2025-09-26)
   * Extended test structure validator to detect test files outside a `tests/` directory
   * Added tests
