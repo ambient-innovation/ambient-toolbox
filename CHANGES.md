@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.3** (2025-10-11)
+  * Fixed broken German translations
+
 **12.5.2** (2025-10-10)
   * Fixed a bug related to extra dependencies
 
