@@ -34,7 +34,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install dependencies
-        run: python -m pip install -U uv && uv sync --frozen --group dev --group drf --group graphql --group import-linter --group bleacher --group gitlab-coverage --group sentry --group view-layer
+        run: python -m pip install -U uv && uv sync --frozen --extra dev --extra drf --extra graphql --extra import-linter --extra bleacher --extra gitlab-coverage --extra sentry --extra view-layer
 
       - name: Validate migration integrity
         run: uv run python manage.py makemigrations --check --dry-run

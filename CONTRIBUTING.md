@@ -4,7 +4,7 @@
 
 - Create a Python virtualenv and activate it
 - Install "uv" with `pip install -U uv`
-- Sync the requirements with `uv sync --frozen --group dev--group drf--group graphql--group import-linter--group bleacher--group gitlab-coverage--group sentry--group view-layer`
+- Sync the requirements with `uv sync --frozen --extra dev --extra drf --extra graphql --extra import-linter --extra bleacher --extra gitlab-coverage --extra sentry --extra view-layer`
 
 ## Add functionality
 
