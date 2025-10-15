@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ambient-toolbox"
 authors = [
-    { 'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital' },
+    {'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital'},
 ]
 readme = "README.md"
 classifiers = [
@@ -30,7 +30,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 description = "Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."
-license = { "file" = "LICENSE.md" }
+license = {"file" = "LICENSE.md"}
 requires-python = ">=3.10"
 dependencies = [
     'Django>=4.2',
@@ -39,41 +39,41 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    'typer~=0.19',
-    'pytest-cov~=7.0',
-    'pytest-django~=4.11',
-    'pytest-mock~=3.15',
-    'pre-commit~=4.3',
-    'sphinx~=7.4',
-    'sphinx-rtd-theme~=3.0',
-    'm2r2~=0.3',
-    'uv~=0.9',
-    'ambient-package-update',
-    'gevent~=25.1',
-    'httpx~=0.28',
-    'freezegun~=1.5',
+   'typer~=0.19',
+   'pytest-cov~=7.0',
+   'pytest-django~=4.11',
+   'pytest-mock~=3.15',
+   'pre-commit~=4.3',
+   'sphinx~=7.4',
+   'sphinx-rtd-theme~=3.0',
+   'm2r2~=0.3',
+   'uv~=0.9',
+   'ambient-package-update',
+   'gevent~=25.1',
+   'httpx~=0.28',
+   'freezegun~=1.5',
 ]
 drf = [
-    'djangorestframework>=3.8.2',
+   'djangorestframework>=3.8.2',
 ]
 graphql = [
-    'graphene-django>=2.2.0',
-    'django-graphql-jwt>=0.2.1',
+   'graphene-django>=2.2.0',
+   'django-graphql-jwt>=0.2.1',
 ]
 import-linter = [
-    'tomlkit~=0.13',
+   'tomlkit~=0.13',
 ]
 bleacher = [
-    'nh3>=0.2,<1',
+   'nh3>=0.2,<1',
 ]
 gitlab-coverage = [
-    'httpx~=0.28',
+   'httpx~=0.28',
 ]
 sentry = [
-    'sentry-sdk>=1.19.1',
+   'sentry-sdk>=1.19.1',
 ]
 view-layer = [
-    'django-crispy-forms>=1.4.0',
+   'django-crispy-forms>=1.4.0',
 ]
 
 [project.urls]
@@ -307,10 +307,3 @@ source = [
 
 [tool.hatch.version]
 path = "ambient_toolbox/__init__.py"
-
-[tool.hatch.build.targets.wheel]
-include = [
-    "ambient_toolbox/**/*.py",
-    "ambient_toolbox/locale/**/*.mo",
-    "ambient_toolbox/locale/**/*.po",
-]

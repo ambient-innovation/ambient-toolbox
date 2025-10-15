@@ -13,16 +13,16 @@ wheels = [
 
 [[package]]
 name = "ambient-package-update"
-version = "25.10.4"
+version = "25.10.18"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
     { name = "typer" },
     { name = "uv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f7/e2/1b3e6eeba80db0256383772cc4cee74035a1d93bb7e9831329168b84a3c9/ambient_package_update-25.10.4.tar.gz", hash = "sha256:b212af96c5c8bdffa5edceb85546f96567148c645f053614567e6909a387ec2b", size = 58680, upload-time = "2025-10-09T04:12:28.037Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/a5/80990ae8a7e355cd466eec349d1f4899d791dc7ea74c022c2d9663d88d2e/ambient_package_update-25.10.18.tar.gz", hash = "sha256:63f8b1f0dc747e32b9b5b19674eb0019ecee464ac5a95bca158c22aa80e9d8fe", size = 59103, upload-time = "2025-10-15T07:40:05.431Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/aa/44/16985f5430552e69a22ee67c1e1bfdee4cc5513d2700cbeac2c6de4bac4a/ambient_package_update-25.10.4-py3-none-any.whl", hash = "sha256:1d5b8b3c38fde3017c8ca2244318c2fc96220be0402d42c37ecd4406f9fc7ae1", size = 42342, upload-time = "2025-10-09T04:12:26.551Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/ea/2a40ad850d1d931fcab80a1a47d1f9993cfcb39d16066424e163fa594a54/ambient_package_update-25.10.18-py3-none-any.whl", hash = "sha256:f0d38351a5d12b6cd512a5027f81651a703a9cf7b454035d15db6718e85beba3", size = 42521, upload-time = "2025-10-15T07:40:04.095Z" },
 ]
 
 [[package]]
