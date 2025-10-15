@@ -308,7 +308,9 @@ source = [
 [tool.hatch.version]
 path = "ambient_toolbox/__init__.py"
 
-[tool.hatch.build.targets.wheel.include]
-files = [
-    "ambient_toolbox/locale/**/LC_MESSAGES/*.mo"
+[tool.hatch.build.targets.wheel]
+include = [
+    "ambient_toolbox/**/*.py",
+    "ambient_toolbox/locale/**/*.mo",
+    "ambient_toolbox/locale/**/*.po",
 ]
