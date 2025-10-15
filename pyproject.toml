@@ -309,6 +309,9 @@ source = [
 path = "ambient_toolbox/__init__.py"
 
 [tool.hatch.build]
+# optional: don't override default include
+# only add extra files
+[tool.hatch.build.targets.wheel]
 include = [
   "ambient_toolbox/locale/**/LC_MESSAGES/*.mo",
 ]
