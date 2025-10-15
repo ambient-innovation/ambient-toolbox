@@ -37,30 +37,6 @@ dependencies = [
 bleacher = [
     { name = "nh3" },
 ]
-drf = [
-    { name = "djangorestframework" },
-]
-gitlab-coverage = [
-    { name = "httpx" },
-]
-graphql = [
-    { name = "django-graphql-jwt" },
-    { name = "graphene-django" },
-]
-import-linter = [
-    { name = "tomlkit" },
-]
-sentry = [
-    { name = "sentry-sdk" },
-]
-view-layer = [
-    { name = "django-crispy-forms" },
-]
-
-[package.dev-dependencies]
-bleacher = [
-    { name = "nh3" },
-]
 dev = [
     { name = "ambient-package-update" },
     { name = "freezegun" },
@@ -98,45 +74,31 @@ view-layer = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ambient-package-update", marker = "extra == 'dev'" },
     { name = "django", specifier = ">=4.2" },
     { name = "django-crispy-forms", marker = "extra == 'view-layer'", specifier = ">=1.4.0" },
     { name = "django-graphql-jwt", marker = "extra == 'graphql'", specifier = ">=0.2.1" },
     { name = "djangorestframework", marker = "extra == 'drf'", specifier = ">=3.8.2" },
+    { name = "freezegun", marker = "extra == 'dev'", specifier = "~=1.5" },
+    { name = "gevent", marker = "extra == 'dev'", specifier = "~=25.1" },
     { name = "graphene-django", marker = "extra == 'graphql'", specifier = ">=2.2.0" },
+    { name = "httpx", marker = "extra == 'dev'", specifier = "~=0.28" },
     { name = "httpx", marker = "extra == 'gitlab-coverage'", specifier = "~=0.28" },
+    { name = "m2r2", marker = "extra == 'dev'", specifier = "~=0.3" },
     { name = "nh3", marker = "extra == 'bleacher'", specifier = ">=0.2,<1" },
+    { name = "pre-commit", marker = "extra == 'dev'", specifier = "~=4.3" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = "~=7.0" },
+    { name = "pytest-django", marker = "extra == 'dev'", specifier = "~=4.11" },
+    { name = "pytest-mock", marker = "extra == 'dev'", specifier = "~=3.15" },
     { name = "python-dateutil", specifier = ">=2.5.3" },
     { name = "sentry-sdk", marker = "extra == 'sentry'", specifier = ">=1.19.1" },
+    { name = "sphinx", marker = "extra == 'dev'", specifier = "~=7.4" },
+    { name = "sphinx-rtd-theme", marker = "extra == 'dev'", specifier = "~=3.0" },
     { name = "tomlkit", marker = "extra == 'import-linter'", specifier = "~=0.13" },
+    { name = "typer", marker = "extra == 'dev'", specifier = "~=0.19" },
+    { name = "uv", marker = "extra == 'dev'", specifier = "~=0.9" },
 ]
-provides-extras = ["bleacher", "drf", "gitlab-coverage", "graphql", "import-linter", "sentry", "view-layer"]
-
-[package.metadata.requires-dev]
-bleacher = [{ name = "nh3", specifier = ">=0.2,<1" }]
-dev = [
-    { name = "ambient-package-update" },
-    { name = "freezegun", specifier = "~=1.5" },
-    { name = "gevent", specifier = "~=25.1" },
-    { name = "httpx", specifier = "~=0.28" },
-    { name = "m2r2", specifier = "~=0.3" },
-    { name = "pre-commit", specifier = "~=4.3" },
-    { name = "pytest-cov", specifier = "~=7.0" },
-    { name = "pytest-django", specifier = "~=4.11" },
-    { name = "pytest-mock", specifier = "~=3.15" },
-    { name = "sphinx", specifier = "~=7.4" },
-    { name = "sphinx-rtd-theme", specifier = "~=3.0" },
-    { name = "typer", specifier = "~=0.19" },
-    { name = "uv", specifier = "~=0.9" },
-]
-drf = [{ name = "djangorestframework", specifier = ">=3.8.2" }]
-gitlab-coverage = [{ name = "httpx", specifier = "~=0.28" }]
-graphql = [
-    { name = "django-graphql-jwt", specifier = ">=0.2.1" },
-    { name = "graphene-django", specifier = ">=2.2.0" },
-]
-import-linter = [{ name = "tomlkit", specifier = "~=0.13" }]
-sentry = [{ name = "sentry-sdk", specifier = ">=1.19.1" }]
-view-layer = [{ name = "django-crispy-forms", specifier = ">=1.4.0" }]
+provides-extras = ["bleacher", "dev", "drf", "gitlab-coverage", "graphql", "import-linter", "sentry", "view-layer"]
 
 [[package]]
 name = "anyio"
