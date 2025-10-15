@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.6** (2025-10-15)
+  * Fixed broken German translations and build issue
+
 **12.5.5** (2025-10-15)
   * Fixed broken German translations
 
