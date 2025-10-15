@@ -307,3 +307,8 @@ source = [
 
 [tool.hatch.version]
 path = "ambient_toolbox/__init__.py"
+
+[tool.hatch.build]
+include = [
+  "ambient_toolbox/locale/**/LC_MESSAGES/*.mo",
+]

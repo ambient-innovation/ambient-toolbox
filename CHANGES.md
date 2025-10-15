@@ -2,6 +2,7 @@
 
 **12.5.4** (2025-10-15)
   * Fixed RTD docs build
+  * Fixed broken German translations
 
 **12.5.3** (2025-10-11)
   * Fixed broken German translations
