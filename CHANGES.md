@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.8** (2025-10-16)
+  * Improved error handling for "create_translation_file" management command
+
 **12.5.7** (2025-10-15)
   * Hopefully, now fixed broken German translations and build issue
 
