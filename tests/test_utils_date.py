@@ -7,6 +7,8 @@ from freezegun import freeze_time
 
 from ambient_toolbox.utils import get_previous_quarter_starting_date_for_date
 from ambient_toolbox.utils.date import (
+    DateHelper,
+    MonthHelper,
     add_days,
     add_minutes,
     add_months,
@@ -76,6 +78,14 @@ class DateUtilTest(TestCase):
             datetime.date(year=2020, month=9, day=26),
         )
 
+    def test_next_weekday_forward_in_week(self):
+        # Test when the desired weekday is ahead in the current week (days_ahead > 0)
+        # Monday (2020-09-21) to Friday (same week)
+        self.assertEqual(
+            next_weekday(datetime.date(year=2020, month=9, day=21), calendar.FRIDAY),
+            datetime.date(year=2020, month=9, day=25),
+        )
+
     def test_date_month_delta(self):
         start_date = datetime.date(year=self.TEST_CURRENT_YEAR, month=2, day=1)
         end_date = datetime.date(year=self.TEST_CURRENT_YEAR, month=3, day=1)
@@ -123,6 +133,7 @@ class DateUtilTest(TestCase):
         with freeze_time(frozen_date):
             self.assertEqual(tz_today(), frozen_date.date())
 
+    @override_settings(USE_TZ=False)
     def test_tz_today_as_object_tz_not_active(self):
         frozen_date = datetime.datetime(year=2019, month=9, day=19, hour=10)
         with freeze_time(frozen_date):
@@ -316,3 +327,158 @@ class DateUtilTest(TestCase):
     def test_get_previous_quarter_starting_date_for_date_get_fourth_quarter(self):
         date = datetime.date(year=2025, month=1, day=1)
         self.assertEqual(get_previous_quarter_starting_date_for_date(date=date), datetime.date(2024, 10, 1))
+
+
+class MonthHelperTest(TestCase):
+    """Test suite for MonthHelper constants."""
+
+    def test_month_constants(self):
+        """Test that all month constants have correct values."""
+        self.assertEqual(MonthHelper.JANUARY, 1)
+        self.assertEqual(MonthHelper.FEBRUARY, 2)
+        self.assertEqual(MonthHelper.MARCH, 3)
+        self.assertEqual(MonthHelper.APRIL, 4)
+        self.assertEqual(MonthHelper.MAY, 5)
+        self.assertEqual(MonthHelper.JUNE, 6)
+        self.assertEqual(MonthHelper.JULY, 7)
+        self.assertEqual(MonthHelper.AUGUST, 8)
+        self.assertEqual(MonthHelper.SEPTEMBER, 9)
+        self.assertEqual(MonthHelper.OCTOBER, 10)
+        self.assertEqual(MonthHelper.NOVEMBER, 11)
+        self.assertEqual(MonthHelper.DECEMBER, 12)
+
+
+class DateHelperTest(TestCase):
+    """Test suite for DateHelper constants."""
+
+    def test_orm_weekday_constants(self):
+        """Test that all ORM weekday constants have correct values."""
+        self.assertEqual(DateHelper.ORM_SUNDAY, 1)
+        self.assertEqual(DateHelper.ORM_MONDAY, 2)
+        self.assertEqual(DateHelper.ORM_TUESDAY, 3)
+        self.assertEqual(DateHelper.ORM_WEDNESDAY, 4)
+        self.assertEqual(DateHelper.ORM_THURSDAY, 5)
+        self.assertEqual(DateHelper.ORM_FRIDAY, 6)
+        self.assertEqual(DateHelper.ORM_SATURDAY, 7)
+
+
+class AddMonthsWithDatetimeTest(TestCase):
+    """Test suite for add_months function with datetime objects."""
+
+    def test_add_months_datetime_one_month(self):
+        """Test adding one month to a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = add_months(source_datetime, 1)
+        self.assertEqual(result, datetime.datetime(year=2020, month=7, day=26, hour=10, minute=30))
+
+    def test_add_months_datetime_many_months(self):
+        """Test adding many months to a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = add_months(source_datetime, 10)
+        self.assertEqual(result, datetime.datetime(year=2021, month=4, day=26, hour=10, minute=30))
+
+    def test_add_months_datetime_negative_months(self):
+        """Test subtracting months from a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = add_months(source_datetime, -2)
+        self.assertEqual(result, datetime.datetime(year=2020, month=4, day=26, hour=10, minute=30))
+
+
+class AddDaysWithDatetimeTest(TestCase):
+    """Test suite for add_days function with datetime objects."""
+
+    def test_add_days_datetime_one_day(self):
+        """Test adding one day to a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = add_days(source_datetime, 1)
+        self.assertEqual(result, datetime.datetime(year=2020, month=6, day=27, hour=10, minute=30))
+
+    def test_add_days_datetime_many_days(self):
+        """Test adding many days to a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = add_days(source_datetime, 10)
+        self.assertEqual(result, datetime.datetime(year=2020, month=7, day=6, hour=10, minute=30))
+
+    def test_add_days_datetime_negative_days(self):
+        """Test subtracting days from a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = add_days(source_datetime, -2)
+        self.assertEqual(result, datetime.datetime(year=2020, month=6, day=24, hour=10, minute=30))
+
+
+class GetFormattedDateStrWithDatetimeTest(TestCase):
+    """Test suite for get_formatted_date_str with datetime objects."""
+
+    def test_get_formatted_date_str_datetime(self):
+        """Test formatting a datetime object."""
+        source_datetime = datetime.datetime(year=2020, month=6, day=26, hour=10, minute=30)
+        result = get_formatted_date_str(source_datetime)
+        self.assertEqual(result, "26.06.2020")
+
+
+class DatetimeFormatZoneInfoNotFoundTest(TestCase):
+    """Test suite for datetime_format with invalid timezone."""
+
+    @override_settings(TIME_ZONE="Invalid/Timezone")
+    def test_datetime_format_with_invalid_timezone(self):
+        """Test that datetime_format handles ZoneInfoNotFoundError gracefully."""
+        source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
+        # Should fall back to regular strftime when ZoneInfoNotFoundError is raised
+        result = datetime_format(source_date, "%d.%m.%Y %H:%M")
+        self.assertEqual(result, "26.06.2020 08:00")
+
+
+class CheckDateIsWeekendWithCustomDaysTest(TestCase):
+    """Test suite for check_date_is_weekend with custom weekend days."""
+
+    def test_check_date_is_weekend_with_custom_weekend_days(self):
+        """Test checking weekend with custom weekend days (Friday and Saturday)."""
+        # Thursday (2024-09-19) - not weekend
+        thursday = datetime.date(year=2024, month=9, day=19)
+        self.assertFalse(check_date_is_weekend(thursday, weekend_days=(calendar.FRIDAY, calendar.SATURDAY)))
+
+        # Friday (2024-09-20) - weekend in custom setup
+        friday = datetime.date(year=2024, month=9, day=20)
+        self.assertTrue(check_date_is_weekend(friday, weekend_days=(calendar.FRIDAY, calendar.SATURDAY)))
+
+        # Saturday (2024-09-21) - weekend in custom setup
+        saturday = datetime.date(year=2024, month=9, day=21)
+        self.assertTrue(check_date_is_weekend(saturday, weekend_days=(calendar.FRIDAY, calendar.SATURDAY)))
+
+        # Sunday (2024-09-22) - not weekend in custom setup
+        sunday = datetime.date(year=2024, month=9, day=22)
+        self.assertFalse(check_date_is_weekend(sunday, weekend_days=(calendar.FRIDAY, calendar.SATURDAY)))
+
+    def test_check_date_is_weekend_with_single_weekend_day(self):
+        """Test checking weekend with only one weekend day."""
+        friday = datetime.date(year=2024, month=9, day=20)
+        saturday = datetime.date(year=2024, month=9, day=21)
+
+        # Only Friday is weekend
+        self.assertTrue(check_date_is_weekend(friday, weekend_days=(calendar.FRIDAY,)))
+        self.assertFalse(check_date_is_weekend(saturday, weekend_days=(calendar.FRIDAY,)))
+
+
+class GetStartAndEndDateFromCalendarWeekEdgeCasesTest(TestCase):
+    """Test suite for get_start_and_end_date_from_calendar_week edge cases."""
+
+    def test_year_starting_on_friday(self):
+        """Test calendar week calculation when year starts on Friday."""
+        # 2016 started on Friday
+        monday, sunday = get_start_and_end_date_from_calendar_week(2016, 1)
+        self.assertEqual(monday, datetime.date(year=2016, month=1, day=4))
+        self.assertEqual(sunday, datetime.date(year=2016, month=1, day=10))
+
+    def test_year_starting_on_saturday(self):
+        """Test calendar week calculation when year starts on Saturday."""
+        # 2022 started on Saturday
+        monday, sunday = get_start_and_end_date_from_calendar_week(2022, 1)
+        self.assertEqual(monday, datetime.date(year=2022, month=1, day=3))
+        self.assertEqual(sunday, datetime.date(year=2022, month=1, day=9))
+
+    def test_year_starting_on_sunday(self):
+        """Test calendar week calculation when year starts on Sunday."""
+        # 2023 started on Sunday
+        monday, sunday = get_start_and_end_date_from_calendar_week(2023, 1)
+        self.assertEqual(monday, datetime.date(year=2023, month=1, day=2))
+        self.assertEqual(sunday, datetime.date(year=2023, month=1, day=8))
