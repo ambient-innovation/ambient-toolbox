@@ -236,7 +236,7 @@ class GraphQLTestCaseTest(TestCase):
         mock_response.content = json.dumps({"errors": [{"message": "Test error"}]}).encode()
 
         # Call assertResponseNoErrors - should raise AssertionError
-        with self.assertRaises(AssertionError):
+        with self.assertRaisesMessage(AssertionError, "'errors' unexpectedly found in"):
             test_instance.assertResponseNoErrors(mock_response)
 
     def test_assert_response_no_errors_with_non_200_status(self):
@@ -255,7 +255,7 @@ class GraphQLTestCaseTest(TestCase):
         mock_response.content = json.dumps({"data": {"test": "value"}}).encode()
 
         # Call assertResponseNoErrors - should raise AssertionError
-        with self.assertRaises(AssertionError):
+        with self.assertRaisesMessage(AssertionError, "500 != 200"):
             test_instance.assertResponseNoErrors(mock_response)
 
     def test_assert_response_has_errors_with_error_response(self):
@@ -292,5 +292,5 @@ class GraphQLTestCaseTest(TestCase):
         mock_response.content = json.dumps({"data": {"test": "value"}}).encode()
 
         # Call assertResponseHasErrors - should raise AssertionError
-        with self.assertRaises(AssertionError):
+        with self.assertRaisesMessage(AssertionError, "'errors' not found in"):
             test_instance.assertResponseHasErrors(mock_response)
