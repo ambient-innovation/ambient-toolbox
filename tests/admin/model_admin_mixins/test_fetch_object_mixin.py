@@ -44,3 +44,15 @@ class FetchObjectMixinTest(RequestProviderMixin, TestCase):
             obj_from_request = model_admin.get_object_from_request(request)
 
         self.assertEqual(obj_from_request, obj)
+
+    def test_get_object_from_request_returns_none_when_no_kwargs(self):
+        """Test that get_object_from_request returns None when resolved.kwargs is empty"""
+        model_admin = FetchObjectTestMixinAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        request = self.get_request(self.super_user)
+
+        return_obj = MockResolverResponse()
+        return_obj.kwargs = None
+        with mock.patch("ambient_toolbox.admin.model_admins.mixins.resolve", return_value=return_obj):
+            result = model_admin.get_object_from_request(request)
+
+        self.assertIsNone(result)
