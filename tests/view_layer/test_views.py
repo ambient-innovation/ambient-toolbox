@@ -1,4 +1,5 @@
-from unittest.mock import Mock, patch
+from unittest import mock
+from unittest.mock import Mock
 
 import pytest
 from django.contrib.auth.models import User
@@ -41,17 +42,17 @@ class CustomPermissionMixinTest(RequestProviderMixin, TestCase):
         view = self.TestView()
         self.assertTrue(view.validate_permissions())
 
-    def test_dispatch_with_permission_granted_calls_super(self):
+    @mock.patch.object(generic.View, "dispatch", return_value=Mock(content="Success"))
+    def test_dispatch_with_permission_granted_calls_super(self, mock_dispatch):
         """Test that dispatch() calls super().dispatch() when permissions are granted."""
         view = self.TestView()
         request = self.get_request()
 
-        with patch.object(generic.View, "dispatch", return_value=Mock(content="Success")) as mock_dispatch:
-            response = view.dispatch(request)
-            mock_dispatch.assert_called_once_with(request)
-            self.assertEqual(response.content, "Success")
+        response = view.dispatch(request)
+        mock_dispatch.assert_called_once_with(request)
+        self.assertEqual(response.content, "Success")
 
-    @patch("ambient_toolbox.view_layer.views.render")
+    @mock.patch("ambient_toolbox.view_layer.views.render")
     def test_dispatch_with_permission_denied_returns_403(self, mock_render):
         """Test that dispatch() returns 403 when permissions are denied."""
         view = self.TestViewWithPermissionDenied()
