@@ -5,7 +5,8 @@ This module tests all functionality of the StructureTestValidator class,
 ensuring 100% code coverage and proper validation of test directory structures.
 """
 
-import os
+import io
+import sys
 import tempfile
 from pathlib import Path
 from unittest import mock
@@ -567,8 +568,6 @@ class TestStructureValidatorTest(TestCase):
                 service = StructureTestValidator()
 
                 # Capture stdout
-                import io
-                import sys
                 captured_output = io.StringIO()
                 old_stdout = sys.stdout
                 sys.stdout = captured_output
