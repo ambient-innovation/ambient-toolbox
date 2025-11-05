@@ -4,6 +4,7 @@ This module ensures comprehensive coverage of the test utility mixin used for te
 view permissions in Django applications.
 """
 
+from http import HTTPStatus
 from unittest import mock
 
 import pytest
@@ -24,7 +25,7 @@ class TestViewWithPermissions(DjangoPermissionRequiredMixin, generic.View):
     login_view_name = "other-login-view"
 
     def get(self, *args, **kwargs):
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 class TestViewMultiplePermissions(DjangoPermissionRequiredMixin, generic.View):
@@ -34,7 +35,7 @@ class TestViewMultiplePermissions(DjangoPermissionRequiredMixin, generic.View):
     login_view_name = "other-login-view"
 
     def get(self, *args, **kwargs):
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 class TestViewNoPermissionList(DjangoPermissionRequiredMixin, generic.View):
@@ -43,7 +44,7 @@ class TestViewNoPermissionList(DjangoPermissionRequiredMixin, generic.View):
     login_view_name = "other-login-view"
 
     def get(self, *args, **kwargs):
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 class ValidBaseViewPermissionTest(BaseViewPermissionTestMixin, TestCase):
@@ -340,7 +341,7 @@ class BaseViewPermissionTestMixinTestPassesLoginBarrierIsCalledTest(ValidBaseVie
         with mock.patch.object(self.view_class, "passes_login_barrier", return_value=False):
             view = self.get_view_instance(user=AnonymousUser())
             response = view.dispatch(request=view.request, **view.kwargs)
-            assert response.status_code == 302
+            assert response.status_code == HTTPStatus.FOUND
 
 
 class BaseViewPermissionTestMixinTestHasPermissionsIsCalledTest(ValidBaseViewPermissionTest):
@@ -356,7 +357,7 @@ class BaseViewPermissionTestMixinTestHasPermissionsIsCalledTest(ValidBaseViewPer
         with mock.patch.object(self.view_class, "has_permissions", return_value=False):
             view = self.get_view_instance(user=self.user)
             response = view.dispatch(request=view.request, **view.kwargs)
-            assert response.status_code == 403
+            assert response.status_code == HTTPStatus.FORBIDDEN
 
 
 class BaseViewPermissionTestMixinIntegrationTest(ValidBaseViewPermissionTest):
@@ -380,7 +381,7 @@ class BaseViewPermissionTestMixinIntegrationTest(ValidBaseViewPermissionTest):
         view = self.get_view_instance(user=self.user)
         response = view.dispatch(request=view.request, **view.kwargs)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
 
     def test_view_instance_creation_without_permissions(self):
         """Test creating a view instance without required permissions."""
@@ -388,7 +389,7 @@ class BaseViewPermissionTestMixinIntegrationTest(ValidBaseViewPermissionTest):
         view = self.get_view_instance(user=self.user)
         response = view.dispatch(request=view.request, **view.kwargs)
 
-        assert response.status_code == 403
+        assert response.status_code == HTTPStatus.FORBIDDEN
 
     def test_view_instance_creation_with_anonymous_user(self):
         """Test creating a view instance with anonymous user."""
@@ -396,4 +397,4 @@ class BaseViewPermissionTestMixinIntegrationTest(ValidBaseViewPermissionTest):
         response = view.dispatch(request=view.request, **view.kwargs)
 
         # Should redirect to login
-        assert response.status_code == 302
+        assert response.status_code == HTTPStatus.FOUND
