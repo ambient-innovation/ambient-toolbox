@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import graphene
 from django.test import TestCase
@@ -18,6 +18,7 @@ class DeleteMutationTest(TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
+
         # Create a concrete implementation for testing
         class TestDeleteMutation(DeleteMutation):
             class Meta:
@@ -142,7 +143,9 @@ class DeleteMutationTest(TestCase):
             TestDeleteMutationWithCustomQueryset.mutate_and_get_payload(None, mock_info, id=str(self.test_instance.id))
 
         # Delete the second instance (value=100) - should succeed
-        result = TestDeleteMutationWithCustomQueryset.mutate_and_get_payload(None, mock_info, id=str(another_instance.id))
+        result = TestDeleteMutationWithCustomQueryset.mutate_and_get_payload(
+            None, mock_info, id=str(another_instance.id)
+        )
 
         # Verify the second instance was deleted
         self.assertFalse(CommonInfoBasedModel.objects.filter(id=another_instance.id).exists())

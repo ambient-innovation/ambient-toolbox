@@ -1,6 +1,7 @@
 from unittest.mock import Mock, patch
 
 from django.test import TestCase
+from graphene_django.forms.mutation import DjangoModelFormMutation
 from graphql import GraphQLError
 from promise import Promise
 
@@ -15,9 +16,6 @@ class DjangoValidatedModelFormMutationTest(TestCase):
 
     def test_inherits_from_django_model_form_mutation(self):
         """Test that DjangoValidatedModelFormMutation inherits from DjangoModelFormMutation."""
-        # Check the base classes
-        from graphene_django.forms.mutation import DjangoModelFormMutation
-
         self.assertTrue(issubclass(DjangoValidatedModelFormMutation, DjangoModelFormMutation))
 
     def test_mutate_without_errors_returns_payload_with_client_mutation_id(self):

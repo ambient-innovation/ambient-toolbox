@@ -30,7 +30,7 @@ class SentryGraphQLViewTest(TestCase):
 
     @patch.object(GraphQLView, "execute_graphql_request")
     def test_execute_graphql_request_without_errors(self, mock_super_execute):
-        """Test that execute_graphql_request() returns result without calling _capture_sentry_exceptions when no errors."""
+        """Test execute_graphql_request() returns result without calling _capture_sentry_exceptions when no errors."""
         # Mock result without errors
         mock_result = Mock()
         mock_result.errors = None

@@ -1,7 +1,7 @@
 import json
 from unittest.mock import Mock, patch
 
-from django.test import Client, TestCase
+from django.test import TestCase
 
 from ambient_toolbox.graphql.tests.base_test import GraphQLTestCase
 
