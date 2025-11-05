@@ -56,12 +56,11 @@ class DjangoValidatedModelFormMutationTest(TestCase):
         with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {"client_mutation_id": "test_id"}
 
-            with self.assertRaises(GraphQLError) as context:
+            with self.assertRaisesMessage(GraphQLError, "Field 'field1': Error message 1") as context:
                 DjangoValidatedModelFormMutation.mutate(None, None, input_data)
 
-            # Verify the error message contains both field errors
+            # Verify the error message also contains the second field error
             error_message = str(context.exception)
-            self.assertIn("Field 'field1': Error message 1", error_message)
             self.assertIn("Field 'field2': Error message 2", error_message)
 
     def test_mutate_with_single_error_raises_graphql_error(self):
@@ -79,11 +78,8 @@ class DjangoValidatedModelFormMutationTest(TestCase):
         with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {"client_mutation_id": "test_id"}
 
-            with self.assertRaises(GraphQLError) as context:
+            with self.assertRaisesMessage(GraphQLError, "Field 'test_field': Single error message"):
                 DjangoValidatedModelFormMutation.mutate(None, None, input_data)
-
-            # Verify the error message
-            self.assertEqual(str(context.exception), "Field 'test_field': Single error message")
 
     def test_mutate_with_thenable_result_returns_promise(self):
         """Test that mutate() returns Promise when result is thenable."""
@@ -117,11 +113,8 @@ class DjangoValidatedModelFormMutationTest(TestCase):
         with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {"client_mutation_id": "test_id"}
 
-            with self.assertRaises(Exception) as context:
+            with self.assertRaisesMessage(Exception, "Cannot set client_mutation_id in the payload object"):
                 DjangoValidatedModelFormMutation.mutate(None, None, input_data)
-
-            # Verify the exception message
-            self.assertIn("Cannot set client_mutation_id in the payload object", str(context.exception))
 
     def test_mutate_without_client_mutation_id_in_input(self):
         """Test that mutate() handles missing client_mutation_id in input."""

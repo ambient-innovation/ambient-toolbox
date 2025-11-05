@@ -41,13 +41,11 @@ class DeleteMutationTest(TestCase):
 
     def test_init_subclass_with_meta_raises_error_without_model(self):
         """Test that __init_subclass_with_meta__ raises AttributeError when model is not set."""
-        with self.assertRaises(AttributeError) as context:
+        with self.assertRaisesMessage(AttributeError, "DeleteMutation needs a valid model to be set."):
 
             class InvalidDeleteMutation(DeleteMutation):
                 class Meta:
                     abstract = False
-
-        self.assertEqual(str(context.exception), "DeleteMutation needs a valid model to be set.")
 
     def test_init_subclass_with_meta_sets_model(self):
         """Test that __init_subclass_with_meta__ sets model attribute."""
@@ -110,10 +108,8 @@ class DeleteMutationTest(TestCase):
         mock_info.context = mock_context
 
         # Call mutate_and_get_payload and expect GraphQLError
-        with self.assertRaises(GraphQLError) as context:
+        with self.assertRaisesMessage(GraphQLError, "Delete method not allowed."):
             TestDeleteMutationWithValidation.mutate_and_get_payload(None, mock_info, id="1")
-
-        self.assertEqual(str(context.exception), "Delete method not allowed.")
 
     def test_mutate_and_get_payload_with_custom_get_queryset(self):
         """Test that mutate_and_get_payload() uses custom get_queryset."""
@@ -139,7 +135,9 @@ class DeleteMutationTest(TestCase):
         mock_info.context = mock_context
 
         # Try to delete the first instance (value=42) - should raise DoesNotExist
-        with self.assertRaises(CommonInfoBasedModel.DoesNotExist):
+        with self.assertRaisesMessage(
+            CommonInfoBasedModel.DoesNotExist, "CommonInfoBasedModel matching query does not exist"
+        ):
             TestDeleteMutationWithCustomQueryset.mutate_and_get_payload(None, mock_info, id=str(self.test_instance.id))
 
         # Delete the second instance (value=100) - should succeed

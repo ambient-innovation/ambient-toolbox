@@ -27,10 +27,8 @@ class GraphQLTestCaseTest(TestCase):
         class TestGraphQLTestCaseWithoutSchema(GraphQLTestCase):
             pass
 
-        with self.assertRaises(AttributeError) as context:
+        with self.assertRaisesMessage(AttributeError, "Variable GRAPHQL_SCHEMA not defined in GraphQLTestCase."):
             TestGraphQLTestCaseWithoutSchema.setUpClass()
-
-        self.assertEqual(str(context.exception), "Variable GRAPHQL_SCHEMA not defined in GraphQLTestCase.")
 
     @mock.patch.object(TestCase, "setUpClass")
     def test_setup_class_creates_client_with_schema(self, mock_super_setup):
