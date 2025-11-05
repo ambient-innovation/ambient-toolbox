@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.9** (2025-11-05)
+  * Added tests for previously uncovered code
+
 **12.5.8** (2025-10-16)
   * Improved error handling for "create_translation_file" management command
 
