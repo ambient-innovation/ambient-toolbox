@@ -185,8 +185,10 @@ class BaseViewPermissionTestMixinTestViewClassInheritsMixinTest(ValidBaseViewPer
 
         test_instance = TestWithNonInheritingView("test_view_class_inherits_mixin")
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(AssertionError) as exc_info:
             test_instance.test_view_class_inherits_mixin()
+
+        assert "False is not true" in str(exc_info.value)
 
 
 class BaseViewPermissionTestMixinTestPermissionsAreEqualTest(TestCase):
@@ -241,8 +243,10 @@ class BaseViewPermissionTestMixinTestPermissionsAreEqualTest(TestCase):
 
         test_instance = TestWithDifferentCount("test_permissions_are_equal")
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(AssertionError) as exc_info:
             test_instance.test_permissions_are_equal()
+
+        assert "1 != 2" in str(exc_info.value)
 
     def test_permissions_are_equal_with_different_permissions(self):
         """Test assertion when permissions are different."""
@@ -253,8 +257,10 @@ class BaseViewPermissionTestMixinTestPermissionsAreEqualTest(TestCase):
 
         test_instance = TestWithDifferentPermissions("test_permissions_are_equal")
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(AssertionError) as exc_info:
             test_instance.test_permissions_are_equal()
+
+        assert "'auth.add_user' not found in" in str(exc_info.value)
 
     def test_permissions_are_equal_with_matching_permissions(self):
         """Test that matching permissions pass the assertion."""
