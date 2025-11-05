@@ -1,5 +1,8 @@
 # Changelog
 
+**12.5.10** (2025-11-05)
+  * Added tests for previously uncovered code to achieve 100% branch coverage
+
 **12.5.9** (2025-11-05)
   * Added tests for previously uncovered code
 
