@@ -63,3 +63,36 @@ class RequestProviderMixinTest(RequestProviderMixin, TestCase):
     def test_passed_url_used(self):
         request = self.get_request(url="my-url")
         self.assertEqual(request.build_absolute_uri(), "http://testserver/my-url")
+
+    def test_method_parameter_get(self):
+        # Test that method parameter is set correctly for GET
+        request = self.get_request(method="GET")
+        self.assertEqual(request.method, "GET")
+
+    def test_method_parameter_post(self):
+        # Test that method parameter is set correctly for POST
+        request = self.get_request(method="POST")
+        self.assertEqual(request.method, "POST")
+
+    def test_method_parameter_put(self):
+        # Test that method parameter is set correctly for PUT
+        request = self.get_request(method="PUT")
+        self.assertEqual(request.method, "PUT")
+
+    def test_method_parameter_delete(self):
+        # Test that method parameter is set correctly for DELETE
+        request = self.get_request(method="DELETE")
+        self.assertEqual(request.method, "DELETE")
+
+    def test_method_parameter_patch(self):
+        # Test that method parameter is set correctly for PATCH
+        request = self.get_request(method="PATCH")
+        self.assertEqual(request.method, "PATCH")
+
+    def test_combined_user_url_method(self):
+        # Test combining all parameters
+        user = User.objects.create(username="test_combined")
+        request = self.get_request(user=user, method="POST", url="/test-url/")
+        self.assertEqual(request.user, user)
+        self.assertEqual(request.method, "POST")
+        self.assertEqual(request.build_absolute_uri(), "http://testserver/test-url/")
