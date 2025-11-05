@@ -256,6 +256,30 @@ class CoverageServiceTest(unittest.TestCase):
         # Check that diff headers are printed
         mock_print.assert_any_call("\n############################## Coverage Diff ##############################")
 
+    @mock.patch("builtins.print")
+    def test_print_diff_with_non_matching_lines(self, mock_print):
+        """Test print_diff with lines that don't match the regex pattern to cover branch 185->177."""
+        target_log = (
+            "Name    Stmts   Miss Branch BrPart  Cover   Missing\n"
+            "old.py     10      2      0      0    80%     5-6\n"
+            "Some random text that won't match\n"
+            "Another line without pattern match"
+        )
+        current_log = (
+            "Name    Stmts   Miss Branch BrPart  Cover   Missing\n"
+            "new.py     10      1      0      0    90%     5\n"
+            "Some random text that won't match\n"
+            "Different random text"
+        )
+
+        CoverageService.print_diff(target_log, current_log)
+
+        self.assertTrue(mock_print.called)
+        # Check that diff headers are printed
+        mock_print.assert_any_call("\n############################## Coverage Diff ##############################")
+        # The non-matching lines should be skipped in the output (not printed)
+        # Only matching lines (header, changes, etc.) should be printed
+
     @mock.patch.dict(
         "os.environ",
         {
