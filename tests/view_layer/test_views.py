@@ -70,7 +70,6 @@ class RequestInFormKwargsMixinTest(RequestProviderMixin, TestCase):
     class TestView(RequestInFormKwargsMixin, generic.FormView):
         """Test view that uses RequestInFormKwargsMixin."""
 
-
     def test_get_form_kwargs_adds_request(self):
         """Test that get_form_kwargs() adds request to kwargs."""
         user = User(username="test-user")
