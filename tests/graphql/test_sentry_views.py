@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest import mock
 
 import graphene
 from django.test import TestCase
@@ -28,11 +28,11 @@ class SentryGraphQLViewTest(TestCase):
         """Test that SentryGraphQLView inherits from GraphQLView."""
         self.assertTrue(issubclass(SentryGraphQLView, GraphQLView))
 
-    @patch.object(GraphQLView, "execute_graphql_request")
+    @mock.patch.object(GraphQLView, "execute_graphql_request")
     def test_execute_graphql_request_without_errors(self, mock_super_execute):
         """Test execute_graphql_request() returns result without calling _capture_sentry_exceptions when no errors."""
         # Mock result without errors
-        mock_result = Mock()
+        mock_result = mock.Mock()
         mock_result.errors = None
         mock_super_execute.return_value = mock_result
 
@@ -40,7 +40,7 @@ class SentryGraphQLViewTest(TestCase):
         view = SentryGraphQLView(schema=self.test_schema)
 
         # Patch _capture_sentry_exceptions to verify it's not called
-        with patch.object(view, "_capture_sentry_exceptions") as mock_capture:
+        with mock.patch.object(view, "_capture_sentry_exceptions") as mock_capture:
             result = view.execute_graphql_request("arg1", "arg2", kwarg1="value1")
 
             # Verify super().execute_graphql_request was called with correct arguments
@@ -52,15 +52,15 @@ class SentryGraphQLViewTest(TestCase):
             # Verify result is returned
             self.assertEqual(result, mock_result)
 
-    @patch.object(GraphQLView, "execute_graphql_request")
+    @mock.patch.object(GraphQLView, "execute_graphql_request")
     def test_execute_graphql_request_with_errors(self, mock_super_execute):
         """Test that execute_graphql_request() calls _capture_sentry_exceptions when errors are present."""
         # Mock errors
-        mock_error_1 = Mock()
-        mock_error_2 = Mock()
+        mock_error_1 = mock.Mock()
+        mock_error_2 = mock.Mock()
 
         # Mock result with errors
-        mock_result = Mock()
+        mock_result = mock.Mock()
         mock_result.errors = [mock_error_1, mock_error_2]
         mock_super_execute.return_value = mock_result
 
@@ -68,7 +68,7 @@ class SentryGraphQLViewTest(TestCase):
         view = SentryGraphQLView(schema=self.test_schema)
 
         # Patch _capture_sentry_exceptions
-        with patch.object(view, "_capture_sentry_exceptions") as mock_capture:
+        with mock.patch.object(view, "_capture_sentry_exceptions") as mock_capture:
             result = view.execute_graphql_request("arg1", "arg2", kwarg1="value1")
 
             # Verify super().execute_graphql_request was called
@@ -80,11 +80,11 @@ class SentryGraphQLViewTest(TestCase):
             # Verify result is returned
             self.assertEqual(result, mock_result)
 
-    @patch.object(GraphQLView, "execute_graphql_request")
+    @mock.patch.object(GraphQLView, "execute_graphql_request")
     def test_execute_graphql_request_with_empty_errors_list(self, mock_super_execute):
         """Test that execute_graphql_request() does not call _capture_sentry_exceptions with empty errors list."""
         # Mock result with empty errors list
-        mock_result = Mock()
+        mock_result = mock.Mock()
         mock_result.errors = []
         mock_super_execute.return_value = mock_result
 
@@ -92,7 +92,7 @@ class SentryGraphQLViewTest(TestCase):
         view = SentryGraphQLView(schema=self.test_schema)
 
         # Patch _capture_sentry_exceptions
-        with patch.object(view, "_capture_sentry_exceptions") as mock_capture:
+        with mock.patch.object(view, "_capture_sentry_exceptions") as mock_capture:
             result = view.execute_graphql_request()
 
             # Verify _capture_sentry_exceptions was NOT called because empty list is falsy
@@ -101,12 +101,12 @@ class SentryGraphQLViewTest(TestCase):
             # Verify result is returned
             self.assertEqual(result, mock_result)
 
-    @patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
+    @mock.patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
     def test_capture_sentry_exceptions_with_original_error(self, mock_sentry_sdk):
         """Test that _capture_sentry_exceptions() captures original_error from errors."""
         # Mock error with original_error attribute
         mock_original_error = Exception("Original error")
-        mock_error = Mock()
+        mock_error = mock.Mock()
         mock_error.original_error = mock_original_error
 
         # Create view instance with schema
@@ -118,11 +118,11 @@ class SentryGraphQLViewTest(TestCase):
         # Verify sentry_sdk.capture_exception was called with original_error
         mock_sentry_sdk.capture_exception.assert_called_once_with(mock_original_error)
 
-    @patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
+    @mock.patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
     def test_capture_sentry_exceptions_without_original_error(self, mock_sentry_sdk):
         """Test that _capture_sentry_exceptions() captures error itself when no original_error."""
         # Mock error without original_error attribute
-        mock_error = Mock(spec=[])  # spec=[] means no attributes
+        mock_error = mock.Mock(spec=[])  # spec=[] means no attributes
         # Make sure accessing original_error raises AttributeError
         type(mock_error).original_error = property(lambda self: (_ for _ in ()).throw(AttributeError("no attribute")))
 
@@ -135,16 +135,16 @@ class SentryGraphQLViewTest(TestCase):
         # Verify sentry_sdk.capture_exception was called with the error itself
         mock_sentry_sdk.capture_exception.assert_called_once_with(mock_error)
 
-    @patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
+    @mock.patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
     def test_capture_sentry_exceptions_with_multiple_errors(self, mock_sentry_sdk):
         """Test that _capture_sentry_exceptions() captures all errors in the list."""
         # Mock multiple errors
         mock_original_error_1 = Exception("Original error 1")
-        mock_error_1 = Mock()
+        mock_error_1 = mock.Mock()
         mock_error_1.original_error = mock_original_error_1
 
         mock_original_error_2 = Exception("Original error 2")
-        mock_error_2 = Mock()
+        mock_error_2 = mock.Mock()
         mock_error_2.original_error = mock_original_error_2
 
         # Create view instance with schema
@@ -158,16 +158,16 @@ class SentryGraphQLViewTest(TestCase):
         mock_sentry_sdk.capture_exception.assert_any_call(mock_original_error_1)
         mock_sentry_sdk.capture_exception.assert_any_call(mock_original_error_2)
 
-    @patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
+    @mock.patch("ambient_toolbox.graphql.sentry.views.sentry_sdk")
     def test_capture_sentry_exceptions_with_mixed_errors(self, mock_sentry_sdk):
         """Test that _capture_sentry_exceptions() handles mix of errors with and without original_error."""
         # Mock error with original_error
         mock_original_error = Exception("Original error")
-        mock_error_1 = Mock()
+        mock_error_1 = mock.Mock()
         mock_error_1.original_error = mock_original_error
 
         # Mock error without original_error
-        mock_error_2 = Mock(spec=[])
+        mock_error_2 = mock.Mock(spec=[])
         type(mock_error_2).original_error = property(lambda self: (_ for _ in ()).throw(AttributeError("no attribute")))
 
         # Create view instance with schema

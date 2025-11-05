@@ -1,5 +1,5 @@
 import json
-from unittest.mock import Mock, patch
+from unittest import mock
 
 from django.test import TestCase
 
@@ -32,17 +32,17 @@ class GraphQLTestCaseTest(TestCase):
 
         self.assertEqual(str(context.exception), "Variable GRAPHQL_SCHEMA not defined in GraphQLTestCase.")
 
-    @patch.object(TestCase, "setUpClass")
+    @mock.patch.object(TestCase, "setUpClass")
     def test_setup_class_creates_client_with_schema(self, mock_super_setup):
         """Test that setUpClass() creates a Client with the GRAPHQL_SCHEMA."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
 
         # Mock the Client constructor
-        with patch("ambient_toolbox.graphql.tests.base_test.Client") as mock_client_class:
-            mock_client_instance = Mock()
+        with mock.patch("ambient_toolbox.graphql.tests.base_test.Client") as mock_client_class:
+            mock_client_instance = mock.Mock()
             mock_client_class.return_value = mock_client_instance
 
             TestGraphQLTestCaseWithSchema.setUpClass()
@@ -58,7 +58,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_query_with_all_parameters(self):
         """Test that query() constructs the request body correctly with all parameters."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -67,8 +67,8 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock the _client
-        mock_client = Mock()
-        mock_response = Mock()
+        mock_client = mock.Mock()
+        mock_response = mock.Mock()
         mock_client.post.return_value = mock_response
         TestGraphQLTestCaseWithSchema._client = mock_client
 
@@ -100,7 +100,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_query_with_query_only(self):
         """Test that query() works with only query parameter."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -109,8 +109,8 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock the _client
-        mock_client = Mock()
-        mock_response = Mock()
+        mock_client = mock.Mock()
+        mock_response = mock.Mock()
         mock_client.post.return_value = mock_response
         TestGraphQLTestCaseWithSchema._client = mock_client
 
@@ -134,7 +134,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_query_with_query_and_op_name(self):
         """Test that query() works with query and operation name."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -143,8 +143,8 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock the _client
-        mock_client = Mock()
-        mock_response = Mock()
+        mock_client = mock.Mock()
+        mock_response = mock.Mock()
         mock_client.post.return_value = mock_response
         TestGraphQLTestCaseWithSchema._client = mock_client
 
@@ -169,7 +169,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_query_with_query_and_input_data(self):
         """Test that query() works with query and input_data."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -178,8 +178,8 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock the _client
-        mock_client = Mock()
-        mock_response = Mock()
+        mock_client = mock.Mock()
+        mock_response = mock.Mock()
         mock_client.post.return_value = mock_response
         TestGraphQLTestCaseWithSchema._client = mock_client
 
@@ -204,7 +204,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_assert_response_no_errors_with_valid_response(self):
         """Test that assertResponseNoErrors() passes for valid response."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -213,7 +213,7 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock response without errors
-        mock_response = Mock()
+        mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.content = json.dumps({"data": {"test": "value"}}).encode()
 
@@ -222,7 +222,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_assert_response_no_errors_with_error_response(self):
         """Test that assertResponseNoErrors() fails for response with errors."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -231,7 +231,7 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock response with errors
-        mock_response = Mock()
+        mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.content = json.dumps({"errors": [{"message": "Test error"}]}).encode()
 
@@ -241,7 +241,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_assert_response_no_errors_with_non_200_status(self):
         """Test that assertResponseNoErrors() fails for non-200 status."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -250,7 +250,7 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock response with non-200 status
-        mock_response = Mock()
+        mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_response.content = json.dumps({"data": {"test": "value"}}).encode()
 
@@ -260,7 +260,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_assert_response_has_errors_with_error_response(self):
         """Test that assertResponseHasErrors() passes for response with errors."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -269,7 +269,7 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock response with errors
-        mock_response = Mock()
+        mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.content = json.dumps({"errors": [{"message": "Test error"}]}).encode()
 
@@ -278,7 +278,7 @@ class GraphQLTestCaseTest(TestCase):
 
     def test_assert_response_has_errors_with_valid_response(self):
         """Test that assertResponseHasErrors() fails for response without errors."""
-        mock_schema = Mock()
+        mock_schema = mock.Mock()
 
         class TestGraphQLTestCaseWithSchema(GraphQLTestCase):
             GRAPHQL_SCHEMA = mock_schema
@@ -287,7 +287,7 @@ class GraphQLTestCaseTest(TestCase):
         test_instance = TestGraphQLTestCaseWithSchema()
 
         # Mock response without errors
-        mock_response = Mock()
+        mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.content = json.dumps({"data": {"test": "value"}}).encode()
 

@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest import mock
 
 from django.test import TestCase
 from graphene_django.forms.mutation import DjangoModelFormMutation
@@ -21,11 +21,11 @@ class DjangoValidatedModelFormMutationTest(TestCase):
     def test_mutate_without_errors_returns_payload_with_client_mutation_id(self):
         """Test that mutate() returns payload with client_mutation_id when no errors."""
         # Mock the payload
-        mock_payload = Mock()
+        mock_payload = mock.Mock()
         mock_payload.errors = []
 
         # Mock mutate_and_get_payload to return the payload
-        with patch.object(
+        with mock.patch.object(
             DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload
         ) as mock_mutate_and_get_payload:
             input_data = {"client_mutation_id": "test_id"}
@@ -40,20 +40,20 @@ class DjangoValidatedModelFormMutationTest(TestCase):
     def test_mutate_with_errors_raises_graphql_error(self):
         """Test that mutate() raises GraphQLError when errors are present."""
         # Mock error objects
-        mock_error_1 = Mock()
+        mock_error_1 = mock.Mock()
         mock_error_1.field = "field1"
         mock_error_1.messages = ["Error message 1"]
 
-        mock_error_2 = Mock()
+        mock_error_2 = mock.Mock()
         mock_error_2.field = "field2"
         mock_error_2.messages = ["Error message 2"]
 
         # Mock the payload with errors
-        mock_payload = Mock()
+        mock_payload = mock.Mock()
         mock_payload.errors = [mock_error_1, mock_error_2]
 
         # Mock mutate_and_get_payload to return the payload with errors
-        with patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
+        with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {"client_mutation_id": "test_id"}
 
             with self.assertRaises(GraphQLError) as context:
@@ -67,16 +67,16 @@ class DjangoValidatedModelFormMutationTest(TestCase):
     def test_mutate_with_single_error_raises_graphql_error(self):
         """Test that mutate() raises GraphQLError with single error message."""
         # Mock error object
-        mock_error = Mock()
+        mock_error = mock.Mock()
         mock_error.field = "test_field"
         mock_error.messages = ["Single error message"]
 
         # Mock the payload with errors
-        mock_payload = Mock()
+        mock_payload = mock.Mock()
         mock_payload.errors = [mock_error]
 
         # Mock mutate_and_get_payload to return the payload with errors
-        with patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
+        with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {"client_mutation_id": "test_id"}
 
             with self.assertRaises(GraphQLError) as context:
@@ -88,7 +88,7 @@ class DjangoValidatedModelFormMutationTest(TestCase):
     def test_mutate_with_thenable_result_returns_promise(self):
         """Test that mutate() returns Promise when result is thenable."""
         # Create a mock payload
-        mock_payload = Mock()
+        mock_payload = mock.Mock()
         mock_payload.errors = []
 
         # Create a Promise as the result (Promise needs errors attribute too)
@@ -96,7 +96,7 @@ class DjangoValidatedModelFormMutationTest(TestCase):
         promise_result.errors = []  # Add errors attribute to pass the check
 
         # Mock mutate_and_get_payload to return a promise
-        with patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=promise_result):
+        with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=promise_result):
             input_data = {"client_mutation_id": "test_id"}
             result = DjangoValidatedModelFormMutation.mutate(None, None, input_data)
 
@@ -106,7 +106,7 @@ class DjangoValidatedModelFormMutationTest(TestCase):
     def test_mutate_handles_exception_when_setting_client_mutation_id(self):
         """Test that mutate() raises Exception when setting client_mutation_id fails."""
         # Mock payload that raises exception when setting client_mutation_id
-        mock_payload = Mock()
+        mock_payload = mock.Mock()
         mock_payload.errors = []
         # Make setting client_mutation_id raise an exception
         type(mock_payload).client_mutation_id = property(
@@ -114,7 +114,7 @@ class DjangoValidatedModelFormMutationTest(TestCase):
         )
 
         # Mock mutate_and_get_payload to return the payload
-        with patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
+        with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {"client_mutation_id": "test_id"}
 
             with self.assertRaises(Exception) as context:
@@ -126,11 +126,11 @@ class DjangoValidatedModelFormMutationTest(TestCase):
     def test_mutate_without_client_mutation_id_in_input(self):
         """Test that mutate() handles missing client_mutation_id in input."""
         # Mock the payload
-        mock_payload = Mock()
+        mock_payload = mock.Mock()
         mock_payload.errors = []
 
         # Mock mutate_and_get_payload to return the payload
-        with patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
+        with mock.patch.object(DjangoValidatedModelFormMutation, "mutate_and_get_payload", return_value=mock_payload):
             input_data = {}
             result = DjangoValidatedModelFormMutation.mutate(None, None, input_data)
 

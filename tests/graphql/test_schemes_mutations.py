@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest import mock
 
 import graphene
 from django.test import TestCase
@@ -55,13 +55,13 @@ class DeleteMutationTest(TestCase):
 
     def test_validate_returns_true_by_default(self):
         """Test that validate() returns True by default."""
-        mock_request = Mock()
+        mock_request = mock.Mock()
         result = self.TestDeleteMutation.validate(mock_request)
         self.assertTrue(result)
 
     def test_get_queryset_returns_all_objects_by_default(self):
         """Test that get_queryset() returns all objects by default."""
-        mock_request = Mock()
+        mock_request = mock.Mock()
         queryset = self.TestDeleteMutation.get_queryset(mock_request)
 
         # Verify it returns the model's queryset
@@ -74,10 +74,10 @@ class DeleteMutationTest(TestCase):
         object_id = self.test_instance.id
 
         # Create mock context
-        mock_context = Mock()
+        mock_context = mock.Mock()
 
         # Create mock info
-        mock_info = Mock()
+        mock_info = mock.Mock()
         mock_info.context = mock_context
 
         # Call mutate_and_get_payload
@@ -103,10 +103,10 @@ class DeleteMutationTest(TestCase):
                 return False
 
         # Create mock context
-        mock_context = Mock()
+        mock_context = mock.Mock()
 
         # Create mock info
-        mock_info = Mock()
+        mock_info = mock.Mock()
         mock_info.context = mock_context
 
         # Call mutate_and_get_payload and expect GraphQLError
@@ -132,10 +132,10 @@ class DeleteMutationTest(TestCase):
                 return CommonInfoBasedModel.objects.filter(value__gte=100)
 
         # Create mock context
-        mock_context = Mock()
+        mock_context = mock.Mock()
 
         # Create mock info
-        mock_info = Mock()
+        mock_info = mock.Mock()
         mock_info.context = mock_context
 
         # Try to delete the first instance (value=42) - should raise DoesNotExist
@@ -159,10 +159,10 @@ class DeleteMutationTest(TestCase):
         instance = CommonInfoBasedModel.objects.create(value=50)
 
         # Create mock context
-        mock_context = Mock()
+        mock_context = mock.Mock()
 
         # Create mock info
-        mock_info = Mock()
+        mock_info = mock.Mock()
         mock_info.context = mock_context
 
         # Call with string ID
