@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest import mock
 
 from django import forms
 from django.forms import BaseInlineFormSet, inlineformset_factory
@@ -116,20 +116,20 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         view.request = request
 
         # Mock form and formset is_valid to return True
-        mock_form = Mock()
+        mock_form = mock.Mock()
         mock_form.is_valid.return_value = True
-        mock_formset = Mock()
+        mock_formset = mock.Mock()
         mock_formset.is_valid.return_value = True
 
-        with patch.object(view, "get_form_class") as mock_get_form_class:
-            mock_get_form_class.return_value = Mock(return_value=mock_form)
-            with patch.object(view, "formset_class", return_value=mock_formset):
-                with patch.object(view, "form_valid") as mock_form_valid:
-                    mock_form_valid.return_value = Mock(status_code=302)
+        with mock.patch.object(view, "get_form_class") as mock_get_form_class:
+            mock_get_form_class.return_value = mock.Mock(return_value=mock_form)
+            with mock.patch.object(view, "formset_class", return_value=mock_formset):
+                with mock.patch.object(view, "form_valid") as mock_form_valid:
+                    mock_form_valid.return_value = mock.Mock(status_code=302)
                     view.post(request)
                     mock_form_valid.assert_called_once()
 
-    @patch("ambient_toolbox.view_layer.formset_view_mixin.render")
+    @mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render")
     def test_post_with_invalid_form_renders_template(self, mock_render):
         """Test that post() renders template when form is invalid."""
         factory = RequestFactory()
@@ -149,7 +149,7 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        mock_render.return_value = Mock(status_code=200)
+        mock_render.return_value = mock.Mock(status_code=200)
         view.post(request)
 
         mock_render.assert_called_once()
@@ -158,7 +158,7 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         self.assertIn("form", call_args[0][2])
         self.assertIn("formset", call_args[0][2])
 
-    @patch("ambient_toolbox.view_layer.formset_view_mixin.render")
+    @mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render")
     def test_post_with_invalid_formset_renders_template(self, mock_render):
         """Test that post() renders template when formset is invalid."""
         factory = RequestFactory()
@@ -180,7 +180,7 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        mock_render.return_value = Mock(status_code=200)
+        mock_render.return_value = mock.Mock(status_code=200)
         view.post(request)
 
         mock_render.assert_called_once()
@@ -197,13 +197,13 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         view.kwargs = {"pk": self.test_model.pk}
 
         # Create mock form and formset
-        mock_form = Mock()
+        mock_form = mock.Mock()
         mock_form.save.return_value = self.test_model
-        mock_formset = Mock()
+        mock_formset = mock.Mock()
         mock_formset.instance = self.test_model
 
-        with patch.object(
-            generic.UpdateView, "form_valid", return_value=Mock(status_code=302)
+        with mock.patch.object(
+            generic.UpdateView, "form_valid", return_value=mock.Mock(status_code=302)
         ) as mock_super_form_valid:
             response = view.form_valid(mock_form, mock_formset)
             mock_super_form_valid.assert_called_once_with(form=mock_form)
@@ -229,12 +229,12 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         view.kwargs = {"pk": self.test_model.pk}
 
         # Create mock form and formset
-        mock_form = Mock()
+        mock_form = mock.Mock()
         mock_form.save.return_value = self.test_model
-        mock_formset = Mock()
+        mock_formset = mock.Mock()
         mock_formset.instance = self.test_model
 
-        with patch.object(generic.UpdateView, "form_valid", return_value=Mock(status_code=302)):
+        with mock.patch.object(generic.UpdateView, "form_valid", return_value=mock.Mock(status_code=302)):
             response = view.form_valid(mock_form, mock_formset)
 
         self.assertTrue(view.additional_is_valid_called)
@@ -248,12 +248,12 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         view.kwargs = {"pk": self.test_model.pk}
 
         # Create mock form and formset
-        mock_form = Mock()
+        mock_form = mock.Mock()
         mock_form.save.return_value = self.test_model
-        mock_formset = Mock()
+        mock_formset = mock.Mock()
         mock_formset.instance = self.test_model
 
-        with patch.object(generic.UpdateView, "form_valid", return_value=Mock(status_code=302)):
+        with mock.patch.object(generic.UpdateView, "form_valid", return_value=mock.Mock(status_code=302)):
             # Should not raise AttributeError
             response = view.form_valid(mock_form, mock_formset)
             self.assertEqual(response.status_code, 302)
@@ -266,13 +266,13 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         view.kwargs = {"pk": self.test_model.pk}
 
         # Create mock form and formset
-        mock_form = Mock()
+        mock_form = mock.Mock()
         new_object = MySingleSignalModel.objects.create(value=30)
         mock_form.save.return_value = new_object
-        mock_formset = Mock()
+        mock_formset = mock.Mock()
         mock_formset.instance = self.test_model
 
-        with patch.object(generic.UpdateView, "form_valid", return_value=Mock(status_code=302)):
+        with mock.patch.object(generic.UpdateView, "form_valid", return_value=mock.Mock(status_code=302)):
             # Before form_valid, the formset instance should be test_model
             self.assertEqual(mock_formset.instance, self.test_model)
 
@@ -301,11 +301,11 @@ class FormsetMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        with patch.object(
+        with mock.patch.object(
             view, "get_formset_kwargs", return_value={"instance": self.test_model}
         ) as mock_get_formset_kwargs:
-            with patch("ambient_toolbox.view_layer.formset_view_mixin.render") as mock_render:
-                mock_render.return_value = Mock(status_code=200)
+            with mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render") as mock_render:
+                mock_render.return_value = mock.Mock(status_code=200)
                 view.post(request)
                 mock_get_formset_kwargs.assert_called()
 
@@ -360,14 +360,14 @@ class FormsetUpdateViewMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        with patch.object(view, "get_object", return_value=self.test_model) as mock_get_object:
-            with patch("ambient_toolbox.view_layer.formset_view_mixin.render") as mock_render:
-                mock_render.return_value = Mock(status_code=200)
+        with mock.patch.object(view, "get_object", return_value=self.test_model) as mock_get_object:
+            with mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render") as mock_render:
+                mock_render.return_value = mock.Mock(status_code=200)
                 view.post(request)
                 mock_get_object.assert_called_once()
                 self.assertEqual(view.object, self.test_model)
 
-    @patch("ambient_toolbox.view_layer.formset_view_mixin.render")
+    @mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render")
     def test_post_calls_parent_post(self, mock_render):
         """Test that post() calls parent class post() method."""
         factory = RequestFactory()
@@ -386,11 +386,11 @@ class FormsetUpdateViewMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        mock_render.return_value = Mock(status_code=200)
+        mock_render.return_value = mock.Mock(status_code=200)
 
         # Verify that the parent post() is called by checking that
         # get_form_class and get_form_kwargs are called
-        with patch.object(view, "get_form_class", return_value=MySingleSignalModelForm) as mock_get_form_class:
+        with mock.patch.object(view, "get_form_class", return_value=MySingleSignalModelForm) as mock_get_form_class:
             view.post(request)
             mock_get_form_class.assert_called()
 
@@ -443,12 +443,12 @@ class FormsetCreateViewMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        with patch("ambient_toolbox.view_layer.formset_view_mixin.render") as mock_render:
-            mock_render.return_value = Mock(status_code=200)
+        with mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render") as mock_render:
+            mock_render.return_value = mock.Mock(status_code=200)
             view.post(request)
             self.assertIsNone(view.object)
 
-    @patch("ambient_toolbox.view_layer.formset_view_mixin.render")
+    @mock.patch("ambient_toolbox.view_layer.formset_view_mixin.render")
     def test_post_calls_parent_post(self, mock_render):
         """Test that post() calls parent class post() method."""
         factory = RequestFactory()
@@ -466,11 +466,11 @@ class FormsetCreateViewMixinTest(RequestProviderMixin, TestCase):
         )
         view.request = request
 
-        mock_render.return_value = Mock(status_code=200)
+        mock_render.return_value = mock.Mock(status_code=200)
 
         # Verify that the parent post() is called by checking that
         # get_form_class and get_form_kwargs are called
-        with patch.object(view, "get_form_class", return_value=MySingleSignalModelForm) as mock_get_form_class:
+        with mock.patch.object(view, "get_form_class", return_value=MySingleSignalModelForm) as mock_get_form_class:
             view.post(request)
             mock_get_form_class.assert_called()
 
@@ -492,16 +492,16 @@ class FormsetCreateViewMixinTest(RequestProviderMixin, TestCase):
         view.request = request
 
         # Mock form and formset is_valid to return True
-        mock_form = Mock()
+        mock_form = mock.Mock()
         mock_form.is_valid.return_value = True
-        mock_formset = Mock()
+        mock_formset = mock.Mock()
         mock_formset.is_valid.return_value = True
 
-        with patch.object(view, "get_form_class") as mock_get_form_class:
-            mock_get_form_class.return_value = Mock(return_value=mock_form)
-            with patch.object(view, "formset_class", return_value=mock_formset):
-                with patch.object(view, "form_valid") as mock_form_valid:
-                    mock_form_valid.return_value = Mock(status_code=302)
+        with mock.patch.object(view, "get_form_class") as mock_get_form_class:
+            mock_get_form_class.return_value = mock.Mock(return_value=mock_form)
+            with mock.patch.object(view, "formset_class", return_value=mock_formset):
+                with mock.patch.object(view, "form_valid") as mock_form_valid:
+                    mock_form_valid.return_value = mock.Mock(status_code=302)
                     view.post(request)
 
                     # Verify that a new object would be created in the normal flow
