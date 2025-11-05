@@ -37,47 +37,47 @@ def test_month_helper_january():
 
 
 def test_month_helper_february():
-    assert MonthHelper.FEBRUARY == 2
+    assert MonthHelper.FEBRUARY == 2  # noqa: PLR2004
 
 
 def test_month_helper_march():
-    assert MonthHelper.MARCH == 3
+    assert MonthHelper.MARCH == 3  # noqa: PLR2004
 
 
 def test_month_helper_april():
-    assert MonthHelper.APRIL == 4
+    assert MonthHelper.APRIL == 4  # noqa: PLR2004
 
 
 def test_month_helper_may():
-    assert MonthHelper.MAY == 5
+    assert MonthHelper.MAY == 5  # noqa: PLR2004
 
 
 def test_month_helper_june():
-    assert MonthHelper.JUNE == 6
+    assert MonthHelper.JUNE == 6  # noqa: PLR2004
 
 
 def test_month_helper_july():
-    assert MonthHelper.JULY == 7
+    assert MonthHelper.JULY == 7  # noqa: PLR2004
 
 
 def test_month_helper_august():
-    assert MonthHelper.AUGUST == 8
+    assert MonthHelper.AUGUST == 8  # noqa: PLR2004
 
 
 def test_month_helper_september():
-    assert MonthHelper.SEPTEMBER == 9
+    assert MonthHelper.SEPTEMBER == 9  # noqa: PLR2004
 
 
 def test_month_helper_october():
-    assert MonthHelper.OCTOBER == 10
+    assert MonthHelper.OCTOBER == 10  # noqa: PLR2004
 
 
 def test_month_helper_november():
-    assert MonthHelper.NOVEMBER == 11
+    assert MonthHelper.NOVEMBER == 11  # noqa: PLR2004
 
 
 def test_month_helper_december():
-    assert MonthHelper.DECEMBER == 12
+    assert MonthHelper.DECEMBER == 12  # noqa: PLR2004
 
 
 # ==============================================================================
@@ -90,27 +90,27 @@ def test_date_helper_orm_sunday():
 
 
 def test_date_helper_orm_monday():
-    assert DateHelper.ORM_MONDAY == 2
+    assert DateHelper.ORM_MONDAY == 2  # noqa: PLR2004
 
 
 def test_date_helper_orm_tuesday():
-    assert DateHelper.ORM_TUESDAY == 3
+    assert DateHelper.ORM_TUESDAY == 3  # noqa: PLR2004
 
 
 def test_date_helper_orm_wednesday():
-    assert DateHelper.ORM_WEDNESDAY == 4
+    assert DateHelper.ORM_WEDNESDAY == 4  # noqa: PLR2004
 
 
 def test_date_helper_orm_thursday():
-    assert DateHelper.ORM_THURSDAY == 5
+    assert DateHelper.ORM_THURSDAY == 5  # noqa: PLR2004
 
 
 def test_date_helper_orm_friday():
-    assert DateHelper.ORM_FRIDAY == 6
+    assert DateHelper.ORM_FRIDAY == 6  # noqa: PLR2004
 
 
 def test_date_helper_orm_saturday():
-    assert DateHelper.ORM_SATURDAY == 7
+    assert DateHelper.ORM_SATURDAY == 7  # noqa: PLR2004
 
 
 # ==============================================================================
@@ -425,12 +425,12 @@ def test_get_start_and_end_date_from_calendar_week_year_starting_sunday():
 
 def test_get_next_calendar_week_mid_year():
     """Test getting next calendar week in the middle of the year."""
-    assert get_next_calendar_week(datetime.date(year=2020, month=9, day=19)) == 39
+    assert get_next_calendar_week(datetime.date(year=2020, month=9, day=19)) == 39  # noqa: PLR2004
 
 
 def test_get_next_calendar_week_beginning_of_year():
     """Test getting next calendar week at the beginning of the year."""
-    assert get_next_calendar_week(datetime.date(year=2020, month=1, day=1)) == 2
+    assert get_next_calendar_week(datetime.date(year=2020, month=1, day=1)) == 2  # noqa: PLR2004
 
 
 def test_get_next_calendar_week_end_of_year():
@@ -495,14 +495,14 @@ def test_date_month_delta_full_year():
     """Test date delta of exactly one year (12 months)."""
     start_date = datetime.date(year=2017, month=1, day=1)
     end_date = datetime.date(year=2018, month=1, day=1)
-    assert date_month_delta(start_date, end_date) == 12
+    assert date_month_delta(start_date, end_date) == 12  # noqa: PLR2004
 
 
 def test_date_month_delta_two_and_half_years():
     """Test date delta of 30 months (2.5 years)."""
     start_date = datetime.date(year=2017, month=1, day=1)
     end_date = datetime.date(year=2019, month=7, day=1)
-    assert date_month_delta(start_date, end_date) == 30
+    assert date_month_delta(start_date, end_date) == 30  # noqa: PLR2004
 
 
 def test_date_month_delta_no_difference():
@@ -604,19 +604,19 @@ def test_get_first_and_last_of_month_with_date_object_april():
 @freeze_time("2017-06-26")
 def test_get_current_year_mid_year():
     """Test getting current year in the middle of the year."""
-    assert get_current_year() == 2017
+    assert get_current_year() == 2017  # noqa: PLR2004
 
 
 @freeze_time("2017-12-31 23:59")
 def test_get_current_year_end_of_year():
     """Test getting current year at the end of the year."""
-    assert get_current_year() == 2017
+    assert get_current_year() == 2017  # noqa: PLR2004
 
 
 @freeze_time("2017-01-01 00:00")
 def test_get_current_year_beginning_of_year():
     """Test getting current year at the beginning of the year."""
-    assert get_current_year() == 2017
+    assert get_current_year() == 2017  # noqa: PLR2004
 
 
 # ==============================================================================
