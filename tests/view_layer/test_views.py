@@ -1,7 +1,6 @@
 from unittest import mock
 from unittest.mock import Mock
 
-import pytest
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.views import generic
@@ -14,7 +13,6 @@ from ambient_toolbox.view_layer.views import (
     CustomPermissionMixin,
     RequestInFormKwargsMixin,
     ToggleView,
-    UserInFormKwargsMixin,
 )
 from testapp.views import UserInFormKwargsMixinView
 
@@ -72,7 +70,6 @@ class RequestInFormKwargsMixinTest(RequestProviderMixin, TestCase):
     class TestView(RequestInFormKwargsMixin, generic.FormView):
         """Test view that uses RequestInFormKwargsMixin."""
 
-        pass
 
     def test_get_form_kwargs_adds_request(self):
         """Test that get_form_kwargs() adds request to kwargs."""
