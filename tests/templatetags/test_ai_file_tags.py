@@ -1,3 +1,5 @@
+import os
+import tempfile
 from unittest.mock import Mock
 
 from django.test import TestCase, override_settings
@@ -55,9 +57,6 @@ class AiFileTagTest(TestCase):
     def test_filesize_file_exists(self, tmp_path=None):
         """Test filesize filter with existing file"""
         # Create a temporary file
-        import os
-        import tempfile
-
         with tempfile.NamedTemporaryFile(mode="w", delete=False, dir="/tmp", prefix="test_") as f:
             f.write("test content")
             temp_filename = os.path.basename(f.name)
