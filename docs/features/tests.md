@@ -1,5 +1,11 @@
 # Tests
 
+## Helpers
+
+### Block external requests in tests
+
+tbw
+
 ## Mixins
 
 ### ClassBasedViewTestMixin
