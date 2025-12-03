@@ -1,4 +1,5 @@
 import socket
+from unittest import mock
 
 import pytest
 
@@ -85,3 +86,112 @@ class TestBlockExternalRequestsFixture:
             with pytest.raises(AssertionError) as exc_info:
                 socket.getaddrinfo(ip, 80)
             assert f"External request to {ip} detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithDjangoSettings:
+    """Tests for the block_external_requests fixture with Django settings configured."""
+
+    @pytest.fixture(autouse=True)
+    def setup_settings(self, settings, monkeypatch):
+        """Set up Django settings and mock getaddrinfo for test domains."""
+        settings.BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = ["example.test", "api.test"]
+
+        # Store the original getaddrinfo before any patching
+        original_getaddrinfo = (
+            socket.getaddrinfo.__wrapped__ if hasattr(socket.getaddrinfo, "__wrapped__") else socket._socket.getaddrinfo
+        )
+
+        def mock_getaddrinfo(host, port, *args, **kwargs):
+            # Return dummy data for test domains
+            if host in ["example.test", "api.test"]:
+                return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", port))]
+            return original_getaddrinfo(host, port, *args, **kwargs)
+
+        monkeypatch.setattr(socket, "_original_getaddrinfo", mock_getaddrinfo, raising=False)
+
+    def test_fixture_allows_additional_hosts_from_settings(self, block_external_requests):
+        """Test that additional hosts from Django settings are allowed."""
+        # Mock the underlying getaddrinfo to return dummy data
+        with mock.patch("socket._socket.getaddrinfo") as mock_gai:
+            mock_gai.return_value = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 80))]
+
+            # Verify default hosts still work
+            result = socket.getaddrinfo("localhost", 80)
+            assert result is not None
+
+            # Verify additional hosts from settings are allowed
+            result = socket.getaddrinfo("example.test", 80)
+            assert result is not None
+
+            result = socket.getaddrinfo("api.test", 80)
+            assert result is not None
+
+        # Verify other external hosts are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("example.com", 80)
+        assert "External request to example.com detected" in str(exc_info.value)
+
+    def test_fixture_with_additional_settings_and_ports(self, block_external_requests):
+        """Test that additional hosts work with different ports."""
+        with mock.patch("socket._socket.getaddrinfo") as mock_gai:
+            mock_gai.return_value = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 80))]
+
+            for port in [80, 443, 8000, 8080]:
+                result = socket.getaddrinfo("example.test", port)
+                assert result is not None
+
+    def test_fixture_still_blocks_unlisted_hosts(self, block_external_requests):
+        """Test that hosts not in settings are still blocked."""
+        blocked_hosts = ["google.com", "github.com", "8.8.8.8"]
+        for host in blocked_hosts:
+            with pytest.raises(AssertionError) as exc_info:
+                socket.getaddrinfo(host, 80)
+            assert f"External request to {host} detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithIPAddressSettings:
+    """Tests for the fixture with IP address settings."""
+
+    @pytest.fixture(autouse=True)
+    def setup_settings(self, settings):
+        """Set up Django settings before the test runs."""
+        settings.BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = ["192.168.1.100", "10.0.0.50"]
+
+    def test_fixture_allows_ip_addresses_from_settings(self, block_external_requests):
+        """Test that IP addresses from Django settings are allowed."""
+        # Mock the underlying getaddrinfo to return dummy data
+        with mock.patch("socket._socket.getaddrinfo") as mock_gai:
+            mock_gai.return_value = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("192.168.1.100", 80))]
+
+            # Verify additional IPs from settings are allowed
+            result = socket.getaddrinfo("192.168.1.100", 80)
+            assert result is not None
+
+            mock_gai.return_value = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("10.0.0.50", 80))]
+            result = socket.getaddrinfo("10.0.0.50", 80)
+            assert result is not None
+
+        # Verify other IPs are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("8.8.8.8", 80)
+        assert "External request to 8.8.8.8 detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithEmptySettings:
+    """Tests for the fixture with empty settings list."""
+
+    @pytest.fixture(autouse=True)
+    def setup_settings(self, settings):
+        """Set up Django settings before the test runs."""
+        settings.BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = []
+
+    def test_fixture_with_empty_settings_list(self, block_external_requests):
+        """Test that empty settings list doesn't break functionality."""
+        # Verify default hosts still work
+        result = socket.getaddrinfo("localhost", 80)
+        assert result is not None
+
+        # Verify external hosts are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("example.com", 80)
+        assert "External request to example.com detected" in str(exc_info.value)
