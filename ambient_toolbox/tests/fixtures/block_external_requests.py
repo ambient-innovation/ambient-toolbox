@@ -3,7 +3,7 @@ import socket
 import pytest
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def block_external_requests(monkeypatch):
     """
     Source: https://blog.pecar.me/disable-network-requets-when-running-pytest

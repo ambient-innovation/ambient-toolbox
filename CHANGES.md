@@ -1,5 +1,8 @@
 # Changelog
 
+**12.6.2** (2025-12-03)
+  * Avoid using the pytest fixture implicitly
+
 **12.6.1** (2025-12-03)
   * Added missing docs
 
