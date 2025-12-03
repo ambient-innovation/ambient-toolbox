@@ -1,5 +1,9 @@
 # Changelog
 
+**12.6.0** (2025-12-03)
+  * Added pytest fixture `block_external_requests` for blocking external requests during tests
+  * Added Django test runner `BlockingExternalRequestsRunner` for blocking external requests during tests
+
 **12.5.10** (2025-11-05)
   * Added tests for previously uncovered code to achieve 100% branch coverage
 
