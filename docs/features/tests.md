@@ -4,7 +4,56 @@
 
 ### Block external requests in tests
 
-tbw
+When writing tests, it's important to ensure they don't accidentally make external network requests. This helps keep
+tests fast, reliable, and prevents unintended side effects. The toolbox provides two helpers to block external requests
+while allowing localhost connections.
+
+#### Pytest Fixture: `block_external_requests`
+
+For pytest-based tests, use the `block_external_requests` fixture. This fixture patches `socket.getaddrinfo` to only
+allow connections to localhost addresses (`localhost`, `127.0.0.1`, `::1`, `0.0.0.0`).
+
+To use it, add it to your `conftest.py`:
+
+```python
+from ambient_toolbox.tests.fixtures.block_external_requests import (
+    block_external_requests,
+)
+```
+
+The fixture is marked with `autouse=True`, so it will automatically apply to all tests in your test suite. If you need
+to use it explicitly:
+
+```python
+def test_my_function(block_external_requests):
+    # This test can only make requests to localhost
+    # Any attempt to connect to external hosts will raise an AssertionError
+    result = my_function()  # If this tries to call example.com, test will fail
+    assert result is not None
+```
+
+#### Django Test Runner: `BlockingExternalRequestsRunner`
+
+For Django projects, you can use the custom test runner to block external requests across your entire test suite.
+
+Add this to your Django settings:
+
+```python
+TEST_RUNNER = "ambient_toolbox.tests.test_runners.block_external_requests.BlockingExternalRequestsRunner"
+```
+
+Then run your tests normally:
+
+```bash
+python manage.py test
+```
+
+The runner will automatically block all external network requests during test execution, allowing only localhost
+connections.
+
+**Note:** Both helpers raise an `AssertionError` when an external request is detected, with a message like:
+`"External request to example.com detected"`. This makes it easy to identify which tests are making unwanted external
+calls.
 
 ## Mixins
 

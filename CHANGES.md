@@ -1,5 +1,8 @@
 # Changelog
 
+**12.6.1** (2025-12-03)
+  * Added missing docs
+
 **12.6.0** (2025-12-03)
   * Added pytest fixture `block_external_requests` for blocking external requests during tests
   * Added Django test runner `BlockingExternalRequestsRunner` for blocking external requests during tests
