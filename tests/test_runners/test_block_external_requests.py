@@ -153,3 +153,20 @@ class BlockingExternalRequestsRunnerTest(TestCase):
                 self.assertIsNotNone(result)
 
                 self.runner.teardown_test_environment()
+
+    def test_handles_settings_not_configured(self):
+        """Test that the runner works correctly when settings are not configured."""
+        with mock.patch.object(type(self.runner).__bases__[0], "setup_test_environment"):
+            with mock.patch.object(type(self.runner).__bases__[0], "teardown_test_environment"):
+                # This should not raise an exception even if settings aren't fully configured
+                self.runner.setup_test_environment()
+
+                # Verify default hosts still work
+                result = socket.getaddrinfo("localhost", 80)
+                self.assertIsNotNone(result)
+
+                # Verify external hosts are still blocked
+                with self.assertRaisesRegex(AssertionError, r"External request to 'example\.com' detected"):
+                    socket.getaddrinfo("example.com", 80)
+
+                self.runner.teardown_test_environment()

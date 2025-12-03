@@ -1,5 +1,9 @@
 # Changelog
 
+**12.6.3**
+  * Extended `block_external_requests` fixture and `BlockingExternalRequestsRunner` to support additional allowed hosts
+  via Django setting `BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS`
+
 **12.6.2** (2025-12-03)
   * Avoid using the pytest fixture implicitly
 
