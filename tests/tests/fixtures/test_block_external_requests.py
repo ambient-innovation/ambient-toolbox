@@ -195,3 +195,149 @@ class TestBlockExternalRequestsFixtureWithEmptySettings:
         with pytest.raises(AssertionError) as exc_info:
             socket.getaddrinfo("example.com", 80)
         assert "External request to example.com detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithAdditionalHosts:
+    """Tests for the fixture when Django settings provide additional allowed hosts."""
+
+    @pytest.fixture(autouse=True)
+    def setup_additional_hosts(self):
+        """Set up environment where Django settings provide additional hosts."""
+        from django.conf import settings as real_settings  # noqa: PLC0415
+
+        # Create a wrapper that returns additional hosts
+        class MockSettingsWrapper:
+            BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = ["test.example.com", "api.example.com"]
+
+            def __getattr__(self, name):
+                if name == "BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS":
+                    return self.BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS
+                return getattr(real_settings, name)
+
+        # Patch settings before the fixture runs
+        with mock.patch("django.conf.settings", MockSettingsWrapper()):
+            yield
+
+    def test_fixture_with_additional_hosts_from_settings(self, block_external_requests):
+        """Test that the fixture allows additional hosts from Django settings."""
+        # Verify default hosts still work
+        result = socket.getaddrinfo("localhost", 80)
+        assert result is not None
+
+        # Mock the underlying socket to return dummy data for test domains
+        with mock.patch("socket._socket.getaddrinfo") as mock_gai:
+            mock_gai.return_value = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 80))]
+
+            # Verify additional hosts from settings are allowed
+            result = socket.getaddrinfo("test.example.com", 80)
+            assert result is not None
+
+            result = socket.getaddrinfo("api.example.com", 80)
+            assert result is not None
+
+        # Verify other external hosts are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("google.com", 80)
+        assert "External request to google.com detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithNoneSettings:
+    """Tests for the fixture when Django settings return None for additional hosts."""
+
+    @pytest.fixture(autouse=True)
+    def setup_none_settings(self):
+        """Set up environment where Django settings return None."""
+        from django.conf import settings as real_settings  # noqa: PLC0415
+
+        # Create a wrapper that returns None for the setting
+        class MockSettingsWrapper:
+            BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = None
+
+            def __getattr__(self, name):
+                if name == "BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS":
+                    return self.BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS
+                return getattr(real_settings, name)
+
+        # Patch settings before the fixture runs
+        with mock.patch("django.conf.settings", MockSettingsWrapper()):
+            yield
+
+    def test_fixture_with_none_additional_hosts(self, block_external_requests):
+        """Test that the fixture handles None additional hosts correctly."""
+        # Verify default hosts still work
+        result = socket.getaddrinfo("localhost", 80)
+        assert result is not None
+
+        # Verify external hosts are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("example.com", 80)
+        assert "External request to example.com detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithImproperlyConfigured:
+    """Tests for the fixture when Django settings raise ImproperlyConfigured."""
+
+    @pytest.fixture(autouse=True)
+    def setup_improperly_configured(self):
+        """Set up environment where Django settings raise ImproperlyConfigured."""
+        from django.conf import settings as real_settings  # noqa: PLC0415
+        from django.core.exceptions import ImproperlyConfigured  # noqa: PLC0415
+
+        # Create a wrapper that raises ImproperlyConfigured
+        class MockSettingsWrapper:
+            def __getattr__(self, name):
+                if name == "BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS":
+                    raise ImproperlyConfigured("Settings are not configured properly")
+                return getattr(real_settings, name)
+
+        # Patch settings before the fixture runs
+        with mock.patch("django.conf.settings", MockSettingsWrapper()):
+            yield
+
+    def test_fixture_handles_improperly_configured_exception(self, block_external_requests):
+        """Test that the fixture gracefully handles ImproperlyConfigured exception."""
+        # Verify default hosts still work (fixture should fall back to defaults)
+        result = socket.getaddrinfo("localhost", 80)
+        assert result is not None
+
+        # Verify external hosts are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("example.com", 80)
+        assert "External request to example.com detected" in str(exc_info.value)
+
+
+class TestBlockExternalRequestsFixtureWithoutDjango:
+    """Tests for the fixture when Django is not available."""
+
+    @pytest.fixture(autouse=True)
+    def setup_no_django(self):
+        """Set up environment where Django is not available."""
+        original_import = __import__
+
+        def mock_import(name, *args, **kwargs):
+            if name in ("django.conf", "django.core.exceptions"):
+                raise ImportError(f"No module named '{name}'")
+            return original_import(name, *args, **kwargs)
+
+        # Patch imports before the fixture runs
+        with mock.patch("builtins.__import__", side_effect=mock_import):
+            # Reload the fixture module
+            from importlib import reload  # noqa: PLC0415
+
+            import ambient_toolbox.tests.fixtures.block_external_requests as fixture_module  # noqa: PLC0415
+
+            reload(fixture_module)
+            yield
+            # Reload again to restore
+            reload(fixture_module)
+
+    def test_fixture_handles_django_import_error(self, block_external_requests):
+        """Test that the fixture gracefully handles ImportError when Django is not available."""
+        # Verify default hosts still work (fixture should fall back to defaults)
+        result = socket.getaddrinfo("localhost", 80)
+        assert result is not None
+
+        # Verify external hosts are still blocked
+        with pytest.raises(AssertionError) as exc_info:
+            socket.getaddrinfo("example.com", 80)
+        assert "External request to example.com detected" in str(exc_info.value)
