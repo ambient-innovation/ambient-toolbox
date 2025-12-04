@@ -13,24 +13,6 @@ while allowing localhost connections.
 For pytest-based tests, use the `block_external_requests` fixture. This fixture patches `socket.getaddrinfo` to only
 allow connections to localhost addresses (`localhost`, `127.0.0.1`, `::1`, `0.0.0.0`).
 
-To make the fixture available, add it to your `conftest.py`:
-
-```python
-from ambient_toolbox.tests.fixtures.block_external_requests import (
-    block_external_requests,
-)
-```
-
-Then use it explicitly in tests where you want to block external requests:
-
-```python
-def test_my_function(block_external_requests):
-    # This test can only make requests to localhost
-    # Any attempt to connect to external hosts will raise an AssertionError
-    result = my_function()  # If this tries to call example.com, test will fail
-    assert result is not None
-```
-
 If you want to apply it to all tests in your suite automatically, create a wrapper fixture in your `conftest.py`:
 
 ```python
