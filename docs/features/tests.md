@@ -46,6 +46,21 @@ def block_external_requests_autouse(_block_external_requests):
     pass
 ```
 
+**Allowing additional hosts:** If you need to allow specific external hosts (e.g., a test API server), you can configure
+them via Django settings:
+
+```python
+# In your Django settings or test settings
+BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = [
+    "api.test-server.com",
+    "cdn.test-server.com",
+    "192.168.1.100",  # IP addresses are also supported
+]
+```
+
+The fixture will automatically detect and apply these settings if Django is available and configured. If Django is not
+available or not configured, it will simply use the default localhost addresses.
+
 #### Django Test Runner: `BlockingExternalRequestsRunner`
 
 For Django projects, you can use the custom test runner to block external requests across your entire test suite.
@@ -64,6 +79,21 @@ python manage.py test
 
 The runner will automatically block all external network requests during test execution, allowing only localhost
 connections.
+
+**Allowing additional hosts:** If you need to allow specific external hosts (e.g., a test API server), you can configure
+them via Django settings:
+
+```python
+# In your Django settings or test settings
+BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = [
+    "api.test-server.com",
+    "cdn.test-server.com",
+    "192.168.1.100",  # IP addresses are also supported
+]
+```
+
+The runner will merge these additional hosts with the default localhost addresses (`localhost`, `127.0.0.1`, `::1`,
+`0.0.0.0`), so both default and custom hosts will be allowed during test execution.
 
 **Note:** Both helpers raise an `AssertionError` when an external request is detected, with a message like:
 `"External request to example.com detected"`. This makes it easy to identify which tests are making unwanted external

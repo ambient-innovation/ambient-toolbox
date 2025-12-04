@@ -1,6 +1,8 @@
 import socket
 from unittest import TestCase, mock
 
+from django.test import override_settings
+
 from ambient_toolbox.tests.test_runners.block_external_requests import BlockingExternalRequestsRunner
 
 
@@ -153,3 +155,117 @@ class BlockingExternalRequestsRunnerTest(TestCase):
                 self.assertIsNotNone(result)
 
                 self.runner.teardown_test_environment()
+
+    def test_handles_settings_not_configured(self):
+        """Test that the runner works correctly when settings are not configured."""
+        with mock.patch.object(type(self.runner).__bases__[0], "setup_test_environment"):
+            with mock.patch.object(type(self.runner).__bases__[0], "teardown_test_environment"):
+                # This should not raise an exception even if settings aren't fully configured
+                self.runner.setup_test_environment()
+
+                # Verify default hosts still work
+                result = socket.getaddrinfo("localhost", 80)
+                self.assertIsNotNone(result)
+
+                # Verify external hosts are still blocked
+                with self.assertRaisesRegex(AssertionError, r"External request to 'example\.com' detected"):
+                    socket.getaddrinfo("example.com", 80)
+
+                self.runner.teardown_test_environment()
+
+    @override_settings(BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS=["example.test", "api.test"])
+    def test_additional_hosts_from_django_settings(self):
+        """Test that additional hosts from Django settings are allowed."""
+        with mock.patch.object(type(self.runner).__bases__[0], "setup_test_environment"):
+            with mock.patch.object(type(self.runner).__bases__[0], "teardown_test_environment"):
+                self.runner.setup_test_environment()
+
+                # Mock the underlying socket to return dummy data for test domains
+                with mock.patch("socket._socket.getaddrinfo") as mock_gai:
+                    mock_gai.return_value = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 80))]
+
+                    # Verify default hosts still work
+                    result = socket.getaddrinfo("localhost", 80)
+                    self.assertIsNotNone(result)
+
+                    # Verify additional hosts from settings are allowed
+                    result = socket.getaddrinfo("example.test", 80)
+                    self.assertIsNotNone(result)
+
+                    result = socket.getaddrinfo("api.test", 80)
+                    self.assertIsNotNone(result)
+
+                # Verify other external hosts are still blocked
+                with self.assertRaisesRegex(AssertionError, r"External request to 'example\.com' detected"):
+                    socket.getaddrinfo("example.com", 80)
+
+                self.runner.teardown_test_environment()
+
+    @override_settings(BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS=["192.168.1.1", "10.0.0.1"])
+    def test_additional_ip_addresses_from_django_settings(self):
+        """Test that additional IP addresses from Django settings are allowed."""
+        with mock.patch.object(type(self.runner).__bases__[0], "setup_test_environment"):
+            with mock.patch.object(type(self.runner).__bases__[0], "teardown_test_environment"):
+                self.runner.setup_test_environment()
+
+                # Verify default hosts still work
+                result = socket.getaddrinfo("localhost", 80)
+                self.assertIsNotNone(result)
+
+                # Verify additional IPs from settings are allowed
+                result = socket.getaddrinfo("192.168.1.1", 80)
+                self.assertIsNotNone(result)
+
+                result = socket.getaddrinfo("10.0.0.1", 80)
+                self.assertIsNotNone(result)
+
+                # Verify other IPs are still blocked
+                with self.assertRaisesRegex(AssertionError, r"External request to '8\.8\.8\.8' detected"):
+                    socket.getaddrinfo("8.8.8.8", 80)
+
+                self.runner.teardown_test_environment()
+
+    @override_settings(BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS=[])
+    def test_empty_additional_hosts_setting(self):
+        """Test that empty additional hosts setting doesn't break functionality."""
+        with mock.patch.object(type(self.runner).__bases__[0], "setup_test_environment"):
+            with mock.patch.object(type(self.runner).__bases__[0], "teardown_test_environment"):
+                self.runner.setup_test_environment()
+
+                # Verify default hosts still work
+                result = socket.getaddrinfo("localhost", 80)
+                self.assertIsNotNone(result)
+
+                # Verify external hosts are still blocked
+                with self.assertRaisesRegex(AssertionError, r"External request to 'example\.com' detected"):
+                    socket.getaddrinfo("example.com", 80)
+
+                self.runner.teardown_test_environment()
+
+    def test_exception_when_accessing_settings(self):
+        """Test that the runner handles exceptions when accessing settings gracefully."""
+        with mock.patch.object(type(self.runner).__bases__[0], "setup_test_environment"):
+            with mock.patch.object(type(self.runner).__bases__[0], "teardown_test_environment"):
+                # Mock getattr in the module to raise an exception when accessing the setting
+                with mock.patch(
+                    "ambient_toolbox.tests.test_runners.block_external_requests.getattr",
+                    side_effect=lambda obj, name, default=None: (
+                        (_ for _ in ()).throw(RuntimeError("Settings error"))
+                        if name == "BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS"
+                        else getattr(obj, name)
+                        if default is None
+                        else getattr(obj, name, default)
+                    ),
+                ):
+                    # Should not raise - exception should be caught
+                    self.runner.setup_test_environment()
+
+                    # Verify default hosts still work
+                    result = socket.getaddrinfo("localhost", 80)
+                    self.assertIsNotNone(result)
+
+                    # Verify external hosts are still blocked
+                    with self.assertRaisesRegex(AssertionError, r"External request to 'example\.com' detected"):
+                        socket.getaddrinfo("example.com", 80)
+
+                    self.runner.teardown_test_environment()
