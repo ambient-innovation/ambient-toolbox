@@ -1,9 +1,12 @@
 # Changelog
 
-**12.6.4**
+**12.6.5** (2025-12-11)
+  * Maintenance updates via ambient-package-update
+
+**12.6.4** (2025-12-04)
   * Improved docs
 
-**12.6.3**
+**12.6.3** (2025-12-04)
   * Extended `block_external_requests` fixture and `BlockingExternalRequestsRunner` to support additional allowed hosts
   via Django setting `BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS`
 
