@@ -156,18 +156,18 @@ class TestStructureValidatorTest(TestCase):
     # Misplaced Test File Whitelist Tests
     # ============================================================================
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands", "special_tests"])
-    def test_get_misplaced_test_file_whitelist_from_settings(self):
-        """Test misplaced test file whitelist retrieval from Django settings."""
+    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers/commands", "special_tests"])
+    def test_get_misplaced_test_file_allowlist_from_settings(self):
+        """Test misplaced test file allowlist retrieval from Django settings."""
         service = StructureTestValidator()
-        whitelist = service._get_misplaced_test_file_whitelist()
+        whitelist = service._get_misplaced_test_file_allowlist()
 
         self.assertEqual(whitelist, ["handlers/commands", "special_tests"])
 
-    def test_get_misplaced_test_file_whitelist_fallback(self):
-        """Test misplaced test file whitelist fallback to toolbox settings."""
+    def test_get_misplaced_test_file_allowlist_fallback(self):
+        """Test misplaced test file allowlist fallback to toolbox settings."""
         service = StructureTestValidator()
-        whitelist = service._get_misplaced_test_file_whitelist()
+        whitelist = service._get_misplaced_test_file_allowlist()
 
         self.assertEqual(whitelist, [])
 
@@ -326,7 +326,7 @@ class TestStructureValidatorTest(TestCase):
 
             with override_settings(
                 TEST_STRUCTURE_VALIDATOR_BASE_DIR=Path(tmpdir),
-                TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers"],
+                TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers"],
             ):
                 service = StructureTestValidator()
                 service._check_misplaced_test_files()
@@ -470,7 +470,7 @@ class TestStructureValidatorTest(TestCase):
         TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH,
         TEST_STRUCTURE_VALIDATOR_APP_LIST=["testapp"],
         TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME="",
-        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands"],
+        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers/commands"],
     )
     def test_process_with_whitelist(self):
         """Test that whitelisted paths are not reported as issues."""

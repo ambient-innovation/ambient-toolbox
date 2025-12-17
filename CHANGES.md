@@ -8,6 +8,7 @@
   * **Breaking changes in `settings.py`:**
     * Rename `EMAIL_BACKEND_DOMAIN_WHITELIST` setting to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
     * Rename `TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST` setting to `TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST`
+    * Rename `TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST` setting to `TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST`
   *  **Breaking changes in `tests.structure_validator/test_structure_validator.StructureTestValidator`:**
     * Rename `file_whitelist` property to `file_allowlist`
     * Rename `_get_file_whitelist` method to `_get_file_allowlist`

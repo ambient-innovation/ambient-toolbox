@@ -203,5 +203,4 @@ You can define all of those settings variables in your main Django settings file
 | TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME                 | str  | "apps"                  | Directory where all your Django apps live in, can be set to "".          |
 | TEST_STRUCTURE_VALIDATOR_APP_LIST                      | list | settings.INSTALLED_APPS | List of all your Django apps you want to validate                        |
 | TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST        | list | []                      | Directories which will be ignored, will always ignore `__pycache__`      |
-| TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST | list | []                      | Test files which will be ignored even though they don't live in `tests/` |
-# TODO CT: Bruh: TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+| TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST | list | [] | Test files which are ignored even though they don't live in `tests/` |

@@ -107,10 +107,20 @@ class StructureTestValidator:
 
     @staticmethod
     def _get_misplaced_test_file_whitelist() -> list:
+        warnings.warn(
+            "_get_misplaced_test_file_whitelist() is deprecated and will be removed in a future version."
+            " Use _get_misplaced_test_file_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        return StructureTestValidator._get_misplaced_test_file_allowlist()
+
+    @staticmethod
+    def _get_misplaced_test_file_allowlist() -> list:
         try:
-            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST
         except AttributeError:
-            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
         if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_allowlist:
@@ -129,7 +139,7 @@ class StructureTestValidator:
     def _check_misplaced_test_files(self) -> None:
         """Check for files starting with 'test_' that are not in or under a 'tests/' directory."""
         base_dir = self._get_base_dir()
-        whitelist = self._get_misplaced_test_file_whitelist()
+        allowlist = self._get_misplaced_test_file_allowlist()
 
         for root, dirs, files in os.walk(base_dir):
             # Skip directories in the ignored list
@@ -148,10 +158,12 @@ class StructureTestValidator:
                     if file.startswith("test_") and file.endswith(".py"):
                         file_path = f"{cleaned_root}/{file}".replace("\\", "/")
 
-                        # Check if the file path matches any whitelist pattern
-                        is_whitelisted = any(whitelist_pattern in file_path for whitelist_pattern in whitelist)
+                        # Check if the file path matches any allowlist pattern
+                        is_allowlisted = any(
+                            allowlist_pattern in file_path for allowlist_pattern in allowlist
+                        )
 
-                        if not is_whitelisted:
+                        if not is_allowlisted:
                             self.issue_list.append(f"Test file found outside tests directory: {file_path!r}.")
 
     def _build_path_to_test_package(self, app: str) -> Path:
