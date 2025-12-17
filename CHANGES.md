@@ -1,5 +1,8 @@
 # Changelog
 
+**12.6.6** (2025-12-17)
+  * Update docs on how to use `block_external_requests` fixture
+
 **12.6.5** (2025-12-11)
   * Maintenance updates via ambient-package-update
 
