@@ -159,9 +159,7 @@ class StructureTestValidator:
                         file_path = f"{cleaned_root}/{file}".replace("\\", "/")
 
                         # Check if the file path matches any allowlist pattern
-                        is_allowlisted = any(
-                            allowlist_pattern in file_path for allowlist_pattern in allowlist
-                        )
+                        is_allowlisted = any(allowlist_pattern in file_path for allowlist_pattern in allowlist)
 
                         if not is_allowlisted:
                             self.issue_list.append(f"Test file found outside tests directory: {file_path!r}.")
