@@ -8,12 +8,14 @@ ensuring 100% code coverage and proper validation of test directory structures.
 import io
 import sys
 import tempfile
+import warnings
 from pathlib import Path
 from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase, override_settings
 
+from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
@@ -21,6 +23,194 @@ from ambient_toolbox.tests.structure_validator.test_structure_validator import S
 @override_settings(TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST=[".tox"])
 class TestStructureValidatorTest(TestCase):
     """Test cases for StructureTestValidator class."""
+
+    # ============================================================================
+    # Deprecated Allowlist Accessors
+    # ============================================================================
+
+    def test_accessing_test_structure_validator_file_whitelist_setting_warns_and_returns_whitelist_value(self):
+        """Deprecated TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST accessor warns about allowlist naming."""
+        original_value = list(toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST)
+        toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = ["my_file"]
+
+        try:
+            expected_message = (
+                "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
+                "Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
+            )
+
+            with mock.patch.object(warnings, "warn") as mocked_warn:
+                returned_settings = toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+
+            mocked_warn.assert_called_once_with(
+                expected_message,
+                category=DeprecationWarning,
+                stacklevel=1,
+            )
+            self.assertEqual(returned_settings, ["my_file"])
+        finally:
+            toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = original_value
+
+    def test_setting_test_structure_validator_file_whitelist_setting_warns_and_sets_whitelist_value(self):
+        """Setting deprecated TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST warns before storing the value."""
+        original_module_value = list(toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST)
+        had_original_settings = hasattr(settings, "_TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST")
+        original_settings_value = getattr(settings, "_TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST", None)
+
+        try:
+            expected_message = (
+                "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
+                "Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
+            )
+
+            with mock.patch.object(warnings, "warn") as mocked_warn:
+                toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = ["additional_file"]
+
+            mocked_warn.assert_called_once_with(
+                expected_message,
+                category=DeprecationWarning,
+                stacklevel=1,
+            )
+
+            self.assertEqual(toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST, ["additional_file"])
+        finally:
+            toolbox_settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = original_module_value
+            if had_original_settings:
+                settings._TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST = original_settings_value
+            elif hasattr(settings, "_TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST"):
+                delattr(settings, "_TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST")
+
+    def test_accessing_test_structure_validator_misplaced_test_file_whitelist_setting_warns_and_returns_whitelist_value(self):
+        """Deprecated TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST accessor warns about allowlist naming."""
+        original_value = list(toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST)
+        toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = ["handlers"]
+
+        try:
+            expected_message = (
+                "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
+                " Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead."
+            )
+
+            with mock.patch.object(warnings, "warn") as mocked_warn:
+                returned_settings = toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+
+            mocked_warn.assert_called_once_with(
+                expected_message,
+                category=DeprecationWarning,
+                stacklevel=1,
+            )
+            self.assertEqual(returned_settings, ["handlers"])
+        finally:
+            toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = original_value
+
+    def test_setting_test_structure_validator_misplaced_test_file_whitelist_setting_warns_and_sets_whitelist_value(self):
+        """Setting deprecated misplaced test file whitelist warns before storing the allowlist."""
+        original_module_value = list(toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST)
+        had_original_settings = hasattr(settings, "_TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST")
+        original_settings_value = getattr(settings, "_TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST", None)
+
+        try:
+            expected_message = (
+                "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
+                " Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead."
+            )
+
+            with mock.patch.object(warnings, "warn") as mocked_warn:
+                toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = ["handlers"]
+
+            mocked_warn.assert_called_once_with(
+                expected_message,
+                category=DeprecationWarning,
+                stacklevel=1,
+            )
+
+            self.assertEqual(toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST, ["handlers"])
+        finally:
+            toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = original_module_value
+            if had_original_settings:
+                settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = original_settings_value
+            elif hasattr(settings, "_TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST"):
+                delattr(settings, "_TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST")
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_accessing_file_whitelist_property_warns_and_returns__file_whitelist(self):
+        """Deprecated file_whitelist attribute warns and proxies to the allowlist."""
+        instance = StructureTestValidator()
+        expected_message = (
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead."
+        )
+
+        with mock.patch.object(warnings, "warn") as mocked_warn:
+            returned_allowlist = instance.file_whitelist
+
+        mocked_warn.assert_called_once_with(
+            expected_message,
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(returned_allowlist, ["__init__", "my_file"])
+
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_setting_file_whitelist_property_warns_and_sets__file_whitelist(self):
+        """Setting the deprecated file_whitelist property warns before updating the backer."""
+        validator_instance = StructureTestValidator()
+        expected_message = (
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead."
+        )
+
+        with mock.patch.object(warnings, "warn") as mocked_warn:
+            validator_instance.file_whitelist = ["some_file"]
+
+        mocked_warn.assert_called_once_with(
+            expected_message,
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        self.assertEqual(validator_instance._file_whitelist, ["some_file"])
+
+    def test_get_file_whitelist_warns_and_calls_get_file_allowlist(self):
+        """Deprecated _get_file_whitelist warns and redirects to _get_file_allowlist."""
+        expected_message = (
+            "_get_file_whitelist() is deprecated and will be removed in a future version."
+            "Use _get_file_allowlist() instead."
+        )
+
+        with mock.patch.object(warnings, "warn") as mocked_warn, mock.patch.object(
+            StructureTestValidator, "_get_file_allowlist"
+        ) as mocked_get_file_allowlist:
+            StructureTestValidator._get_file_whitelist()
+
+        mocked_warn.assert_called_once_with(
+            expected_message,
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        mocked_get_file_allowlist.assert_called_once()
+
+    def test_get_misplaced_test_file_whitelist_warns_and_calls_misplaced_test_file_allowlist(self):
+        """Deprecated _get_misplaced_test_file_whitelist warns and forwards to the allowlist."""
+        expected_message = (
+            "_get_misplaced_test_file_whitelist() is deprecated and will be removed in a future version."
+            " Use _get_misplaced_test_file_allowlist() instead."
+        )
+
+        with mock.patch.object(warnings, "warn") as mocked_warn, mock.patch.object(
+            StructureTestValidator, "_get_misplaced_test_file_allowlist"
+        ) as mocked_misplaced_allowlist:
+            StructureTestValidator._get_misplaced_test_file_whitelist()
+
+        mocked_warn.assert_called_once_with(
+            expected_message,
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+
+        mocked_misplaced_allowlist.assert_called_once()
 
     # ============================================================================
     # Initialization Tests
