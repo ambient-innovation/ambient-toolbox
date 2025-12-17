@@ -3,9 +3,8 @@
 ## Setup package for development
 
 - Create a Python virtualenv and activate it
-- Install "pip-tools" with `pip install -U pip-tools`
-- Compile the requirements with `pip-compile --extra dev,drf,graphql,bleacher,gitlab-coverage,sentry,view-layer, -o requirements.txt pyproject.toml --resolver=backtracking`
-- Sync the dependencies with your virtualenv with `pip-sync`
+- Install "uv" with `pip install -U uv`
+- Sync the requirements with `uv sync --frozen --extra dev --extra drf --extra graphql --extra import-linter --extra bleacher --extra gitlab-coverage --extra sentry --extra view-layer`
 
 ## Add functionality
 
@@ -58,7 +57,6 @@ Example: run all hooks of push stage on all files
 - To build the documentation, run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
 
-
 ### Translation files
 
 If you have added custom text, make sure to wrap it in `_()` where `_` is
@@ -66,12 +64,12 @@ gettext_lazy (`from django.utils.translation import gettext_lazy as _`).
 
 How to create translation file:
 
-* Navigate to `ambient-toolbox`
+* Navigate to `ambient_toolbox`
 * `python manage.py makemessages -l de`
 * Have a look at the new/changed files within `ambient_toolbox/locale`
 
 How to compile translation files:
 
-* Navigate to `ambient-toolbox`
+* Navigate to `ambient_toolbox`
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `ambient_toolbox/locale`

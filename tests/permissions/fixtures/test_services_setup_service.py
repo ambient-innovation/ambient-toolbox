@@ -10,7 +10,7 @@ class PermissionSetupServiceTest(TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
 
-        cls.group, created = Group.objects.get_or_create(name="my_group")
+        cls.group, _created = Group.objects.get_or_create(name="my_group")
 
         cls.permission_view = Permission.objects.get_by_natural_key(
             app_label="testapp", codename="view_mysinglesignalmodel", model="mysinglesignalmodel"

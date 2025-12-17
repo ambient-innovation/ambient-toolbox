@@ -1,9 +1,7 @@
-from typing import Optional
-
 from django.conf import settings
 
 
-def get_static_role_permissions_path() -> Optional[str]:
+def get_static_role_permissions_path() -> str | None:
     """
     Path where role permissions are defined at.
     """

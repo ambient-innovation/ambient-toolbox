@@ -1,6 +1,6 @@
 # Changelog
 
-**12.2.2** (2025-06-07)
+**12.6.6** (2025-12-17)
   * **Breaking changes in `mail.backends.whitelist_smtp.WhitelistEmailBackend`:**
     * Renamed `WhitelistEmailBackend` to `AllowlistEmailBackend` and moved to `mail.backends.allowlist_smtp`
     * Renamed `get_domain_whitelist` method to `get_domain_allowlist`
@@ -14,6 +14,91 @@
   * **Breaking change:** Rename `blacklisted_fields` kwarg of `utils.object_to_dict` to `blocklisted_fields`
 
   - Introduce deprecation warnings for all "white-XY" and "black-XY" terms
+
+
+**12.6.5** (2025-12-11)
+  * Maintenance updates via ambient-package-update
+
+**12.6.4** (2025-12-04)
+  * Improved docs
+
+**12.6.3** (2025-12-04)
+  * Extended `block_external_requests` fixture and `BlockingExternalRequestsRunner` to support additional allowed hosts
+  via Django setting `BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS`
+
+**12.6.2** (2025-12-03)
+  * Avoid using the pytest fixture implicitly
+
+**12.6.1** (2025-12-03)
+  * Added missing docs
+
+**12.6.0** (2025-12-03)
+  * Added pytest fixture `block_external_requests` for blocking external requests during tests
+  * Added Django test runner `BlockingExternalRequestsRunner` for blocking external requests during tests
+
+**12.5.10** (2025-11-05)
+  * Added tests for previously uncovered code to achieve 100% branch coverage
+
+**12.5.9** (2025-11-05)
+  * Added tests for previously uncovered code
+
+**12.5.8** (2025-10-16)
+  * Improved error handling for "create_translation_file" management command
+
+**12.5.7** (2025-10-15)
+  * Hopefully, now fixed broken German translations and build issue
+
+**12.5.6** (2025-10-15)
+  * Fixed broken German translations and build issue
+
+**12.5.5** (2025-10-15)
+  * Fixed broken German translations
+
+**12.5.4** (2025-10-15)
+  * Fixed RTD docs build
+  * Fixed broken German translations
+
+**12.5.3** (2025-10-11)
+  * Fixed broken German translations
+
+**12.5.2** (2025-10-10)
+  * Fixed a bug related to extra dependencies
+
+**12.5.1** (2025-10-09)
+  * Maintenance updates via ambient-package-update
+
+**12.5.0** (2025-09-26)
+  * Extended test structure validator to detect test files outside a `tests/` directory
+  * Added tests
+  * Reordered test files
+
+**12.4.5** (2025-08-15)
+  * Fix DeprecationWarning when using `BleacherMixin`
+
+**12.4.4** (2025-07-07)
+  * Fixed a bug leading to import linter validation always returning "true"
+
+**12.4.3** (2025-07-07)
+  * Added shell output for better UX for import linter validation command
+
+**12.4.2** (2025-07-07)
+  * Fixed import-linter tests and increased project coverage border
+
+**12.4.1** (2025-07-07)
+  * Fixed issue with import-linter validation command
+
+**12.4.0** (2025-07-07)
+  * Added helpers for the "import-linter" package
+  * Fixed missing setup info in system check docs
+
+**12.3.0** (2025-06-18)
+  * New function returning the starting date of the previous quarter for a given date
+
+**12.2.3** (2025-06-17)
+  * Fixed issue with null variable in GitLab coverage service
+
+**12.2.2** (2025-06-16)
+  * Added missing variable to GitLab coverage docs
 
 **12.2.1** (2025-06-04)
   * Added dependency extra for GitLab coverage

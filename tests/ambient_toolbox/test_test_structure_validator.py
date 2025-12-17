@@ -8,6 +8,8 @@ from django.test import TestCase, override_settings
 from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
+# TODO CT: Was this moved?
+
 
 class TestStructureValidatorTest(TestCase):
     # --------------------- deprecated methods START

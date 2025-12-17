@@ -1,5 +1,86 @@
 # Tests
 
+## Helpers
+
+### Block external requests in tests
+
+When writing tests, it's important to ensure they don't accidentally make external network requests. This helps keep
+tests fast, reliable, and prevents unintended side effects. The toolbox provides two helpers to block external requests
+while allowing localhost connections.
+
+#### Pytest Fixture: `block_external_requests`
+
+For pytest-based tests, use the `block_external_requests` fixture. This fixture patches `socket.getaddrinfo` to only
+allow connections to localhost addresses (`localhost`, `127.0.0.1`, `::1`, `0.0.0.0`).
+
+If you want to apply it to all tests in your suite automatically, create a wrapper fixture in your `conftest.py`:
+
+```python
+from ambient_toolbox.tests.fixtures.block_external_requests import (
+    block_external_requests as _block_external_requests,
+)
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def block_external_requests_autouse(_block_external_requests):
+    """Auto-apply external request blocking to all tests."""
+    pass
+```
+
+**Allowing additional hosts:** If you need to allow specific external hosts (e.g., a test API server), you can configure
+them via Django settings:
+
+```python
+# In your Django settings or test settings
+BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = [
+    "api.test-server.com",
+    "cdn.test-server.com",
+    "192.168.1.100",  # IP addresses are also supported
+]
+```
+
+The fixture will automatically detect and apply these settings if Django is available and configured. If Django is not
+available or not configured, it will simply use the default localhost addresses.
+
+#### Django Test Runner: `BlockingExternalRequestsRunner`
+
+For Django projects, you can use the custom test runner to block external requests across your entire test suite.
+
+Add this to your Django settings:
+
+```python
+TEST_RUNNER = "ambient_toolbox.tests.test_runners.block_external_requests.BlockingExternalRequestsRunner"
+```
+
+Then run your tests normally:
+
+```bash
+python manage.py test
+```
+
+The runner will automatically block all external network requests during test execution, allowing only localhost
+connections.
+
+**Allowing additional hosts:** If you need to allow specific external hosts (e.g., a test API server), you can configure
+them via Django settings:
+
+```python
+# In your Django settings or test settings
+BLOCKING_EXTERNAL_REQUESTS_ALLOWED_HOSTS = [
+    "api.test-server.com",
+    "cdn.test-server.com",
+    "192.168.1.100",  # IP addresses are also supported
+]
+```
+
+The runner will merge these additional hosts with the default localhost addresses (`localhost`, `127.0.0.1`, `::1`,
+`0.0.0.0`), so both default and custom hosts will be allowed during test execution.
+
+**Note:** Both helpers raise an `AssertionError` when an external request is detected, with a message like:
+`"External request to example.com detected"`. This makes it easy to identify which tests are making unwanted external
+calls.
+
 ## Mixins
 
 ### ClassBasedViewTestMixin
@@ -101,7 +182,9 @@ When working on a Django project, it can happen very easily that you create unit
 auto-discovered. The mean thing about this is that you can still run those tests - so it's hard to find those issues.
 
 The most common mistakes are forgetting the `__init__.py` in the directory or not prefixing your python files
-with `test_`. To tackle this problem, we created a handy management command you can run manually or integrate in your
+with `test_`. In addition, it checks for files like `test_*.py` which don't live inside a `tests/` directory.
+
+To tackle this problem, we created a handy management command you can run manually or integrate in your
 CI pipeline.
 
     python manage.py validate_test_structure
@@ -113,10 +196,12 @@ tests / test files which are not executed.
 
 You can define all of those settings variables in your main Django settings file.
 
-| Variable                                        | Type | Default                 | Explanation                                                         |
-|-------------------------------------------------|------|-------------------------|---------------------------------------------------------------------|
-| TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST         | list | []                      | Filenames which will be ignored, will always ignore `__init__`      |
-| TEST_STRUCTURE_VALIDATOR_BASE_DIR               | Path | settings.BASE_DIR       | Root path to your application (BASE_DIR in a vanilla Django setup)   |
-| TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME          | str  | "apps"                  | Directory where all your Django apps live in, can be set to "".     |
-| TEST_STRUCTURE_VALIDATOR_APP_LIST               | list | settings.INSTALLED_APPS | List of all your Django apps you want to validate                   |
-| TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST | list | []                      | Directories which will be ignored, will always ignore `__pycache__` |
+| Variable                                               | Type | Default                 | Explanation                                                              |
+|--------------------------------------------------------|------|-------------------------|--------------------------------------------------------------------------|
+| TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST                | list | []                      | Filenames which will be ignored, will always ignore `__init__`           |
+| TEST_STRUCTURE_VALIDATOR_BASE_DIR                      | Path | settings.BASE_DIR       | Root path to your application (BASE_DIR in a vanilla Django setup)       |
+| TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME                 | str  | "apps"                  | Directory where all your Django apps live in, can be set to "".          |
+| TEST_STRUCTURE_VALIDATOR_APP_LIST                      | list | settings.INSTALLED_APPS | List of all your Django apps you want to validate                        |
+| TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST        | list | []                      | Directories which will be ignored, will always ignore `__pycache__`      |
+| TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST | list | []                      | Test files which will be ignored even though they don't live in `tests/` |
+# TODO CT: Bruh: TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST

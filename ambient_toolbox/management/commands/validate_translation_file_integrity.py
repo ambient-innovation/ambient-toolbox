@@ -15,34 +15,37 @@ class Command(BaseCommand):
     * Validate, that all translations were actually translated
     """
 
+    OK_MESSAGE = "OK."
+
     def handle(self, *args, **options):
         for lang, label in settings.LANGUAGES:
             print(f'Check language "{label}"...')
+            translation_file_path = f"./locale/{lang}/LC_MESSAGES/django.po"
 
-            if not os.path.isfile(f"./locale/{lang}/LC_MESSAGES/django.po"):
+            if not os.path.isfile(translation_file_path):
                 print("> Skipping language due to missing PO file.")
                 continue
 
             # Check for fuzzy translations
             print("> Check for fuzzy translations")
-            output = subprocess.call(f'grep -q "#, fuzzy" ./locale/{lang}/LC_MESSAGES/django.po', shell=True)
+            output = subprocess.call(f'grep -q "#, fuzzy" {translation_file_path}', shell=True)
             if output == 0:
-                raise Exception("Please remove all fuzzy translations in your translation files.")
+                raise Exception(f"Please remove all fuzzy translations in {translation_file_path}.")
             else:
-                print("OK.")
+                print(self.OK_MESSAGE)
 
             # Check for left-over translations
             print("> Check for left-over translations")
-            output = subprocess.call(f'grep -q "#~" ./locale/{lang}/LC_MESSAGES/django.po', shell=True)
+            output = subprocess.call(f'grep -q "#~" {translation_file_path}', shell=True)
             if output == 0:
-                raise Exception("Please remove all commented-out translations in your translation files.")
+                raise Exception(f"Please remove all commented-out translations in {translation_file_path}.")
             else:
-                print("OK.")
+                print(self.OK_MESSAGE)
 
             # Check if "makemessages" detects new translations
             print('> Check if "makemessages" detects new translations')
             subprocess.call(f"python manage.py create_translation_file --lang {lang}", shell=True)
-            print("OK.")
+            print(self.OK_MESSAGE)
 
             # Checking for differences in translation file
             print("> Checking for differences in translation file")
@@ -52,10 +55,12 @@ class Command(BaseCommand):
             )
             if output > 0:
                 raise Exception(
-                    "It seems you have forgotten to update your translation file before pushing your changes."
+                    "It seems you have forgotten to update your translation files before pushing your "
+                    "changes.\nPlease run 'manage.py create_translation_file' and 'manage.py "
+                    "compilemessages'."
                 )
             else:
-                print("OK.")
+                print(self.OK_MESSAGE)
 
             # Check if all translation strings have been translated
             print("> Check if all translation strings have been translated")
@@ -65,4 +70,4 @@ class Command(BaseCommand):
             if output > 0:
                 raise Exception("You have untranslated strings in your translation files.")
             else:
-                print("OK.")
+                print(self.OK_MESSAGE)

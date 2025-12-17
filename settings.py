@@ -112,3 +112,6 @@ LOCALE_PATHS = [BASE_PATH / "ambient_toolbox/locale"]
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
 ]
+
+# Test structure validator
+TEST_STRUCTURE_VALIDATOR_BASE_DIR = BASE_PATH

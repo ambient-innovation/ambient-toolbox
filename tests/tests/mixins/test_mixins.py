@@ -55,3 +55,43 @@ class ClassBasedViewTestMixinTest(ClassBasedViewTestMixin, TestCase):
         response = self.delete()
         self.assertIsInstance(response, HttpResponse)
         self.assertEqual(response.status_code, 204)
+
+    def test_get_response_with_url_params(self):
+        response = self._get_response(method="get", user=self.user, data=None, url_params={"pk": 1})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 202)
+
+    def test_get_response_without_data(self):
+        response = self._get_response(method="get", user=self.user, data=None)
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 202)
+
+    def test_get_with_data(self):
+        response = self.get(user=self.user, data={"test": "value"})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 202)
+
+    def test_get_with_url_params(self):
+        response = self.get(user=self.user, url_params={"pk": 1})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 202)
+
+    def test_post_with_data(self):
+        response = self.post(user=self.user, data={"test": "value"})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 203)
+
+    def test_post_with_url_params(self):
+        response = self.post(user=self.user, url_params={"pk": 1})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 203)
+
+    def test_delete_with_data(self):
+        response = self.delete(user=self.user, data={"test": "value"})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 204)
+
+    def test_delete_with_url_params(self):
+        response = self.delete(user=self.user, url_params={"pk": 1})
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.status_code, 204)

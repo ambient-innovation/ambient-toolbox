@@ -1,17 +1,15 @@
 [![PyPI release](https://img.shields.io/pypi/v/ambient-toolbox.svg)](https://pypi.org/project/ambient-toolbox/)
 [![Downloads](https://static.pepy.tech/badge/ambient-toolbox)](https://pepy.tech/project/ambient-toolbox)
-[![Coverage](https://img.shields.io/badge/Coverage-71.75%25-success)](https://github.com/ambient-innovation/ambient-toolbox/actions?workflow=CI)
+[![Coverage](https://img.shields.io/badge/Coverage-100.0%25-success)](https://github.com/ambient-innovation/ambient-toolbox/actions?workflow=CI)
 [![Linting](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Coding Style](https://img.shields.io/badge/code%20style-Ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Documentation Status](https://readthedocs.org/projects/ambient-toolbox/badge/?version=latest)](https://ambient-toolbox.readthedocs.io/en/latest/?badge=latest)
 
 Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.
 
-* [PyPI](https://pypi.org/project/ambient-toolbox/)
-* [GitHub](https://github.com/ambient-innovation/ambient-toolbox)
-* [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
-* Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
+[PyPI](https://pypi.org/project/ambient-toolbox/) | [GitHub](https://github.com/ambient-innovation/ambient-toolbox) | [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
 
+Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
 ## Features
 
@@ -45,24 +43,22 @@ The migration is really simple, just:
 
   `pip install ambient-toolbox`
 
-  or via pipenv:
+  or via uv:
 
-  `pipenv install ambient-toolbox`
+  `uv add ambient-toolbox`
 
 - Add module to `INSTALLED_APPS` within the main django `settings.py`:
 
-    ```python
-    INSTALLED_APPS = (
-        # ...
-        "ambient_toolbox",
-    )
-    ```
-
+```python
+INSTALLED_APPS = (
+    # ...
+    "ambient_toolbox",
+)
+```
 
 - Apply migrations by running:
 
   `python ./manage.py migrate`
-
 
 ### Publish to ReadTheDocs.io
 
@@ -70,27 +66,43 @@ The migration is really simple, just:
 - Trigger new build at ReadTheDocs.io (follow instructions in admin panel at RTD) if the GitHub webhook is not yet set
   up.
 
-### Publish to PyPi
+### Preparation and building
+
+This package uses [uv](https://github.com/astral-sh/uv) for dependency management and building.
 
 - Update documentation about new/changed functionality
 
-- Update the `Changelog`
+- Update the `CHANGES.md`
 
 - Increment version in main `__init__.py`
 
-- Create pull request / merge to master
+- Create pull request / merge to "master"
 
-- This project uses the flit package to publish to PyPI. Thus, publishing should be as easy as running:
-  ```
-  flit publish
+- This project uses uv to publish to PyPI. This will create distribution files in the `dist/` directory.
+
+  ```bash
+  uv build
   ```
 
-  To publish to TestPyPI use the following to ensure that you have set up your .pypirc as
-  shown [here](https://flit.readthedocs.io/en/latest/upload.html#using-pypirc) and use the following command:
+### Publishing to PyPI
 
-  ```
-  flit publish --repository testpypi
-  ```
+To publish to the production PyPI:
+
+```bash
+uv publish
+```
+
+To publish to TestPyPI first (recommended for testing):
+
+```bash
+uv publish --publish-url https://test.pypi.org/legacy/
+```
+
+You can then test the installation from TestPyPI:
+
+```bash
+uv pip install --index-url https://test.pypi.org/simple/ ambient-package-update
+```
 
 ### Maintenance
 

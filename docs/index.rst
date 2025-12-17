@@ -23,6 +23,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
    features/djangorestframework.md
    features/gitlab.md
    features/graphql.md
+   features/import_linter.md
    features/managers.md
    features/mail.md
    features/models.md

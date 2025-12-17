@@ -1,13 +1,32 @@
 import calendar
 import datetime
 from calendar import monthrange
-from typing import Optional, Union
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+
+class MonthHelper:
+    """
+    Constants for month numbers to secure backwards compatibility with Python 3.11,
+    which did not have built-in month constants.
+    """
+
+    JANUARY = 1
+    FEBRUARY = 2
+    MARCH = 3
+    APRIL = 4
+    MAY = 5
+    JUNE = 6
+    JULY = 7
+    AUGUST = 8
+    SEPTEMBER = 9
+    OCTOBER = 10
+    NOVEMBER = 11
+    DECEMBER = 12
 
 
 class DateHelper:
@@ -42,18 +61,16 @@ def tz_today(str_format=None):
 
 
 def add_months(
-    source_date: Union[datetime.date, datetime.datetime], months: Union[int, float]
-) -> Union[datetime.date, datetime.datetime]:
+    source_date: datetime.date | datetime.datetime, months: int | float
+) -> datetime.date | datetime.datetime:
     return source_date + relativedelta(months=months)
 
 
-def add_days(
-    source_date: Union[datetime.date, datetime.datetime], days: int
-) -> Union[datetime.date, datetime.datetime]:
+def add_days(source_date: datetime.date | datetime.datetime, days: int) -> datetime.date | datetime.datetime:
     return source_date + datetime.timedelta(days=days)
 
 
-def add_minutes(source_datetime: datetime.datetime, minutes: int) -> Union[datetime.date, datetime.datetime]:
+def add_minutes(source_datetime: datetime.datetime, minutes: int) -> datetime.date | datetime.datetime:
     return source_datetime + relativedelta(minutes=minutes)
 
 
@@ -65,7 +82,7 @@ def first_day_of_month(source_date: datetime.date) -> datetime.date:
     return datetime.date(source_date.year, source_date.month, 1)
 
 
-def get_formatted_date_str(source_date: Union[datetime.date, datetime.datetime]) -> str:
+def get_formatted_date_str(source_date: datetime.date | datetime.datetime) -> str:
     return source_date.strftime("%d.%m.%Y")
 
 
@@ -158,7 +175,7 @@ def date_month_delta(start_date: datetime.date, end_date: datetime.date) -> floa
     # Loop until all days are processed
     while date_diff > 0:
         # Get days of month we are currently looking at
-        iter_month, iter_month_days = monthrange(iter_date.year, iter_date.month)
+        _iter_month, iter_month_days = monthrange(iter_date.year, iter_date.month)
         # Calculate how many days are left to end of this month
         days_to_month_end = min((iter_month_days - (iter_date.day - 1)), date_diff)
         # Add percentage of the month these days cover to return variable
@@ -173,7 +190,7 @@ def date_month_delta(start_date: datetime.date, end_date: datetime.date) -> floa
     return delta
 
 
-def get_first_and_last_of_month(date_object: Optional[datetime.date] = None) -> tuple[datetime.date, datetime.date]:
+def get_first_and_last_of_month(date_object: datetime.date | None = None) -> tuple[datetime.date, datetime.date]:
     """
     Returns first and last day of a month as date objects.
     Will either return first/last of current month (if no datetime_object is passed), or will determine first/last of
@@ -204,3 +221,26 @@ def check_date_is_weekend(compare_date: datetime.date, weekend_days=(calendar.SA
     which default to European weekend days.
     """
     return compare_date.weekday() in weekend_days
+
+
+def get_previous_quarter_starting_date_for_date(*, date: datetime.date) -> datetime.date:
+    """
+    Returns the starting date of the previous quarter in relation to the current quarter of a given date.
+    """
+    year = date.year
+    month = date.month
+    # Q1: 1.1. - 3.31 -> Q4
+    if month <= MonthHelper.MARCH:
+        month = MonthHelper.OCTOBER
+        year -= 1
+    # Q2: 4.1. - 6.30 -> Q1
+    elif month <= MonthHelper.JUNE:
+        month = MonthHelper.JANUARY
+    # Q3: 7.1. - 9.30 -> Q2
+    elif month <= MonthHelper.SEPTEMBER:
+        month = MonthHelper.APRIL
+    # Q4: 10.1. - 12.31 -> Q3
+    else:
+        month = MonthHelper.JULY
+
+    return datetime.date(year, month=month, day=1)

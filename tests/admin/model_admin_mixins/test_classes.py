@@ -46,6 +46,25 @@ class AdminClassesTest(RequestProviderMixin, TestCase):
         self.assertIn("id", readonly_fields)
         self.assertIn("value", readonly_fields)
 
+    def test_read_only_admin_get_readonly_fields_with_no_obj(self):
+        admin_class = ReadOnlyTestAdmin(model=MySingleSignalModel, admin_site=admin.site)
+        admin_class.readonly_fields = ["existing_field"]
+
+        readonly_fields = admin_class.get_readonly_fields(request=self.get_request(), obj=None)
+
+        self.assertEqual(readonly_fields, ["existing_field"])
+
+    def test_read_only_admin_get_readonly_fields_sets_attribute(self):
+        obj = MySingleSignalModel(value=1)
+        admin_class = ReadOnlyTestAdmin(model=obj, admin_site=admin.site)
+
+        admin_class.get_readonly_fields(request=self.get_request(), obj=obj)
+
+        expected_fields = [field.name for field in admin_class.opts.local_fields] + [
+            field.name for field in admin_class.opts.local_many_to_many
+        ]
+        self.assertEqual(admin_class.readonly_fields, expected_fields)
+
     def test_read_only_admin_no_change_permissions(self):
         admin_class = ReadOnlyTestAdmin(model=MySingleSignalModel, admin_site=admin.site)
 

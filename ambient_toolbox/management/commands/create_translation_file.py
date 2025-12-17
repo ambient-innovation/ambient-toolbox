@@ -1,6 +1,5 @@
 from os.path import isfile
 from pathlib import Path
-from typing import Optional
 
 from django.conf import settings
 from django.core.management import call_command
@@ -15,7 +14,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--lang", type=str)
 
-    def detect_single_translation_language(self) -> Optional[str]:
+    def detect_single_translation_language(self) -> str | None:
         """
         Returns the language code of the projects' translation if there is exactly one.
         Returns None otherwise.

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.apps import AppConfig, apps
 from django.contrib.auth import get_permission_codename
 from django.core.checks import Warning  # noqa: A004
@@ -30,7 +28,7 @@ def collect_model_permissions(app_configs: list[AppConfig]) -> set[str]:
     return all_model_permissions
 
 
-def check_permissions_against_models(app_configs: Optional[list[AppConfig]] = None, **kwargs) -> list:
+def check_permissions_against_models(app_configs: list[AppConfig] | None = None, **kwargs) -> list:
     """
     Check whether static role permissions exist in models.
     We do this to ensure full compatibility with Django's permission system.
