@@ -72,20 +72,9 @@ class StructureTestValidator:
     def _get_file_allowlist() -> list:
         default_allowlist = ["__init__"]
         try:
-            allowlist_values = list(settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST)
+            return default_allowlist + settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
         except AttributeError:
-            allowlist_values = list(toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST)
-
-        try:
-            whitelist_values = list(settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST)
-        except AttributeError:
-            whitelist_values = list(toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST)
-
-        combined_allowlist = default_allowlist + allowlist_values
-        for entry in whitelist_values:
-            if entry not in combined_allowlist:
-                combined_allowlist.append(entry)
-        return combined_allowlist
+            return default_allowlist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
 
     @staticmethod
     def _get_base_dir() -> Path | str:
@@ -129,20 +118,9 @@ class StructureTestValidator:
     @staticmethod
     def _get_misplaced_test_file_allowlist() -> list:
         try:
-            allowlist_values = list(settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST)
+            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST
         except AttributeError:
-            allowlist_values = list(toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST)
-
-        try:
-            whitelist_values = list(settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST)
-        except AttributeError:
-            whitelist_values = list(toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST)
-
-        combined_allowlist = allowlist_values
-        for entry in whitelist_values:
-            if entry not in combined_allowlist:
-                combined_allowlist.append(entry)
-        return combined_allowlist
+            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
         if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_allowlist:
@@ -163,10 +141,9 @@ class StructureTestValidator:
         base_dir = self._get_base_dir()
         allowlist = self._get_misplaced_test_file_allowlist()
 
-        ignored_dirs = [*self._get_ignored_directory_list(), ".venv"]
         for root, dirs, files in os.walk(base_dir):
             # Skip directories in the ignored list
-            for excluded_dir in ignored_dirs:
+            for excluded_dir in self._get_ignored_directory_list():
                 if excluded_dir in dirs:
                     dirs.remove(excluded_dir)
 
@@ -201,14 +178,13 @@ class StructureTestValidator:
             if not app.startswith(backend_package):
                 continue
             app_path = self._build_path_to_test_package(app=app)
-            ignored_dirs = [*self._get_ignored_directory_list(), ".venv"]
             for root, dirs, files in os.walk(app_path):
                 cleaned_root = root.replace("\\", "/")
                 print(f"Inspecting {cleaned_root!r}...")
                 init_found = False
                 number_of_py_files = 0
 
-                for excluded_dir in ignored_dirs:
+                for excluded_dir in self._get_ignored_directory_list():
                     try:
                         dirs.remove(excluded_dir)
                     except ValueError:
