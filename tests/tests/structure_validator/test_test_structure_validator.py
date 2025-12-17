@@ -35,8 +35,8 @@ class TestStructureValidatorTest(TestCase):
 
         try:
             expected_message = (
-                "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
-                "Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
+                "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a "
+                "future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
             )
 
             with mock.patch.object(warnings, "warn") as mocked_warn:
@@ -59,8 +59,8 @@ class TestStructureValidatorTest(TestCase):
 
         try:
             expected_message = (
-                "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
-                "Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
+                "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a "
+                "future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
             )
 
             with mock.patch.object(warnings, "warn") as mocked_warn:
@@ -80,15 +80,17 @@ class TestStructureValidatorTest(TestCase):
             elif hasattr(settings, "_TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST"):
                 delattr(settings, "_TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST")
 
-    def test_accessing_test_structure_validator_misplaced_test_file_whitelist_setting_warns_and_returns_whitelist_value(self):
+    def test_accessing_test_structure_validator_misplaced_test_file_whitelist_setting_warns_and_returns_whitelist_value(
+        self,
+    ):
         """Deprecated TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST accessor warns about allowlist naming."""
         original_value = list(toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST)
         toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = ["handlers"]
 
         try:
             expected_message = (
-                "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
-                " Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead."
+                "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be "
+                "removed in a future version. Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead."
             )
 
             with mock.patch.object(warnings, "warn") as mocked_warn:
@@ -103,7 +105,9 @@ class TestStructureValidatorTest(TestCase):
         finally:
             toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST = original_value
 
-    def test_setting_test_structure_validator_misplaced_test_file_whitelist_setting_warns_and_sets_whitelist_value(self):
+    def test_setting_test_structure_validator_misplaced_test_file_whitelist_setting_warns_and_sets_whitelist_value(
+        self,
+    ):
         """Setting deprecated misplaced test file whitelist warns before storing the allowlist."""
         original_module_value = list(toolbox_settings._TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST)
         had_original_settings = hasattr(settings, "_TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST")
@@ -111,8 +115,8 @@ class TestStructureValidatorTest(TestCase):
 
         try:
             expected_message = (
-                "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
-                " Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead."
+                "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be "
+                "removed in a future version. Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead."
             )
 
             with mock.patch.object(warnings, "warn") as mocked_warn:
@@ -179,9 +183,10 @@ class TestStructureValidatorTest(TestCase):
             "Use _get_file_allowlist() instead."
         )
 
-        with mock.patch.object(warnings, "warn") as mocked_warn, mock.patch.object(
-            StructureTestValidator, "_get_file_allowlist"
-        ) as mocked_get_file_allowlist:
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+            mock.patch.object(StructureTestValidator, "_get_file_allowlist") as mocked_get_file_allowlist,
+        ):
             StructureTestValidator._get_file_whitelist()
 
         mocked_warn.assert_called_once_with(
@@ -199,9 +204,12 @@ class TestStructureValidatorTest(TestCase):
             " Use _get_misplaced_test_file_allowlist() instead."
         )
 
-        with mock.patch.object(warnings, "warn") as mocked_warn, mock.patch.object(
-            StructureTestValidator, "_get_misplaced_test_file_allowlist"
-        ) as mocked_misplaced_allowlist:
+        with (
+            mock.patch.object(warnings, "warn") as mocked_warn,
+            mock.patch.object(
+                StructureTestValidator, "_get_misplaced_test_file_allowlist"
+            ) as mocked_misplaced_allowlist,
+        ):
             StructureTestValidator._get_misplaced_test_file_whitelist()
 
         mocked_warn.assert_called_once_with(

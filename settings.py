@@ -1,4 +1,7 @@
+import warnings
 from pathlib import Path
+
+from django.conf import settings
 
 BASE_PATH = Path(__file__).resolve(strict=True).parent
 
@@ -74,8 +77,6 @@ def EMAIL_BACKEND_DOMAIN_WHITELIST():  # noqa: N802
     Until then, keep this for backwards compatibility but warn users about future deprecation.
     """
 
-    import warnings
-
     warnings.warn(
         "The 'EMAIL_BACKEND_DOMAIN_WHITELIST' setting is deprecated and will be removed in a future version."
         "Use 'EMAIL_BACKEND_DOMAIN_ALLOWLIST' instead.",
@@ -91,10 +92,6 @@ def EMAIL_BACKEND_DOMAIN_WHITELIST(value):  # noqa: N802
     The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
     Until then, keep this for backwards compatibility but warn users about future deprecation.
     """
-
-    import warnings
-
-    from django.conf import settings
 
     warnings.warn(
         "The 'EMAIL_BACKEND_DOMAIN_WHITELIST' setting is deprecated and will be removed in a future version."

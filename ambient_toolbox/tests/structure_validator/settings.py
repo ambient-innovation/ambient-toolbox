@@ -1,3 +1,5 @@
+import warnings
+
 from django.conf import settings
 
 # Test validator
@@ -15,8 +17,6 @@ def TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST():  # noqa: N802
     Until then, keep this for backwards compatibility but warn users about future deprecation.
     """
 
-    import warnings
-
     warnings.warn(
         "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
         "Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead.",
@@ -32,10 +32,6 @@ def TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST(value):  # noqa: N802
     The term "Whitelist" will be deprecated in 12.7 and move to "Allowlist".
     Until then, keep this for backwards compatibility but warn users about future deprecation.
     """
-
-    import warnings
-
-    from django.conf import settings
 
     warnings.warn(
         "The 'TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
@@ -53,11 +49,9 @@ def TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST():  # noqa: N802
     Until then, keep this for backwards compatibility but warn users about future deprecation.
     """
 
-    import warnings
-
     warnings.warn(
-        "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
-        " Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead.",
+        "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be "
+        "removed in a future version. Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead.",
         category=DeprecationWarning,
         stacklevel=1,
     )
@@ -71,13 +65,9 @@ def TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST(value):  # noqa: N802
     Until then, keep this for backwards compatibility but warn users about future deprecation.
     """
 
-    import warnings
-
-    from django.conf import settings
-
     warnings.warn(
-        "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be removed in a future version."
-        " Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead.",
+        "The 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST' setting is deprecated and will be "
+        "removed in a future version. Use 'TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST' instead.",
         category=DeprecationWarning,
         stacklevel=1,
     )
