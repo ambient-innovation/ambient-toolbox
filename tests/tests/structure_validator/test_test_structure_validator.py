@@ -549,6 +549,21 @@ class TestStructureValidatorTest(TestCase):
                 # Should not find the test file in __pycache__
                 self.assertEqual(len(service.issue_list), 0)
 
+    def test_check_misplaced_test_files_ignores_virtualenv(self):
+        """Test that directories containing '.venv' are skipped entirely."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            venv_dir = Path(tmpdir) / ".venv"
+            venv_dir.mkdir()
+            test_file = venv_dir / "test_in_venv.py"
+            test_file.write_text("# Virtual env test")
+
+            with override_settings(TEST_STRUCTURE_VALIDATOR_BASE_DIR=Path(tmpdir)):
+                service = StructureTestValidator()
+                service._check_misplaced_test_files()
+
+                # .venv directories should not be inspected even if they contain tests
+                self.assertEqual(len(service.issue_list), 0)
+
     def test_check_misplaced_test_files_nested_tests_directory(self):
         """Test that test files in nested 'tests' directories are valid."""
         with tempfile.TemporaryDirectory() as tmpdir:
