@@ -1,3 +1,5 @@
+import warnings
+
 from django.contrib.auth.models import Permission
 from django.test import TestCase
 
@@ -10,15 +12,15 @@ class UtilModelTest(TestCase):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj), {"value": obj.value})
 
-    def test_object_to_dict_blacklist(self):
+    def test_object_to_dict_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
-        self.assertEqual(object_to_dict(obj, ["value"]), {})
+        self.assertEqual(object_to_dict(obj=obj, blocklisted_fields=["value"]), {})
 
-    def test_object_to_dict_with_id_with_blacklist(self):
+    def test_object_to_dict_with_id_with_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
-        self.assertEqual(object_to_dict(obj, ["value"], True), {"id": obj.id})
+        self.assertEqual(object_to_dict(obj=obj, blocklisted_fields=["value"], include_id=True), {"id": obj.id})
 
-    def test_with_id_no_blacklist(self):
+    def test_with_id_no_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj, include_id=True), {"id": obj.id, "value": obj.value})
 
@@ -30,6 +32,16 @@ class UtilModelTest(TestCase):
 
         self.assertIn("single_signal_id", valid_data)
         self.assertEqual(valid_data["single_signal_id"], obj.id)
+
+    def test_object_to_dict_blacklisted_fields_warns(self):
+        obj = MySingleSignalModel.objects.create(value=17)
+
+        with warnings.catch_warnings(record=True) as caught_warnings:
+            warnings.simplefilter("always", DeprecationWarning)
+            self.assertEqual(object_to_dict(obj, blacklisted_fields=["value"], blocklisted_fields=["foo"]), {})
+
+        self.assertEqual(len(caught_warnings), 1)
+        self.assertIn("blacklisted_fields is deprecated", str(caught_warnings[0].message))
 
     # --- Test get_cached_related_obj (happy path) ---
     def test_get_cached_related_obj_with_select_related(self):

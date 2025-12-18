@@ -1,5 +1,6 @@
 import os
 import sys
+import warnings
 from pathlib import Path
 
 from django.conf import settings
@@ -8,20 +9,89 @@ from ambient_toolbox.tests.structure_validator import settings as toolbox_settin
 
 
 class StructureTestValidator:
-    file_whitelist: list
+    _file_whitelist: list
+
+    file_allowlist: list
     issue_list: list
 
     def __init__(self):
-        self.file_whitelist = self._get_file_whitelist()
+        self._file_whitelist = self._get_file_allowlist()
+
+        self.file_allowlist = self._get_file_allowlist()
         self.issue_list = []
+
+    # --------------------- deprecated methods START
+
+    @property
+    def file_whitelist(self):
+        """
+        The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+        Until then, keep this for backwards compatibility but warn users about future deprecation.
+        """
+
+        warnings.warn(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        return self._file_whitelist
+
+    @file_whitelist.setter
+    def file_whitelist(self, value):
+        """
+        The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+        Until then, keep this for backwards compatibility but warn users about future deprecation.
+        """
+
+        warnings.warn(
+            "The 'file_whitelist' attribute is deprecated and will be removed in a future version."
+            "Use 'file_allowlist' instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        self._file_whitelist = value
 
     @staticmethod
     def _get_file_whitelist() -> list:
-        default_whitelist = ["__init__"]
+        """
+        The term "Whitelist" will be deprecated in 12.2 and move to "Allowlist".
+        Until then, keep this for backwards compatibility but warn users about future deprecation.
+        """
+        warnings.warn(
+            "_get_file_whitelist() is deprecated and will be removed in a future version."
+            "Use _get_file_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        return StructureTestValidator._get_file_allowlist()
+
+    @staticmethod
+    def _get_available_setting_list(setting_name: str, fallback: list) -> list:
         try:
-            return default_whitelist + settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+            return list(getattr(settings, setting_name))
         except AttributeError:
-            return default_whitelist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+            return list(fallback)
+
+    # --------------------- deprecated methods END
+
+    @staticmethod
+    def _get_file_allowlist() -> list:
+        default_allowlist = ["__init__"]
+        allowlist = default_allowlist[:]
+        allowlist.extend(
+            StructureTestValidator._get_available_setting_list(
+                "TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+                toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST,
+            )
+        )
+        allowlist.extend(
+            StructureTestValidator._get_available_setting_list(
+                "TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+                toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST,
+            )
+        )
+        return allowlist
 
     @staticmethod
     def _get_base_dir() -> Path | str:
@@ -54,13 +124,23 @@ class StructureTestValidator:
 
     @staticmethod
     def _get_misplaced_test_file_whitelist() -> list:
+        warnings.warn(
+            "_get_misplaced_test_file_whitelist() is deprecated and will be removed in a future version."
+            " Use _get_misplaced_test_file_allowlist() instead.",
+            category=DeprecationWarning,
+            stacklevel=1,
+        )
+        return StructureTestValidator._get_misplaced_test_file_allowlist()
+
+    @staticmethod
+    def _get_misplaced_test_file_allowlist() -> list:
         try:
-            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST
         except AttributeError:
-            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
-        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_whitelist:
+        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_allowlist:
             file_path = f"{root}\\{file}".replace("\\", "/")
             self.issue_list.append(f'Python file without "test_" prefix found: {file_path!r}.')
             return False
@@ -76,7 +156,7 @@ class StructureTestValidator:
     def _check_misplaced_test_files(self) -> None:
         """Check for files starting with 'test_' that are not in or under a 'tests/' directory."""
         base_dir = self._get_base_dir()
-        whitelist = self._get_misplaced_test_file_whitelist()
+        allowlist = self._get_misplaced_test_file_allowlist()
 
         for root, dirs, files in os.walk(base_dir):
             # Skip directories in the ignored list
@@ -85,9 +165,13 @@ class StructureTestValidator:
                     dirs.remove(excluded_dir)
 
             cleaned_root = root.replace("\\", "/")
+            path_parts = Path(cleaned_root).parts
+
+            if ".venv" in path_parts:
+                dirs[:] = []
+                continue
 
             # Check if current path contains 'tests' as a directory component
-            path_parts = Path(cleaned_root).parts
             has_tests_parent = any(part == "tests" for part in path_parts)
 
             if not has_tests_parent:
@@ -95,10 +179,10 @@ class StructureTestValidator:
                     if file.startswith("test_") and file.endswith(".py"):
                         file_path = f"{cleaned_root}/{file}".replace("\\", "/")
 
-                        # Check if the file path matches any whitelist pattern
-                        is_whitelisted = any(whitelist_pattern in file_path for whitelist_pattern in whitelist)
+                        # Check if the file path matches any allowlist pattern
+                        is_allowlisted = any(allowlist_pattern in file_path for allowlist_pattern in allowlist)
 
-                        if not is_whitelisted:
+                        if not is_allowlisted:
                             self.issue_list.append(f"Test file found outside tests directory: {file_path!r}.")
 
     def _build_path_to_test_package(self, app: str) -> Path:
