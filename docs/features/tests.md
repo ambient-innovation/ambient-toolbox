@@ -13,17 +13,19 @@ while allowing localhost connections.
 For pytest-based tests, use the `block_external_requests` fixture. This fixture patches `socket.getaddrinfo` to only
 allow connections to localhost addresses (`localhost`, `127.0.0.1`, `::1`, `0.0.0.0`).
 
-If you want to apply it to all tests in your suite automatically, create a wrapper fixture in your `conftest.py`:
+If you want to apply it to all tests in your suite automatically, register the helper plugin and create a wrapper
+fixture in your `conftest.py`:
 
 ```python
-from ambient_toolbox.tests.fixtures.block_external_requests import (
-    block_external_requests as _block_external_requests,
-)
 import pytest
+
+pytest_plugins = [
+    "ambient_toolbox.tests.fixtures.block_external_requests",
+]
 
 
 @pytest.fixture(autouse=True)
-def block_external_requests_autouse(_block_external_requests):
+def block_external_requests_autouse(block_external_requests):
     """Auto-apply external request blocking to all tests."""
     pass
 ```
@@ -158,6 +160,7 @@ You can either check for a full message or just for a partial one.
 ````python
 from django.test import TestCase
 from ambient_toolbox.tests.mixins import DjangoMessagingFrameworkTestMixin
+
 
 class MyViewTest(DjangoMessagingFrameworkTestMixin, TestCase):
 
