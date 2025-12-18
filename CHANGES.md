@@ -1,6 +1,6 @@
 # Changelog
 
-**12.6.6** (2025-12-17)
+**12.6.7** (2025-12-17)
   * **Breaking changes in `mail.backends.whitelist_smtp.WhitelistEmailBackend`:**
     * Renamed `WhitelistEmailBackend` to `AllowlistEmailBackend` and moved to `mail.backends.allowlist_smtp`
     * Renamed `get_domain_whitelist` method to `get_domain_allowlist`
@@ -16,6 +16,8 @@
 
   - Introduce deprecation warnings for all "white-XY" and "black-XY" terms
 
+**12.6.6** (2025-12-17)
+  * Update docs on how to use `block_external_requests` fixture
 
 **12.6.5** (2025-12-11)
   * Maintenance updates via ambient-package-update
