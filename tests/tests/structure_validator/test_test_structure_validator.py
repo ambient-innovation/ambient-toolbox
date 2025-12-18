@@ -39,8 +39,10 @@ class TestStructureValidatorTest(TestCase):
                 "future version. Use 'TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST' instead."
             )
 
-            with mock.patch.object(warnings, "warn") as mocked_warn:
+            with mock.patch("ambient_toolbox.tests.structure_validator.settings.warnings.warn") as mocked_warn:
                 returned_settings = toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+
+            returned_settings = toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
 
             mocked_warn.assert_called_once_with(
                 expected_message,
@@ -700,7 +702,7 @@ class TestStructureValidatorTest(TestCase):
 
         mocked_get_app_list.assert_called_once()
         # Should only find misplaced test files, not any app-specific issues
-        self.assertEqual(len(service.issue_list), 2)
+        self.assertEqual(len(service.issue_list), 2, service.issue_list)
 
     def test_process_success_no_issues(self):
         """Test process method succeeds when no issues are found."""

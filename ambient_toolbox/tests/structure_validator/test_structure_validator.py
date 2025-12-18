@@ -66,15 +66,32 @@ class StructureTestValidator:
         )
         return StructureTestValidator._get_file_allowlist()
 
+    @staticmethod
+    def _get_available_setting_list(setting_name: str, fallback: list) -> list:
+        try:
+            return list(getattr(settings, setting_name))
+        except AttributeError:
+            return list(fallback)
+
     # --------------------- deprecated methods END
 
     @staticmethod
     def _get_file_allowlist() -> list:
         default_allowlist = ["__init__"]
-        try:
-            return default_allowlist + settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
-        except AttributeError:
-            return default_allowlist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
+        allowlist = default_allowlist[:]
+        allowlist.extend(
+            StructureTestValidator._get_available_setting_list(
+                "TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+                toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST,
+            )
+        )
+        allowlist.extend(
+            StructureTestValidator._get_available_setting_list(
+                "TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+                toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST,
+            )
+        )
+        return allowlist
 
     @staticmethod
     def _get_base_dir() -> Path | str:
@@ -148,9 +165,13 @@ class StructureTestValidator:
                     dirs.remove(excluded_dir)
 
             cleaned_root = root.replace("\\", "/")
+            path_parts = Path(cleaned_root).parts
+
+            if ".venv" in path_parts:
+                dirs[:] = []
+                continue
 
             # Check if current path contains 'tests' as a directory component
-            path_parts = Path(cleaned_root).parts
             has_tests_parent = any(part == "tests" for part in path_parts)
 
             if not has_tests_parent:
