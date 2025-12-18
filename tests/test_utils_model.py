@@ -1,3 +1,5 @@
+import warnings
+
 from django.contrib.auth.models import Permission
 from django.test import TestCase
 
@@ -30,6 +32,16 @@ class UtilModelTest(TestCase):
 
         self.assertIn("single_signal_id", valid_data)
         self.assertEqual(valid_data["single_signal_id"], obj.id)
+
+    def test_object_to_dict_blacklisted_fields_warns(self):
+        obj = MySingleSignalModel.objects.create(value=17)
+
+        with warnings.catch_warnings(record=True) as caught_warnings:
+            warnings.simplefilter("always", DeprecationWarning)
+            self.assertEqual(object_to_dict(obj, blacklisted_fields=["value"], blocklisted_fields=["foo"]), {})
+
+        self.assertEqual(len(caught_warnings), 1)
+        self.assertIn("blacklisted_fields is deprecated", str(caught_warnings[0].message))
 
     # --- Test get_cached_related_obj (happy path) ---
     def test_get_cached_related_obj_with_select_related(self):
