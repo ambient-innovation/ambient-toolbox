@@ -106,7 +106,7 @@ class DjangoQ2SentryReporterTest(TestCase):
     @mock.patch("ambient_toolbox.sentry.reporter.sys")
     @mock.patch("ambient_toolbox.sentry.reporter.traceback", create=True)
     def test_return_task_from_stack_no_tb_arg(self, mock_traceback, mock_sys):
-        # Test line 30: if not tb: tb = sys.exc_info()[2]
+        # Test line 29: if not tb: tb = sys.exc_info()[2]
         mock_tb = mock.Mock()
         mock_tb.tb_next = None
         mock_tb.tb_frame.f_back = None
@@ -120,7 +120,7 @@ class DjangoQ2SentryReporterTest(TestCase):
 
     @mock.patch("ambient_toolbox.sentry.reporter.traceback", create=True)
     def test_return_task_from_stack_nested_tb(self, mock_traceback):
-        # Test line 34: tb = tb.tb_next
+        # Test line 33: tb = tb.tb_next
         mock_tb_root = mock.Mock()
         mock_tb_leaf = mock.Mock()
 
@@ -135,7 +135,7 @@ class DjangoQ2SentryReporterTest(TestCase):
 
     @mock.patch("ambient_toolbox.sentry.reporter.traceback", create=True)
     def test_return_task_from_stack_malformed_task(self, mock_traceback):
-        # Test line 44: if value.get("id", False) and value.get("func"): -> False
+        # Test line 42: if value.get("id", False) and value.get("func"): -> False
         mock_tb = mock.Mock()
         mock_tb.tb_next = None
 

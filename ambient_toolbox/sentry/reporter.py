@@ -13,16 +13,20 @@ class DjangoQ2SentryReporter:
     def __init__(self, dsn=None, **kwargs):
         if not sentry_sdk.is_initialized():
             if not dsn:
-                raise Exception("If sentry hasn't been initialized before, dsn is required.")
+                raise ValueError("If sentry hasn't been initialized before, dsn is required.")
             sentry_sdk.init(dsn, **kwargs)
 
     @staticmethod
     def return_task_from_stack(tb) -> dict:
         """
-        Function returns task information from stack trace if available
-        Used to tag
-        :param tb: traceback
-        :return return_task: dict
+        Return task information from the stack trace if available.
+
+        Used to tag and enrich Sentry events with django-q task details by
+        extracting a `task` dict from the traceback frames (containing keys
+        such as ``id`` and ``func``).
+
+        :param tb: traceback object to inspect; if None, the current traceback is used.
+        :return return_task: dict containing task information, or an empty dict if none found.
         """
         return_task = {}
         if not tb:
