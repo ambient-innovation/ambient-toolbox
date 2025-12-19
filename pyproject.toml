@@ -37,6 +37,9 @@ dependencies = [
     'python-dateutil>=2.5.3',
 ]
 
+[project.entry-points."djangoq.errorreporters"]
+ambient-djangoq2-sentry = "ambient_toolbox.sentry.reporter:DjangoQ2SentryReporter"
+
 [project.optional-dependencies]
 dev = [
    'typer~=0.19',
