@@ -10,7 +10,44 @@ ignore_logger("django_q")
 
 
 class DjangoQ2SentryReporter:
+    """
+    Reporter implementation for Django Q2 that sends task failures to Sentry.
+
+    This class is intended to be configured as the ``REPORTER`` in Django Q2
+    so that it is instantiated and its :meth:`report` method is called
+    whenever a task raises an unhandled exception.
+
+    On first use, if the global Sentry SDK has not yet been initialized,
+    the reporter will initialize it using the provided ``dsn`` and any
+    additional keyword arguments. If Sentry has already been initialized
+    elsewhere in the application, ``dsn`` may be omitted.
+
+    When :meth:`report` is invoked, the reporter inspects the traceback to
+    extract the Django Q2 task information from the stack, then sends the
+    current exception to Sentry with a dedicated fingerprint and additional
+    context (such as task id, name, and callable path) attached as extras.
+    """
+
     def __init__(self, dsn=None, **kwargs):
+        """
+        Initialize a reporter that ensures Sentry is configured for Django Q tasks.
+
+        If the Sentry SDK has not yet been initialized in this process, this
+        constructor will call ``sentry_sdk.init`` with the provided ``dsn`` and
+        any additional keyword arguments.
+
+        If Sentry is already initialized (``sentry_sdk.is_initialized()`` returns
+        ``True``), the constructor will not modify the existing configuration and
+        the ``dsn`` and ``kwargs`` parameters are ignored.
+
+        :param dsn: Sentry Data Source Name used to initialize the Sentry SDK
+            when it has not yet been configured. This parameter is required if
+            Sentry has not been initialized before.
+        :param kwargs: Additional keyword arguments forwarded directly to
+            ``sentry_sdk.init`` (for example, environment, release, integrations).
+        :raises Exception: If Sentry is not yet initialized and no ``dsn`` is
+            provided.
+        """
         if not sentry_sdk.is_initialized():
             if not dsn:
                 raise ValueError("If sentry hasn't been initialized before, dsn is required.")
@@ -50,6 +87,24 @@ class DjangoQ2SentryReporter:
         return return_task
 
     def report(self):
+        """
+        Report the currently handled exception to Sentry with Django-Q context.
+
+        This method inspects the active exception from ``sys.exc_info()``, extracts
+        the associated Django-Q task metadata from the traceback via
+        :meth:`return_task_from_stack`, and sends the exception to Sentry.
+
+        A new Sentry scope is created to:
+
+        * Build a fingerprint based on the Django-Q integration, the task
+          function path (if available), and the exception value, improving
+          event grouping for task failures.
+        * Attach task-related details (ID, name, function) as extras on the
+          event so they are visible in Sentry without altering global scope.
+
+        The exception is then captured using :func:`sentry_sdk.capture_exception`,
+        passing the exception instance obtained from ``sys.exc_info()``.
+        """
         # get exception triple
         _, exc_value, exc_tb = sys.exc_info()
         task = self.return_task_from_stack(exc_tb)

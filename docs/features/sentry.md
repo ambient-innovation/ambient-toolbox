@@ -70,3 +70,52 @@ sentry_sdk.init(
 ```
 
 And that's it! Have fun finding your bugs more easily!
+
+## Django-Q Reporter
+
+The `DjangoQ2SentryReporter` sends task failures from Django Q2 to Sentry with enhanced context about the failing task.
+
+### Setup
+
+Configure the reporter in your Django Q2 settings:
+
+```python
+from ambient_toolbox.sentry.reporter import DjangoQ2SentryReporter
+
+Q_CLUSTER = {
+    "name": "django_q",
+    "workers": 1,
+    "timeout": 360,
+    "retry": 720,
+    "queue_limit": 50,
+    "bold": True,
+    "orm": "default",
+    "reporter": DjangoQ2SentryReporter(dsn="your-sentry-dsn"),
+}
+```
+
+Alternatively, if Sentry is already initialized elsewhere in your application, you can omit the `dsn`:
+
+```python
+Q_CLUSTER = {
+    # ...
+    "reporter": DjangoQ2SentryReporter(),
+    # ...
+}
+```
+
+### Features
+
+- **Task Context**: Automatically extracts and attaches Django Q2 task information (ID, name, function path) to Sentry events
+- **Intelligent Fingerprinting**: Creates a dedicated fingerprint based on the task function and exception, ensuring that failures from the same task across different executions are grouped together in Sentry for easier issue tracking
+- **Exception Capture**: Sends unhandled task exceptions to Sentry with full traceback and context
+
+### How It Works
+
+When a Django Q2 task raises an unhandled exception, the reporter:
+1. Inspects the traceback to extract task metadata from the execution stack
+2. Builds a fingerprint from the task function path and exception value for consistent grouping
+3. Attaches task details as extras (ID, name, function) to the event
+4. Sends the exception to Sentry
+
+This approach helps you identify and track task-specific errors more effectively in your Sentry dashboard.
