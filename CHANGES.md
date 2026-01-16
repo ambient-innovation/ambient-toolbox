@@ -1,5 +1,8 @@
 # Changelog
 
+**12.7.0** (2026-01-16)
+  * Add DjangoQ2 Sentry reporter
+
 **12.6.6** (2025-12-17)
   * Update docs on how to use `block_external_requests` fixture
 
