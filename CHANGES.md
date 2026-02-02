@@ -1,5 +1,8 @@
 # Changelog
 
+**12.7.1** (2026-02-02)
+  * Fixed bug in DjangoQ2 Sentry reporter docs
+
 **12.7.0** (2026-01-16)
   * Add DjangoQ2 Sentry reporter
 
