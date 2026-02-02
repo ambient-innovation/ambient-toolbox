@@ -90,7 +90,7 @@ Q_CLUSTER = {
     "queue_limit": 50,
     "bold": True,
     "orm": "default",
-    "reporter": {"ambient-djangoq2-sentry": {"dsn": SENTRY_DSN}}
+    "reporter": {"ambient-djangoq2-sentry": {"dsn": SENTRY_DSN}},
 }
 ```
 
