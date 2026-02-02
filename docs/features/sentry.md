@@ -90,7 +90,7 @@ Q_CLUSTER = {
     "queue_limit": 50,
     "bold": True,
     "orm": "default",
-    "reporter": DjangoQ2SentryReporter(dsn="your-sentry-dsn"),
+    "reporter": {"ambient-djangoq2-sentry": {"dsn": SENTRY_DSN}},
 }
 ```
 
@@ -99,7 +99,7 @@ Alternatively, if Sentry is already initialized elsewhere in your application, y
 ```python
 Q_CLUSTER = {
     # ...
-    "reporter": DjangoQ2SentryReporter(),
+    "reporter": {"ambient-djangoq2-sentry": ""},
     # ...
 }
 ```
