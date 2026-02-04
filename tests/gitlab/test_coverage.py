@@ -279,6 +279,36 @@ class CoverageServiceTest(unittest.TestCase):
         self.assertNotIn("2026-02-05T10:15:07.123456Z", combined)
 
     @mock.patch("builtins.print")
+    def test_print_diff_strips_stream_markers(self, mock_print):
+        # Logs with GitLab CI stream markers (00E, 01O, 00O, 00O+)
+        target_log = (
+            "2026-02-04T09:03:14.792494Z 00E Waiting for pod to be running\n"
+            "2026-02-04T09:03:27.780528Z 00O+[0Ksection_start:1770195807:step_script\n"
+            "2026-02-04T09:03:41.299799Z 01O Database is up\n"
+            "2026-02-04T09:04:17.351519Z 01O Name    Stmts   Miss Branch BrPart  Cover   Missing\n"
+            "2026-02-04T09:04:17.351519Z 01O file1.py     10      0      0      0    100%\n"
+        )
+        current_log = (
+            "2026-02-05T10:15:07.123456Z 00E Waiting for pod to be running\n"
+            "2026-02-05T10:15:07.123456Z 00O+[0Ksection_start:1770195807:step_script\n"
+            "2026-02-05T10:15:07.123456Z 01O Database is up\n"
+            "2026-02-05T10:15:07.123456Z 01O Name    Stmts   Miss Branch BrPart  Cover   Missing\n"
+            "2026-02-05T10:15:07.123456Z 01O file1.py     10      0      0      0    100%\n"
+        )
+
+        CoverageService.print_diff(target_log, current_log)
+
+        # Combine all printed outputs into single string
+        combined = "".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        # Stream markers should be stripped from printed output
+        self.assertNotIn("00E ", combined)
+        self.assertNotIn("01O ", combined)
+        self.assertNotIn("00O+", combined)
+        # Timestamps should also be stripped
+        self.assertNotIn("2026-02-04T09:03:14.792494Z", combined)
+        self.assertNotIn("2026-02-05T10:15:07.123456Z", combined)
+
+    @mock.patch("builtins.print")
     def test_print_diff_with_non_matching_lines(self, mock_print):
         """Test print_diff with lines that don't match the regex pattern to cover branch 185->177."""
         target_log = (

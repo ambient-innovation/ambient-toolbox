@@ -171,8 +171,11 @@ class CoverageService:
         """
         # Strip leading ISO8601 UTC timestamps added by GitLab CI logs (e.g. "2026-02-04T09:12:06.864043Z ")
         timestamp_re = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z\s*")
-        target_lines = [timestamp_re.sub("", line) for line in target_job_log.splitlines(keepends=True)]
-        current_lines = [timestamp_re.sub("", line) for line in current_job_log.splitlines(keepends=True)]
+        # Strip GitLab CI stream markers (e.g. "00E ", "01O ", "00O+")
+        stream_marker_re = re.compile(r"^\d{2}[EO][+]?\s*")
+        
+        target_lines = [stream_marker_re.sub("", timestamp_re.sub("", line)) for line in target_job_log.splitlines(keepends=True)]
+        current_lines = [stream_marker_re.sub("", timestamp_re.sub("", line)) for line in current_job_log.splitlines(keepends=True)]
 
         diff = ndiff(target_lines, current_lines)
         print("\n############################## Coverage Diff ##############################")
