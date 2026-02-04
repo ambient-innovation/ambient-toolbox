@@ -169,7 +169,12 @@ class CoverageService:
         """
         Print a diff between the coverage reports of Current and Target branch
         """
-        diff = ndiff(target_job_log.splitlines(keepends=True), current_job_log.splitlines(keepends=True))
+        # Strip leading ISO8601 UTC timestamps added by GitLab CI logs (e.g. "2026-02-04T09:12:06.864043Z ")
+        timestamp_re = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z\s*")
+        target_lines = [timestamp_re.sub('', line) for line in target_job_log.splitlines(keepends=True)]
+        current_lines = [timestamp_re.sub('', line) for line in current_job_log.splitlines(keepends=True)]
+
+        diff = ndiff(target_lines, current_lines)
         print("\n############################## Coverage Diff ##############################")
         print("# \033[91m- Target Branch\033[0m                                                         #")
         print("# \033[92m+ Current Branch\033[0m                                                        #")
