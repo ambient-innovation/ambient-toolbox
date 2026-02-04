@@ -257,6 +257,28 @@ class CoverageServiceTest(unittest.TestCase):
         mock_print.assert_any_call("\n############################## Coverage Diff ##############################")
 
     @mock.patch("builtins.print")
+    def test_print_diff_strips_iso_timestamps(self, mock_print):
+        # Logs where each line is prefixed with ISO8601 UTC timestamps (GitLab CI default)
+        target_log = (
+            "2026-02-04T09:12:06.864043Z Name    Stmts   Miss Branch BrPart  Cover   Missing\n"
+            "2026-02-04T09:12:06.864043Z file1.py     10      0      0      0    100%\n"
+            "2026-02-04T09:12:06.864043Z files skipped due to complete coverage.\n"
+        )
+        current_log = (
+            "2026-02-05T10:15:07.123456Z Name    Stmts   Miss Branch BrPart  Cover   Missing\n"
+            "2026-02-05T10:15:07.123456Z file1.py     10      0      0      0    100%\n"
+            "2026-02-05T10:15:07.123456Z files skipped due to complete coverage.\n"
+        )
+
+        CoverageService.print_diff(target_log, current_log)
+
+        # Combine all printed outputs into single string
+        combined = "".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        # Timestamps should be stripped from printed output
+        self.assertNotIn("2026-02-04T09:12:06.864043Z", combined)
+        self.assertNotIn("2026-02-05T10:15:07.123456Z", combined)
+
+    @mock.patch("builtins.print")
     def test_print_diff_with_non_matching_lines(self, mock_print):
         """Test print_diff with lines that don't match the regex pattern to cover branch 185->177."""
         target_log = (
