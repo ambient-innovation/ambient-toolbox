@@ -1,5 +1,8 @@
 # Changelog
 
+**12.7.2** (2026-02-05)
+  * Fixed wrong display due to changes in GitLab for coverage checker script
+
 **12.7.1** (2026-02-02)
   * Fixed bug in DjangoQ2 Sentry reporter docs
 
