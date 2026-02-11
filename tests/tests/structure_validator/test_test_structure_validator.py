@@ -64,6 +64,23 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertEqual(file_allowlist, ["__init__"])
 
+    def test_resolve_allowlist_setting_defaults_when_missing(self):
+        """Ensure the helper returns the provided default when no settings exist."""
+        dummy_settings = types.SimpleNamespace()
+
+        with mock.patch(
+            "ambient_toolbox.tests.structure_validator.test_structure_validator.settings", dummy_settings
+        ), mock.patch(
+            "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+        ):
+            default = StructureTestValidator._resolve_allowlist_setting(
+                allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+                whitelist_name="TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+                default=["default_entry"],
+            )
+
+        self.assertEqual(default, ["default_entry"])
+
     def test_get_file_whitelist_alias_warns(self):
         """Test that calling the deprecated whitelist getter warns and mirrors allowlist."""
         service = StructureTestValidator()
