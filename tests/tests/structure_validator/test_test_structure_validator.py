@@ -46,12 +46,31 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertEqual(file_allowlist, ["__init__", "my_file"])
 
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["legacy_file"])
+    def test_get_file_allowlist_warns_for_deprecated_setting(self):
+        """Test that deprecated whitelist settings warn when allowlist is absent."""
+        service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning):
+            file_allowlist = service._get_file_allowlist()
+
+        self.assertIn("legacy_file", file_allowlist)
+
     def test_get_file_allowlist_fallback(self):
         """Test file allowlist fallback to toolbox settings."""
         service = StructureTestValidator()
         file_allowlist = service._get_file_allowlist()
 
         self.assertEqual(file_allowlist, ["__init__"])
+
+    def test_get_file_whitelist_alias_warns(self):
+        """Test that calling the deprecated whitelist getter warns and mirrors allowlist."""
+        service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning):
+            file_whitelist = service._get_file_whitelist()
+
+        self.assertEqual(file_whitelist, service.file_allowlist)
 
     # ============================================================================
     # Base Directory Tests
