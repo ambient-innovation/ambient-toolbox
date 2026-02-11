@@ -8,6 +8,7 @@ ensuring 100% code coverage and proper validation of test directory structures.
 import io
 import sys
 import tempfile
+import types
 from pathlib import Path
 from unittest import mock
 
@@ -75,14 +76,19 @@ class TestStructureValidatorTest(TestCase):
 
     def test_toolbox_settings_file_whitelist_warns(self):
         """Test that toolbox settings whitelist emits a warning when allowlist is missing."""
-        with (
-            mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST", []),
-            mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST", ["toolbox_file"]),
-        ):
-            service = StructureTestValidator()
+        dummy_settings = types.SimpleNamespace(
+            TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["toolbox_file"]
+        )
 
+        with mock.patch(
+            "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+        ):
             with self.assertWarns(DeprecationWarning):
-                file_allowlist = service._get_file_allowlist()
+                file_allowlist = StructureTestValidator._resolve_allowlist_setting(
+                    allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+                    whitelist_name="TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+                    default=[],
+                )
 
         self.assertIn("toolbox_file", file_allowlist)
 
@@ -206,17 +212,20 @@ class TestStructureValidatorTest(TestCase):
         self.assertEqual(allowlist, [])
 
     def test_toolbox_settings_misplaced_whitelist_warns(self):
-        """Test toolbox settings misplaced whitelist emits warning when allowlist is missing."""
-        with (
-            mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST", []),
-            mock.patch.object(
-                toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST", ["handlers/toolbox"]
-            ),
-        ):
-            service = StructureTestValidator()
+        """Test that toolbox settings misplaced whitelist emits warning when allowlist is missing."""
+        dummy_settings = types.SimpleNamespace(
+            TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/toolbox"]
+        )
 
+        with mock.patch(
+            "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+        ):
             with self.assertWarns(DeprecationWarning):
-                allowlist = service._get_misplaced_test_file_allowlist()
+                allowlist = StructureTestValidator._resolve_allowlist_setting(
+                    allowlist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST",
+                    whitelist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST",
+                    default=[],
+                )
 
         self.assertIn("handlers/toolbox", allowlist)
 
