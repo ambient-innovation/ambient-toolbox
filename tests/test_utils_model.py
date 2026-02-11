@@ -40,6 +40,13 @@ class UtilModelTest(TestCase):
         self.assertEqual(result, {})
         self.assertTrue(any("blacklisted_fields" in str(w.message) for w in captured))
 
+    def test_old_blacklist_keyword_preserves_explicit_blocklist(self):
+        obj = MySingleSignalModel.objects.create(value=17)
+        with self.assertWarns(DeprecationWarning):
+            result = object_to_dict(obj, blocklisted_fields=[], blacklisted_fields=["value"])
+
+        self.assertEqual(result, {"value": obj.value})
+
     def test_object_to_dict_valid_fields_append(self):
         obj = MySingleSignalModel.objects.create(value=17)
         dummy_instance = ForeignKeyRelatedModel(single_signal=obj)
