@@ -1,5 +1,6 @@
 import os
 import sys
+import warnings
 from pathlib import Path
 
 from django.conf import settings
@@ -12,16 +13,56 @@ class StructureTestValidator:
     issue_list: list
 
     def __init__(self):
-        self.file_whitelist = self._get_file_whitelist()
+        self.file_allowlist = self._get_file_allowlist()
+        self.file_whitelist = self.file_allowlist
         self.issue_list = []
 
     @staticmethod
+    def _resolve_allowlist_setting(
+        allowlist_name: str,
+        whitelist_name: str,
+        default: list,
+    ) -> list:
+        if hasattr(settings, allowlist_name):
+            return getattr(settings, allowlist_name)
+        if hasattr(settings, whitelist_name):
+            warnings.warn(
+                f"{whitelist_name} is deprecated, use {allowlist_name}",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            return getattr(settings, whitelist_name)
+
+        if hasattr(toolbox_settings, allowlist_name):
+            return getattr(toolbox_settings, allowlist_name)
+        if hasattr(toolbox_settings, whitelist_name):
+            warnings.warn(
+                f"{whitelist_name} is deprecated, use {allowlist_name}",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            return getattr(toolbox_settings, whitelist_name)
+
+        return default
+
+    @staticmethod
+    def _get_file_allowlist() -> list:
+        default_allowlist = ["__init__"]
+        configured = StructureTestValidator._resolve_allowlist_setting(
+            allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+            whitelist_name="TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+            default=[],
+        )
+        return default_allowlist + configured
+
+    @staticmethod
     def _get_file_whitelist() -> list:
-        default_whitelist = ["__init__"]
-        try:
-            return default_whitelist + settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
-        except AttributeError:
-            return default_whitelist + toolbox_settings.TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST
+        warnings.warn(
+            "StructureTestValidator._get_file_whitelist() is deprecated, use _get_file_allowlist()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return StructureTestValidator._get_file_allowlist()
 
     @staticmethod
     def _get_base_dir() -> Path | str:
@@ -39,7 +80,7 @@ class StructureTestValidator:
 
     @staticmethod
     def _get_ignored_directory_list() -> list:
-        default_dir_list = ["__pycache__"]
+        default_dir_list = ["__pycache__", ".venv", "venv", "env"]
         try:
             return default_dir_list + settings.TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST
         except AttributeError:
@@ -53,11 +94,21 @@ class StructureTestValidator:
             return toolbox_settings.TEST_STRUCTURE_VALIDATOR_APP_LIST
 
     @staticmethod
+    def _get_misplaced_test_file_allowlist() -> list:
+        return StructureTestValidator._resolve_allowlist_setting(
+            allowlist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST",
+            whitelist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST",
+            default=[],
+        )
+
+    @staticmethod
     def _get_misplaced_test_file_whitelist() -> list:
-        try:
-            return settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
-        except AttributeError:
-            return toolbox_settings.TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST
+        warnings.warn(
+            "StructureTestValidator._get_misplaced_test_file_whitelist() is deprecated, use _get_misplaced_test_file_allowlist()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return StructureTestValidator._get_misplaced_test_file_allowlist()
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
         if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_whitelist:
@@ -76,7 +127,7 @@ class StructureTestValidator:
     def _check_misplaced_test_files(self) -> None:
         """Check for files starting with 'test_' that are not in or under a 'tests/' directory."""
         base_dir = self._get_base_dir()
-        whitelist = self._get_misplaced_test_file_whitelist()
+        allowlist = self._get_misplaced_test_file_allowlist()
 
         for root, dirs, files in os.walk(base_dir):
             # Skip directories in the ignored list
@@ -95,10 +146,12 @@ class StructureTestValidator:
                     if file.startswith("test_") and file.endswith(".py"):
                         file_path = f"{cleaned_root}/{file}".replace("\\", "/")
 
-                        # Check if the file path matches any whitelist pattern
-                        is_whitelisted = any(whitelist_pattern in file_path for whitelist_pattern in whitelist)
+                        # Check if the file path matches any allowlist pattern
+                        is_allowlisted = any(
+                            allowlist_pattern in file_path for allowlist_pattern in allowlist
+                        )
 
-                        if not is_whitelisted:
+                        if not is_allowlisted:
                             self.issue_list.append(f"Test file found outside tests directory: {file_path!r}.")
 
     def _build_path_to_test_package(self, app: str) -> Path:
