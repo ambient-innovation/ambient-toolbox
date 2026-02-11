@@ -72,6 +72,18 @@ class TestStructureValidatorTest(TestCase):
 
         self.assertEqual(file_whitelist, service.file_allowlist)
 
+    def test_toolbox_settings_file_whitelist_warns(self):
+        """Test that toolbox settings whitelist emits a warning when allowlist is missing."""
+        with mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST", []), mock.patch.object(
+            toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST", ["toolbox_file"]
+        ):
+            service = StructureTestValidator()
+
+            with self.assertWarns(DeprecationWarning):
+                file_allowlist = service._get_file_allowlist()
+
+        self.assertIn("toolbox_file", file_allowlist)
+
     # ============================================================================
     # Base Directory Tests
     # ============================================================================
@@ -190,6 +202,27 @@ class TestStructureValidatorTest(TestCase):
         allowlist = service._get_misplaced_test_file_allowlist()
 
         self.assertEqual(allowlist, [])
+
+    def test_toolbox_settings_misplaced_whitelist_warns(self):
+        """Test toolbox settings misplaced whitelist emits warning when allowlist is missing."""
+        with mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST", []), mock.patch.object(
+            toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST", ["handlers/toolbox"]
+        ):
+            service = StructureTestValidator()
+
+            with self.assertWarns(DeprecationWarning):
+                allowlist = service._get_misplaced_test_file_allowlist()
+
+        self.assertIn("handlers/toolbox", allowlist)
+
+    def test_get_misplaced_test_file_whitelist_alias_warns(self):
+        """Test that calling the deprecated misplaced whitelist getter warns and mirrors allowlist."""
+        service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning):
+            whitelist = service._get_misplaced_test_file_whitelist()
+
+        self.assertEqual(whitelist, service._get_misplaced_test_file_allowlist())
 
     # ============================================================================
     # Check Missing Test Prefix Tests
