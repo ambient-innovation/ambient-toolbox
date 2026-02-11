@@ -157,9 +157,7 @@ class TestStructureValidatorTest(TestCase):
     # Misplaced Test File Whitelist Tests
     # ============================================================================
 
-    @override_settings(
-        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers/commands", "special_tests"]
-    )
+    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers/commands", "special_tests"])
     def test_get_misplaced_test_file_allowlist_from_settings(self):
         """Test misplaced test file allowlist retrieval from Django settings."""
         service = StructureTestValidator()

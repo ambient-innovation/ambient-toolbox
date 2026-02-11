@@ -73,9 +73,7 @@ class AllowlistEmailBackend(SMTPEmailBackend):
             if re.search(AllowlistEmailBackend.get_email_allowlist_regex(), to):
                 allowed_recipients.append(to)
             elif AllowlistEmailBackend.get_backend_redirect_address():
-                allowed_recipients.append(
-                    AllowlistEmailBackend.get_backend_redirect_address() % to.replace("@", "_")
-                )
+                allowed_recipients.append(AllowlistEmailBackend.get_backend_redirect_address() % to.replace("@", "_"))
         return allowed_recipients
 
     @staticmethod
