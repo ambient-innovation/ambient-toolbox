@@ -68,10 +68,11 @@ class TestStructureValidatorTest(TestCase):
         """Ensure the helper returns the provided default when no settings exist."""
         dummy_settings = types.SimpleNamespace()
 
-        with mock.patch(
-            "ambient_toolbox.tests.structure_validator.test_structure_validator.settings", dummy_settings
-        ), mock.patch(
-            "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+        with (
+            mock.patch("ambient_toolbox.tests.structure_validator.test_structure_validator.settings", dummy_settings),
+            mock.patch(
+                "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+            ),
         ):
             default = StructureTestValidator._resolve_allowlist_setting(
                 allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
