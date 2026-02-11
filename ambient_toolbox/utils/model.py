@@ -1,17 +1,34 @@
+import warnings
+
 from django.db.models import ForeignKey, Model
 
 
-def object_to_dict(obj, blacklisted_fields: list | None = None, include_id: bool = False) -> dict:
+def object_to_dict(
+    obj,
+    blocklisted_fields: list | None = None,
+    include_id: bool = False,
+    *,
+    blacklisted_fields: list | None = None,
+) -> dict:
     """
     Returns a dict with all data defined in the model class as a key-value-dict
     Attention: Does not work for M2M fields!
     """
-    # Default blacklist
-    blacklisted_fields = blacklisted_fields if blacklisted_fields else []
+    if blacklisted_fields is not None:
+        warnings.warn(
+            "blacklisted_fields is deprecated, use blocklisted_fields",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if blocklisted_fields is None:
+            blocklisted_fields = blacklisted_fields
 
-    # Add default django primary key to blacklist
+    # Default blocklist
+    blocklisted_fields = blocklisted_fields if blocklisted_fields else []
+
+    # Add default django primary key to blocklist
     if not include_id:
-        blacklisted_fields.append("id")
+        blocklisted_fields.append("id")
 
     data = vars(obj)
 
@@ -22,7 +39,7 @@ def object_to_dict(obj, blacklisted_fields: list | None = None, include_id: bool
         else:
             valid_fields.append(f"{f.name}_id")
 
-    valid_data = {key: value for key, value in data.items() if key in valid_fields and key not in blacklisted_fields}
+    valid_data = {key: value for key, value in data.items() if key in valid_fields and key not in blocklisted_fields}
 
     return valid_data
 
