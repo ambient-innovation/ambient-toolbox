@@ -15,7 +15,6 @@ from unittest import mock
 from django.conf import settings
 from django.test import TestCase, override_settings
 
-from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
@@ -76,9 +75,7 @@ class TestStructureValidatorTest(TestCase):
 
     def test_toolbox_settings_file_whitelist_warns(self):
         """Test that toolbox settings whitelist emits a warning when allowlist is missing."""
-        dummy_settings = types.SimpleNamespace(
-            TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["toolbox_file"]
-        )
+        dummy_settings = types.SimpleNamespace(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["toolbox_file"])
 
         with mock.patch(
             "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
