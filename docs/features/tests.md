@@ -201,9 +201,11 @@ You can define all of those settings variables in your main Django settings file
 
 | Variable                                               | Type | Default                 | Explanation                                                              |
 |--------------------------------------------------------|------|-------------------------|--------------------------------------------------------------------------|
-| TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST                | list | []                      | Filenames which will be ignored, will always ignore `__init__`           |
+| TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST                | list | []                      | Filenames which will be ignored, will always ignore `__init__` (legacy `*_WHITELIST` names still accepted, but deprecated) |
 | TEST_STRUCTURE_VALIDATOR_BASE_DIR                      | Path | settings.BASE_DIR       | Root path to your application (BASE_DIR in a vanilla Django setup)       |
 | TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME                 | str  | "apps"                  | Directory where all your Django apps live in, can be set to "".          |
 | TEST_STRUCTURE_VALIDATOR_APP_LIST                      | list | settings.INSTALLED_APPS | List of all your Django apps you want to validate                        |
 | TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST        | list | []                      | Directories which will be ignored, will always ignore `__pycache__`      |
-| TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST | list | []                      | Test files which will be ignored even though they don't live in `tests/` |
+| TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST | list | []                      | Test files which will be ignored even though they don't live in `tests/` (legacy `*_WHITELIST` names still accepted, but deprecated) |
+
+Legacy names like `TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST` or `TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST` are still accepted for now but trigger a `DeprecationWarning` via the structure validator helper.

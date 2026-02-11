@@ -8,6 +8,7 @@ ensuring 100% code coverage and proper validation of test directory structures.
 import io
 import sys
 import tempfile
+import types
 from pathlib import Path
 from unittest import mock
 
@@ -30,6 +31,7 @@ class TestStructureValidatorTest(TestCase):
         """Test that initialization sets correct default values."""
         service = StructureTestValidator()
 
+        self.assertEqual(service.file_allowlist, ["__init__"])
         self.assertEqual(service.file_whitelist, ["__init__"])
         self.assertEqual(service.issue_list, [])
 
@@ -37,20 +39,73 @@ class TestStructureValidatorTest(TestCase):
     # File Whitelist Tests
     # ============================================================================
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
-    def test_get_file_whitelist_from_settings(self):
-        """Test file whitelist retrieval from Django settings."""
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
+    def test_get_file_allowlist_from_settings(self):
+        """Test file allowlist retrieval from Django settings."""
         service = StructureTestValidator()
-        file_whitelist = service._get_file_whitelist()
+        file_allowlist = service._get_file_allowlist()
 
-        self.assertEqual(file_whitelist, ["__init__", "my_file"])
+        self.assertEqual(file_allowlist, ["__init__", "my_file"])
 
-    def test_get_file_whitelist_fallback(self):
-        """Test file whitelist fallback to toolbox settings."""
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["legacy_file"])
+    def test_get_file_allowlist_warns_for_deprecated_setting(self):
+        """Test that deprecated whitelist settings warn when allowlist is absent."""
         service = StructureTestValidator()
-        file_whitelist = service._get_file_whitelist()
 
-        self.assertEqual(file_whitelist, ["__init__"])
+        with self.assertWarns(DeprecationWarning):
+            file_allowlist = service._get_file_allowlist()
+
+        self.assertIn("legacy_file", file_allowlist)
+
+    def test_get_file_allowlist_fallback(self):
+        """Test file allowlist fallback to toolbox settings."""
+        service = StructureTestValidator()
+        file_allowlist = service._get_file_allowlist()
+
+        self.assertEqual(file_allowlist, ["__init__"])
+
+    def test_resolve_allowlist_setting_defaults_when_missing(self):
+        """Ensure the helper returns the provided default when no settings exist."""
+        dummy_settings = types.SimpleNamespace()
+
+        with (
+            mock.patch("ambient_toolbox.tests.structure_validator.test_structure_validator.settings", dummy_settings),
+            mock.patch(
+                "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+            ),
+        ):
+            default = StructureTestValidator._resolve_allowlist_setting(
+                allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+                whitelist_name="TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+                default=["default_entry"],
+            )
+
+        self.assertEqual(default, ["default_entry"])
+
+    def test_get_file_whitelist_alias_warns(self):
+        """Test that calling the deprecated whitelist getter warns and mirrors allowlist."""
+        service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning):
+            file_whitelist = service._get_file_whitelist()
+
+        self.assertEqual(file_whitelist, service.file_allowlist)
+
+    def test_toolbox_settings_file_whitelist_warns(self):
+        """Test that toolbox settings whitelist emits a warning when allowlist is missing."""
+        dummy_settings = types.SimpleNamespace(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["toolbox_file"])
+
+        with mock.patch(
+            "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+        ):
+            with self.assertWarns(DeprecationWarning):
+                file_allowlist = StructureTestValidator._resolve_allowlist_setting(
+                    allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
+                    whitelist_name="TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
+                    default=[],
+                )
+
+        self.assertIn("toolbox_file", file_allowlist)
 
     # ============================================================================
     # Base Directory Tests
@@ -132,7 +187,7 @@ class TestStructureValidatorTest(TestCase):
         service = StructureTestValidator()
         dir_list = service._get_ignored_directory_list()
 
-        self.assertEqual(dir_list, ["__pycache__", "my_dir", "other_dir"])
+        self.assertEqual(dir_list, ["__pycache__", ".venv", "venv", "env", "my_dir", "other_dir"])
 
     def test_get_ignored_directory_list_fallback(self):
         """Test ignored directory list fallback to toolbox settings."""
@@ -156,20 +211,47 @@ class TestStructureValidatorTest(TestCase):
     # Misplaced Test File Whitelist Tests
     # ============================================================================
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands", "special_tests"])
-    def test_get_misplaced_test_file_whitelist_from_settings(self):
-        """Test misplaced test file whitelist retrieval from Django settings."""
+    @override_settings(TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers/commands", "special_tests"])
+    def test_get_misplaced_test_file_allowlist_from_settings(self):
+        """Test misplaced test file allowlist retrieval from Django settings."""
         service = StructureTestValidator()
-        whitelist = service._get_misplaced_test_file_whitelist()
+        allowlist = service._get_misplaced_test_file_allowlist()
 
-        self.assertEqual(whitelist, ["handlers/commands", "special_tests"])
+        self.assertEqual(allowlist, ["handlers/commands", "special_tests"])
 
-    def test_get_misplaced_test_file_whitelist_fallback(self):
-        """Test misplaced test file whitelist fallback to toolbox settings."""
+    def test_get_misplaced_test_file_allowlist_fallback(self):
+        """Test misplaced test file allowlist fallback to toolbox settings."""
         service = StructureTestValidator()
-        whitelist = service._get_misplaced_test_file_whitelist()
+        allowlist = service._get_misplaced_test_file_allowlist()
 
-        self.assertEqual(whitelist, [])
+        self.assertEqual(allowlist, [])
+
+    def test_toolbox_settings_misplaced_whitelist_warns(self):
+        """Test that toolbox settings misplaced whitelist emits warning when allowlist is missing."""
+        dummy_settings = types.SimpleNamespace(
+            TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/toolbox"]
+        )
+
+        with mock.patch(
+            "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
+        ):
+            with self.assertWarns(DeprecationWarning):
+                allowlist = StructureTestValidator._resolve_allowlist_setting(
+                    allowlist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST",
+                    whitelist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST",
+                    default=[],
+                )
+
+        self.assertIn("handlers/toolbox", allowlist)
+
+    def test_get_misplaced_test_file_whitelist_alias_warns(self):
+        """Test that calling the deprecated misplaced whitelist getter warns and mirrors allowlist."""
+        service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning):
+            whitelist = service._get_misplaced_test_file_whitelist()
+
+        self.assertEqual(whitelist, service._get_misplaced_test_file_allowlist())
 
     # ============================================================================
     # Check Missing Test Prefix Tests
@@ -189,8 +271,8 @@ class TestStructureValidatorTest(TestCase):
         self.assertEqual(len(service.issue_list), 0)
 
     @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
-    def test_check_missing_test_prefix_whitelisted_file(self):
-        """Test that whitelisted files without 'test_' prefix pass validation."""
+    def test_check_missing_test_prefix_allowlisted_file(self):
+        """Test that allowlisted files without 'test_' prefix pass validation."""
         service = StructureTestValidator()
         result = service._check_missing_test_prefix(
             root="root/path",
@@ -231,7 +313,7 @@ class TestStructureValidatorTest(TestCase):
         self.assertIn("root/path/missing_prefix.py", service.issue_list[0])
 
     def test_check_missing_test_prefix_init_file(self):
-        """Test that __init__.py files are automatically whitelisted."""
+        """Test that __init__.py files are automatically included in the allowlist."""
         service = StructureTestValidator()
         result = service._check_missing_test_prefix(
             root="root/path",
@@ -315,10 +397,10 @@ class TestStructureValidatorTest(TestCase):
                 self.assertIn("Test file found outside tests directory:", service.issue_list[0])
                 self.assertIn("test_misplaced.py", service.issue_list[0])
 
-    def test_check_misplaced_test_files_with_whitelist(self):
-        """Test that whitelisted paths are not flagged even when outside tests directory."""
+    def test_check_misplaced_test_files_with_allowlist(self):
+        """Test that allowlisted paths are not flagged even when outside tests directory."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Create a test file in a whitelisted location
+            # Create a test file in an allowlisted location
             handlers_dir = Path(tmpdir) / "handlers"
             handlers_dir.mkdir()
             test_file = handlers_dir / "test_handler.py"
@@ -472,8 +554,8 @@ class TestStructureValidatorTest(TestCase):
         TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME="",
         TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands"],
     )
-    def test_process_with_whitelist(self):
-        """Test that whitelisted paths are not reported as issues."""
+    def test_process_with_allowlist(self):
+        """Test that allowlisted paths are not reported as issues."""
         service = StructureTestValidator()
         with self.assertRaises(SystemExit) as cm:
             service.process()

@@ -1,3 +1,5 @@
+import warnings
+
 from django.contrib.auth.models import Permission
 from django.test import TestCase
 
@@ -10,17 +12,40 @@ class UtilModelTest(TestCase):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj), {"value": obj.value})
 
-    def test_object_to_dict_blacklist(self):
+    def test_object_to_dict_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
-        self.assertEqual(object_to_dict(obj, ["value"]), {})
+        self.assertEqual(object_to_dict(obj, blocklisted_fields=["value"]), {})
 
-    def test_object_to_dict_with_id_with_blacklist(self):
+    def test_object_to_dict_with_id_with_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
-        self.assertEqual(object_to_dict(obj, ["value"], True), {"id": obj.id})
+        self.assertEqual(object_to_dict(obj, blocklisted_fields=["value"], include_id=True), {"id": obj.id})
 
-    def test_with_id_no_blacklist(self):
+    def test_with_id_no_blocklist(self):
         obj = MySingleSignalModel.objects.create(value=17)
         self.assertEqual(object_to_dict(obj, include_id=True), {"id": obj.id, "value": obj.value})
+
+    def test_old_blacklist_keyword_warns(self):
+        obj = MySingleSignalModel.objects.create(value=17)
+        with self.assertWarns(DeprecationWarning):
+            result = object_to_dict(obj, blacklisted_fields=["value"])
+
+        self.assertEqual(result, {})
+
+    def test_old_blacklist_keyword_captured_by_warnings(self):
+        obj = MySingleSignalModel.objects.create(value=17)
+        with warnings.catch_warnings(record=True) as captured:
+            warnings.simplefilter("always")
+            result = object_to_dict(obj, blacklisted_fields=["value"])
+
+        self.assertEqual(result, {})
+        self.assertTrue(any("blacklisted_fields" in str(w.message) for w in captured))
+
+    def test_old_blacklist_keyword_preserves_explicit_blocklist(self):
+        obj = MySingleSignalModel.objects.create(value=17)
+        with self.assertWarns(DeprecationWarning):
+            result = object_to_dict(obj, blocklisted_fields=[], blacklisted_fields=["value"])
+
+        self.assertEqual(result, {"value": obj.value})
 
     def test_object_to_dict_valid_fields_append(self):
         obj = MySingleSignalModel.objects.create(value=17)
