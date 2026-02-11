@@ -64,22 +64,30 @@ class MailBackendAllowlistBackendTest(TestCase):
     def test_get_domain_allowlist_defaults_empty(self):
         self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), [])
 
-    @override_settings(EMAIL_BACKEND_DOMAIN_WHITELIST=["legacy.domain"])
-    def test_get_domain_allowlist_falls_back_to_whitelist(self):
-        with self.assertWarns(DeprecationWarning):
-            self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), ["legacy.domain"])
+    def test_get_domain_allowlist_defaults_empty(self):
+        with self.settings(
+            EMAIL_BACKEND_DOMAIN_ALLOWLIST=None,
+            EMAIL_BACKEND_DOMAIN_WHITELIST=None,
+        ):
+            self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), [])
 
-    @override_settings(EMAIL_BACKEND_DOMAIN_ALLOWLIST=["allowed.domain"])
+    def test_get_domain_allowlist_falls_back_to_whitelist(self):
+        with self.settings(
+            EMAIL_BACKEND_DOMAIN_ALLOWLIST=None,
+            EMAIL_BACKEND_DOMAIN_WHITELIST=["legacy.domain"],
+        ):
+            with self.assertWarns(DeprecationWarning):
+                self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), ["legacy.domain"])
+
     def test_get_domain_whitelist_alias_warns(self):
         with self.assertWarns(DeprecationWarning):
-            self.assertEqual(AllowlistEmailBackend.get_domain_whitelist(), ["allowed.domain"])
+            self.assertEqual(AllowlistEmailBackend.get_domain_whitelist(), ["valid.domain"])
 
-    @override_settings(EMAIL_BACKEND_DOMAIN_ALLOWLIST=["allowed.domain"])
     def test_get_email_regex_alias_warns(self):
         with self.assertWarns(DeprecationWarning):
             regex = AllowlistEmailBackend.get_email_regex()
 
-        self.assertIn("allowed.domain", regex)
+        self.assertIn(r"valid\.domain", regex)
 
     def test_whitify_alias_warns(self):
         with self.assertWarns(DeprecationWarning):
