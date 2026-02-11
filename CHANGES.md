@@ -1,5 +1,8 @@
 # Changelog
 
+**Unreleased**
+  * Replaced legacy whitelist/blacklist terminology with Allowlist/Blocklist for the email backend, test structure validator, and `object_to_dict`, while keeping the old settings/paths as deprecated shims that emit warnings.
+
 **12.7.2** (2026-02-05)
   * Fixed wrong display due to changes in GitLab for coverage checker script
 
