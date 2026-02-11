@@ -14,6 +14,7 @@ from unittest import mock
 from django.conf import settings
 from django.test import TestCase, override_settings
 
+from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 from ambient_toolbox.tests.structure_validator.test_structure_validator import StructureTestValidator
 
 
@@ -74,8 +75,9 @@ class TestStructureValidatorTest(TestCase):
 
     def test_toolbox_settings_file_whitelist_warns(self):
         """Test that toolbox settings whitelist emits a warning when allowlist is missing."""
-        with mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST", []), mock.patch.object(
-            toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST", ["toolbox_file"]
+        with (
+            mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST", []),
+            mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST", ["toolbox_file"]),
         ):
             service = StructureTestValidator()
 
@@ -205,8 +207,11 @@ class TestStructureValidatorTest(TestCase):
 
     def test_toolbox_settings_misplaced_whitelist_warns(self):
         """Test toolbox settings misplaced whitelist emits warning when allowlist is missing."""
-        with mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST", []), mock.patch.object(
-            toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST", ["handlers/toolbox"]
+        with (
+            mock.patch.object(toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST", []),
+            mock.patch.object(
+                toolbox_settings, "TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST", ["handlers/toolbox"]
+            ),
         ):
             service = StructureTestValidator()
 
