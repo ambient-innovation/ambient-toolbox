@@ -62,9 +62,6 @@ class MailBackendAllowlistBackendTest(TestCase):
         mocked_send_messages.assert_called_once_with([])
 
     def test_get_domain_allowlist_defaults_empty(self):
-        self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), [])
-
-    def test_get_domain_allowlist_defaults_empty(self):
         with self.settings(
             EMAIL_BACKEND_DOMAIN_ALLOWLIST=None,
             EMAIL_BACKEND_DOMAIN_WHITELIST=None,
