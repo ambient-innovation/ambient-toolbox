@@ -26,6 +26,21 @@ class CheckAtomicDocsTestCase(SimpleTestCase):
 
             self.assertEqual(result, [])
 
+    def test_base_dir_defaults_to_settings_base_dir(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            base_dir = Path(tmp_dir)
+            docs_dir = base_dir / "docs"
+            docs_dir.mkdir()
+            (docs_dir / "guide.md").write_text("# Guide", encoding="utf-8")
+
+            readme = base_dir / "README.md"
+            readme.write_text("# Project\n[Guide](docs/guide.md)\n", encoding="utf-8")
+
+            with override_settings(BASE_DIR=base_dir):
+                result = check_atomic_docs()
+
+            self.assertEqual(result, [])
+
     def test_unlinked_file_emits_warning(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             base_dir = Path(tmp_dir)
