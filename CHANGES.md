@@ -1,5 +1,8 @@
 # Changelog
 
+**12.8.0** (2026-03-03)
+  * Added "atomic docs" system check to ensure all markdown files in the docs directory are linked in the README
+
 **12.7.3** (2026-02-17)
   * Added help texts to all management commands and refined docstrings
 
