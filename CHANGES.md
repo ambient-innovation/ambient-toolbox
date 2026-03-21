@@ -1,5 +1,8 @@
 # Changelog
 
+**12.9.0** (2026-03-21)
+  * Added "backend import validation" system check to ensure ENV vars for backends are set up correctly
+
 **12.8.0** (2026-03-03)
   * Added "atomic docs" system check to ensure all markdown files in the docs directory are linked in the README
 
