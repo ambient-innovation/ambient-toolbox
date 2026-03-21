@@ -1,10 +1,10 @@
 from importlib import import_module
 
 from django.conf import settings
-from django.core.checks import Warning  # noqa: A004
+from django.core import checks
 
 
-def check_backend_env_variables(**kwargs) -> list[Warning]:
+def check_backend_env_variables(*args, **kwargs) -> list[checks.Warning]:
     """
     Check all Django settings with "_BACKEND" suffix to ensure they point to importable paths.
     """
