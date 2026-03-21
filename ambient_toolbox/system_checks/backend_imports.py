@@ -43,7 +43,7 @@ def check_backend_env_variables(*args, **kwargs) -> list[checks.Warning]:
                 module = import_module(module_path)
                 if not hasattr(module, class_name):
                     warnings.append(
-                        Warning(
+                        checks.Warning(
                             f"Setting '{setting_name}' points to '{setting_value}', "
                             f"but class '{class_name}' does not exist in module '{module_path}'.",
                             hint=f"Check that the class name is correct in the path '{setting_value}'.",
@@ -52,7 +52,7 @@ def check_backend_env_variables(*args, **kwargs) -> list[checks.Warning]:
                     )
         except ModuleNotFoundError as e:
             warnings.append(
-                Warning(
+                checks.Warning(
                     f"Setting '{setting_name}' points to '{setting_value}', but the module could not be imported: {e}",
                     hint="Ensure the module path is correct and the module is installed.",
                     id="ambient_toolbox.W006",
@@ -60,7 +60,7 @@ def check_backend_env_variables(*args, **kwargs) -> list[checks.Warning]:
             )
         except ImportError as e:
             warnings.append(
-                Warning(
+                checks.Warning(
                     f"Setting '{setting_name}' points to '{setting_value}', but an error occurred while importing: {e}",
                     hint="Check the path and ensure it's a valid Python import path.",
                     id="ambient_toolbox.W007",
