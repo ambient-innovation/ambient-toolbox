@@ -12,7 +12,7 @@ from ambient_toolbox.system_checks.settings import (
 
 def check_atomic_docs(*args, **kwargs) -> list[checks.Warning]:
     """
-    Checks that all markdown files in the docs directory are linked in the README.
+    Checks that all Markdown files in the docs directory are linked in the README.
     Ensures documentation stays discoverable and prevents orphaned docs from accumulating.
     """
     base_dir = get_atomic_docs_base_dir()
