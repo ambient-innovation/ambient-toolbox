@@ -98,6 +98,9 @@ jobs:
           name: dist-signed
           path: dist/
 
+      - name: Remove Sigstore bundles (PyPI only accepts .whl and .tar.gz)
+        run: rm dist/*.sigstore.json
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         # Sigstore attestations are generated and uploaded to PyPI automatically
