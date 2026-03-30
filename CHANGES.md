@@ -1,5 +1,8 @@
 # Changelog
 
+**12.9.2** (2026-03-30)
+  * Maintenance updates via ambient-package-update
+
 **12.9.1** (2026-03-30)
   * Trusted publishing and releases via the CI
 
