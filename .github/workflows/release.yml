@@ -13,10 +13,22 @@ jobs:
   ci:
     uses: ./.github/workflows/quality-gate.yml
 
+  check-branch:
+    name: Verify tag is on master
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Fail if tag is not on master
+        run: |
+          git fetch origin master
+          git merge-base --is-ancestor "${{ github.sha }}" origin/master
+
   build:
     name: Build distribution packages
     runs-on: ubuntu-24.04
-    needs: ci
+    needs: [ci, check-branch]
     permissions:
       contents: read
     steps:
