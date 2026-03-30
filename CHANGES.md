@@ -1,5 +1,8 @@
 # Changelog
 
+**12.9.1** (2026-03-30)
+  * Trusted publishing and releases via the CI
+
 **12.9.0** (2026-03-21)
   * Added "backend import validation" system check to ensure ENV vars for backends are set up correctly
 

@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Restrictive default — each job declares only what it needs
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build distribution packages
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build packages
+        run: uv build
+
+      - name: Upload distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  sign:
+    name: Sign distribution packages
+    runs-on: ubuntu-24.04
+    needs: build
+    permissions:
+      id-token: write  # required for Sigstore OIDC signing
+      contents: read
+    steps:
+      - name: Download distribution packages
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Sign packages with Sigstore
+        uses: sigstore/gh-action-sigstore-python@v3.2.0
+        with:
+          inputs: >-
+            ./dist/*.tar.gz
+            ./dist/*.whl
+
+      - name: Upload signed distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-signed
+          path: dist/
+          if-no-files-found: error
+
+  github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-24.04
+    needs: sign
+    permissions:
+      contents: write  # required to create GitHub releases
+    steps:
+      - name: Download signed distribution packages
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-signed
+          path: dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**
+          fail_on_unmatched_files: true
+
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-24.04
+    needs: sign
+    environment: pypi
+    permissions:
+      id-token: write  # required for PyPI Trusted Publisher OIDC auth
+      contents: read
+    steps:
+      - name: Download signed distribution packages
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-signed
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # Sigstore attestations are generated and uploaded to PyPI automatically
+        # when using Trusted Publishing — no extra configuration needed.
