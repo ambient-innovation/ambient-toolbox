@@ -7,7 +7,7 @@ def object_to_dict(obj, blacklisted_fields: list | None = None, include_id: bool
     Attention: Does not work for M2M fields!
     """
     # Default blacklist
-    blacklisted_fields = blacklisted_fields if blacklisted_fields else []
+    blacklisted_fields = blacklisted_fields or []
 
     # Add default django primary key to blacklist
     if not include_id:

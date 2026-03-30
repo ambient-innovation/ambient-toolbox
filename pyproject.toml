@@ -37,9 +37,6 @@ dependencies = [
     'python-dateutil>=2.5.3',
 ]
 
-[project.entry-points."djangoq.errorreporters"]
-ambient-djangoq2-sentry = "ambient_toolbox.sentry.reporter:DjangoQ2SentryReporter"
-
 [project.optional-dependencies]
 dev = [
    'typer~=0.19',
@@ -51,6 +48,7 @@ dev = [
    'sphinx-rtd-theme~=3.0',
    'm2r2~=0.3',
    'uv~=0.9',
+   'keyring~=25.7',
    'ambient-package-update',
    'gevent~=25.1',
    'httpx~=0.28',
@@ -310,3 +308,6 @@ source = [
 
 [tool.hatch.version]
 path = "ambient_toolbox/__init__.py"
+
+[tool.uv]
+keyring-provider = "subprocess"
