@@ -184,3 +184,69 @@ class MyModelSuperuserDetailPageAdmin(DeactivatableChangeViewAdminMixin, admin.M
 
 This mixin automatically disables all links and furthermore the route to the change view so you don't have to worry
 about users trying to guess the route.
+
+### UserForeignKeyLabelAdminMixin
+
+By default, Django admin renders ForeignKey and ManyToManyField widgets using the related model's ``__str__()`` method.
+For the User model this often results in unhelpful labels if the username is not being used. This mixin overrides the
+display label for any field pointing to the User model, showing **"Full Name (email)"** instead.
+
+````python
+from django.contrib import admin
+
+from ambient_toolbox.admin.model_admins.mixins import UserForeignKeyLabelAdminMixin
+
+
+@admin.register(MyModel)
+class MyModelAdmin(UserForeignKeyLabelAdminMixin, admin.ModelAdmin):
+    ...
+````
+
+The mixin handles both ``ForeignKey`` and ``ManyToManyField`` relations to the User model automatically.
+
+If you want to customise the label format, override ``get_label_for_user()``:
+
+````python
+@admin.register(MyModel)
+class MyModelAdmin(UserForeignKeyLabelAdminMixin, admin.ModelAdmin):
+
+    def get_label_for_user(self, user) -> str:
+        return f"{user.email} ({user.username})"
+````
+
+## Views
+
+### UserLabelAutocompleteJsonView
+
+When using ``autocomplete_fields`` in the Django admin, the autocomplete dropdown also relies on ``__str__()``.
+``UserLabelAutocompleteJsonView`` overrides the autocomplete response for User objects to show **"Full Name (email)"**,
+matching the behaviour of ``UserForeignKeyLabelAdminMixin``.
+
+Wire this view into your URL configuration **before** the admin URLs:
+
+````python
+from django.contrib import admin
+from django.urls import path
+
+from ambient_toolbox.admin.views.autocomplete import UserLabelAutocompleteJsonView
+
+urlpatterns = [
+    path("admin/autocomplete/", UserLabelAutocompleteJsonView.as_view(admin_site=admin.site)),
+    path("admin/", admin.site.urls),
+]
+````
+
+If you want to customise the label format, override ``get_user_display_text()``:
+
+````python
+from ambient_toolbox.admin.views.autocomplete import UserLabelAutocompleteJsonView
+
+
+class MyAutocompleteJsonView(UserLabelAutocompleteJsonView):
+
+    def get_user_display_text(self, user) -> str:
+        return f"{user.email} ({user.username})"
+````
+
+Both the mixin and the view use ``get_user_display_label()`` from ``ambient_toolbox.admin.utils`` under the hood, so
+they produce consistent labels by default.

@@ -150,6 +150,13 @@ class ModelWithoutRelatedNameOnFieldButWithMeta(models.Model):
         return self.id
 
 
+class ModelWithM2MToUser(models.Model):
+    users = models.ManyToManyField("auth.User", blank=True, related_name="m2m_test_models")
+
+    def __str__(self):
+        return str(self.id)
+
+
 class ModelWithGetOrNoneManagerModel(models.Model):
     my_field = models.BooleanField(default=False)
 

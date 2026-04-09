@@ -1,5 +1,8 @@
 # Changelog
 
+**12.10.0** (2026-04-09)
+* Added Django admin mixins to show the user by email and not username
+
 **12.9.4** (2026-04-08)
 * No git worktree needed for checking translation file integrity
 
