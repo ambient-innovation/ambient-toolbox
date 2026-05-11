@@ -6,6 +6,7 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 
+from ambient_toolbox.middleware.current_request import CurrentRequestMiddleware
 from ambient_toolbox.middleware.current_user import CurrentUserMiddleware
 
 
@@ -88,6 +89,19 @@ def test_replaced_user_is_reflected_in_middleware():
     response = middleware(request)
 
     assert response.status_code == HTTPStatus.OK
+
+
+def test_request_is_cleared_when_get_response_raises():
+    def get_response(request):
+        raise RuntimeError("boom")
+
+    middleware = CurrentRequestMiddleware(get_response)
+    request = Mock(user=Mock(user_name="test_user"))
+
+    with pytest.raises(RuntimeError, match="boom"):
+        middleware(request)
+
+    assert CurrentRequestMiddleware.get_current_user() is None
 
 
 def set_current_user(user=None, current_users=None, ready_event=None, proceed_event=None):

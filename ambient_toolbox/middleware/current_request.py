@@ -18,9 +18,10 @@ class CurrentRequestMiddleware:
 
     def __call__(self, request: "HttpRequest") -> "HttpResponse":
         token = _request_cv.set(request)
-        response = self.get_response(request)
-        _request_cv.reset(token)
-        return response
+        try:
+            return self.get_response(request)
+        finally:
+            _request_cv.reset(token)
 
     @staticmethod
     def get_current_user():

@@ -1,5 +1,8 @@
 # Changelog
 
+**12.10.2** (2026-05-11)
+* Fixed `ContextVar` leak in `CurrentRequestMiddleware` when `get_response` raises an exception
+
 **12.10.1** (2026-04-09)
 * Improved docs for user-email admin
 
