@@ -1,5 +1,8 @@
 # Changelog
 
+**12.10.3** (2026-05-22)
+* Fixed `validate_gitlab_coverage` management command triggering an `httpx` ImportError on command discovery when the optional `gitlab-coverage` extra was not installed
+
 **12.10.2** (2026-05-11)
 * Fixed `ContextVar` leak in `CurrentRequestMiddleware` when `get_response` raises an exception
 
