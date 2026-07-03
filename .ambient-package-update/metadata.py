@@ -1,5 +1,6 @@
 from ambient_package_update.metadata.author import PackageAuthor
 from ambient_package_update.metadata.constants import (
+    DEPLOYMENT_STATUS_STABLE,
     DEV_DEPENDENCIES,
     LICENSE_MIT,
     SUPPORTED_DJANGO_VERSIONS,
@@ -26,7 +27,7 @@ METADATA = PackageMetadata(
         ),
     ],
     maintainer=PackageMaintainer(name="Beyonder Deutschland", url="https://beyonder.de/", email="hello@beyonder.de"),
-    development_status="5 - Production/Stable",
+    development_status=DEPLOYMENT_STATUS_STABLE,
     license=LICENSE_MIT,
     license_year=2012,
     claim=claim,
