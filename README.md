@@ -5,11 +5,11 @@
 [![Coding Style](https://img.shields.io/badge/code%20style-Ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Documentation Status](https://readthedocs.org/projects/ambient-toolbox/badge/?version=latest)](https://ambient-toolbox.readthedocs.io/en/latest/?badge=latest)
 
-Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets.
+Python toolbox of Beyonder Deutschland containing an abundance of useful tools and gadgets.
 
 [PyPI](https://pypi.org/project/ambient-toolbox/) • [GitHub](https://github.com/ambient-innovation/ambient-toolbox) • [Full documentation](https://ambient-toolbox.readthedocs.io/en/latest/index.html)
 
-Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
+Creator & Maintainer: [Beyonder Deutschland](https://beyonder.de/)
 
 ## Features
 

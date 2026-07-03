@@ -15,9 +15,9 @@ Example:
 
 ```python
 EMAIL_BACKEND = "ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend"
-EMAIL_BACKEND_DOMAIN_WHITELIST = ["ambient.digital"]
-EMAIL_BACKEND_REDIRECT_ADDRESS = "%s@testuser.ambient.digital"
+EMAIL_BACKEND_DOMAIN_WHITELIST = ["beyonder.de"]
+EMAIL_BACKEND_REDIRECT_ADDRESS = "%s@testuser.beyonder.de"
 ```
 
 If EMAIL_BACKEND_REDIRECT_ADDRESS is configured, an email to 'albertus.magnus@example.com' will be redirected to:
-albertus.magnus_example.com@testuser.ambient.digital
+albertus.magnus_example.com@testuser.beyonder.de
