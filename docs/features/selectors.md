@@ -9,7 +9,7 @@ In addition to this the company [WirBauenDigital](https://www.wirbauen.digital/)
 all Custom QuerySet (CQS) methods to be as atomic as possible. These CQS methods will be (re-)used in any place
 throughout your system.
 
-Combining these approaches with the [Ambient Digital](https://ambient.digital) style to separate CQS and managers in a
+Combining these approaches with the [Beyonder Deutschland](https://beyonder.de) style to separate CQS and managers in a
 very strict way:
 
 * CQS methods will always return a QuerySet

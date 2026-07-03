@@ -13,19 +13,19 @@ from ambient_package_update.metadata.ruff_ignored_inspection import (
     RuffIgnoredInspection,
 )
 
-claim = "Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."
+claim = "Python toolbox of Beyonder Deutschland containing an abundance of useful tools and gadgets."
 
 METADATA = PackageMetadata(
     package_name="ambient-toolbox",
     github_package_group="ambient-innovation",
-    licenser="Ambient Innovation: GmbH",
+    licenser="Beyonder Deutschland GmbH",
     authors=[
         PackageAuthor(
-            name="Ambient Digital",
-            email="hello@ambient.digital",
+            name="Beyonder Deutschland",
+            email="hello@beyonder.de",
         ),
     ],
-    maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
+    maintainer=PackageMaintainer(name="Beyonder Deutschland", url="https://beyonder.de/", email="hello@beyonder.de"),
     development_status="5 - Production/Stable",
     license=LICENSE_MIT,
     license_year=2012,
