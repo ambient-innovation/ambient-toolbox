@@ -325,28 +325,28 @@ def test_get_time_from_seconds_negative_seconds():
 @override_settings(TIME_ZONE="UTC")
 def test_datetime_format_with_utc_timezone():
     """Test datetime formatting with UTC timezone."""
-    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
+    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
     assert datetime_format(source_date, "%d.%m.%Y %H:%M") == "26.06.2020 08:00"
 
 
 @override_settings(TIME_ZONE="Europe/Cologne")
 def test_datetime_format_with_cologne_timezone():
     """Test datetime formatting with Europe/Cologne timezone (same as UTC in summer)."""
-    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
+    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
     assert datetime_format(source_date, "%d.%m.%Y %H:%M") == "26.06.2020 08:00"
 
 
 @override_settings(TIME_ZONE="Europe/Berlin")
 def test_datetime_format_with_berlin_timezone():
     """Test datetime formatting with Europe/Berlin timezone (UTC+2 in summer)."""
-    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
+    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
     assert datetime_format(source_date, "%d.%m.%Y %H:%M") == "26.06.2020 10:00"
 
 
 @override_settings(TIME_ZONE="Invalid/Timezone")
 def test_datetime_format_with_invalid_timezone():
     """Test that datetime_format handles ZoneInfoNotFoundError gracefully."""
-    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.timezone.utc)
+    source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
     assert datetime_format(source_date, "%d.%m.%Y %H:%M") == "26.06.2020 08:00"
 
 
