@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models.signals import post_save, pre_save
@@ -6,7 +7,7 @@ from django.dispatch import receiver
 from ambient_toolbox.managers import GloballyVisibleQuerySet
 from ambient_toolbox.mixins.bleacher import BleacherMixin
 from ambient_toolbox.mixins.models import PermissionModelMixin, SaveWithoutSignalsMixin
-from ambient_toolbox.mixins.validation import CleanOnSaveMixin
+from ambient_toolbox.mixins.validation import CleanOnSaveMixin, ValidateConstraintsOnSaveMixin
 from ambient_toolbox.models import CommonInfo
 from testapp.managers import ModelWithGetOrNoneManager, ModelWithSelectorQuerySet
 from testapp.selectors import ModelWithSelectorGloballyVisibleSelector
@@ -95,6 +96,28 @@ class ModelWithCleanMixin(CleanOnSaveMixin, models.Model):
 
     def clean(self):
         return True
+
+
+class ModelWithValidateConstraintsMixin(ValidateConstraintsOnSaveMixin, models.Model):
+    INVALID_VALUE = 7
+
+    value = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(value__lte=10),
+                name="testapp_model_with_validate_constraints_mixin_value_lte_10",
+                violation_error_message="Value must not exceed 10.",
+            )
+        ]
+
+    def __str__(self):
+        return str(self.value)
+
+    def clean(self):
+        if self.value == self.INVALID_VALUE:
+            raise ValidationError("Seven is not a valid value.")
 
 
 class MyPermissionModelMixin(PermissionModelMixin, models.Model):

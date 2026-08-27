@@ -1,5 +1,8 @@
 # Changelog
 
+**12.13.0** (2026-08-27)
+* Added `ValidateConstraintsOnSaveMixin`, which validates the models `Meta.constraints` on save and raises a `ValidationError` instead of an `IntegrityError`
+
 **12.12.0** (2026-08-27)
 * Added support for Django 6.1
 * **Breaking change:** Dropped support for Django 4.2, whose extended support ended in April 2026

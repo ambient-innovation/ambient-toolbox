@@ -188,3 +188,42 @@ class ModelWithCleanMixin(CleanOnSaveMixin, models.Model):
         # to your magic here
         pass
 ````
+
+### ValidateConstraintsOnSaveMixin
+
+Django validates the constraints declared in your models `Meta.constraints` when a `ModelForm` is validated - but not
+on a regular model save. There, a violation reaches the database and surfaces as an `IntegrityError`.
+
+If you want to handle such a violation like any other validation problem, derive your model from the
+`ValidateConstraintsOnSaveMixin`. It calls `clean()` and afterwards `validate_constraints()` on every save, so a
+violation is raised as a `ValidationError` containing the constraints `violation_error_message`.
+
+````python
+from django.db import models
+from ambient_toolbox.mixins.validation import ValidateConstraintsOnSaveMixin
+
+class Booking(ValidateConstraintsOnSaveMixin, models.Model):
+    guest_count = models.PositiveIntegerField()
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(guest_count__lte=10),
+                name="booking_guest_count_lte_10",
+                violation_error_message="A booking can hold ten guests at most.",
+            )
+        ]
+````
+
+````python
+from django.core.exceptions import ValidationError
+
+try:
+    Booking(guest_count=11).save()
+except ValidationError as e:
+    print(e.messages)  # ['A booking can hold ten guests at most.']
+````
+
+The constraint in the database stays the authority for concurrent writes - the mixin only turns the common case into a
+catchable error. Keep in mind that validating constraints costs one query per constraint per save, and that bulk
+operations like `bulk_create()` or `QuerySet.update()` don't call `save()`, hence still raise an `IntegrityError`.
