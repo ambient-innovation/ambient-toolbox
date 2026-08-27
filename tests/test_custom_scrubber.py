@@ -73,7 +73,6 @@ class AbstractScrubbingServiceTest(TestCase):
         """Test that _validation returns False when django_scrubber is not installed."""
         self.assertFalse(self.service._validation())
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     def test_validation_warns_when_logging_not_configured(self, mock_settings):
         """Test that _validation warns when django_scrubber logging is not configured but returns True."""
@@ -86,7 +85,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         self.assertIn("Logging for django-scrubber is not activated", log.output[0])
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     def test_validation_succeeds_with_all_checks_passing(self, mock_settings):
         """Test that _validation returns True when all checks pass."""
@@ -103,7 +101,6 @@ class AbstractScrubbingServiceTest(TestCase):
         with self.assertRaisesMessage(ScrubbingError, "Scrubber settings validation failed"):
             self.service.process()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -123,7 +120,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_call_command.assert_called_once_with("scrub_data")
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -153,7 +149,6 @@ class AbstractScrubbingServiceTest(TestCase):
         call_order = [call.args for call in mock_call_command.mock_calls]
         self.assertEqual(len(call_order), 1)
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -179,7 +174,6 @@ class AbstractScrubbingServiceTest(TestCase):
         service.post_function_1.assert_called_once()
         service.post_function_2.assert_called_once()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -204,7 +198,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_log_entry.objects.all().delete.assert_called_once()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -229,7 +222,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_log_entry.objects.all().delete.assert_not_called()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -254,7 +246,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_session.objects.all().delete.assert_called_once()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -279,7 +270,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_session.objects.all().delete.assert_not_called()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -304,7 +294,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_cursor.execute.assert_called_once_with("TRUNCATE TABLE django_scrubber_fakedata;")
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -334,7 +323,6 @@ class AbstractScrubbingServiceTest(TestCase):
         mock_cursor.execute.assert_any_call("TRUNCATE TABLE django_scrubber_fakedata;")
         mock_cursor.execute.assert_any_call("DELETE FROM django_scrubber_fakedata;")
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -359,7 +347,6 @@ class AbstractScrubbingServiceTest(TestCase):
         self.assertTrue(result)
         mock_cursor.execute.assert_not_called()
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
@@ -378,7 +365,6 @@ class AbstractScrubbingServiceTest(TestCase):
 
         self.assertTrue(result)
 
-    @override_settings(DEBUG=True, LOGGING={"loggers": {"django_scrubber": {}}})
     @mock.patch("ambient_toolbox.services.custom_scrubber.settings")
     @mock.patch("ambient_toolbox.services.custom_scrubber.call_command")
     @mock.patch("ambient_toolbox.services.custom_scrubber.Session")
