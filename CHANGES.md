@@ -1,5 +1,8 @@
 # Changelog
 
+**12.11.2** (2026-08-27)
+  * Maintenance updates via ambient-package-update
+
 **12.11.1** (2026-07-03)
 * Updated company and maintainer information to "Beyonder Deutschland"
 
