@@ -4,6 +4,8 @@
 * Fixed `CoverageService` failing the pipeline when fetching the job trace times out: all GitLab API requests now use
   an explicit timeout (60s read, 5s connect) instead of httpx's five second default, and a failed trace fetch degrades
   into the existing "skipping diff" path instead of raising
+* Made `CoverageService` tolerate a job trace that is not valid UTF-8, which happens when GitLab truncates an oversized
+  trace at a byte boundary
 
 **12.13.0** (2026-08-27)
 * Added `ValidateConstraintsOnSaveMixin`, which validates the models `Meta.constraints` on save and raises a `ValidationError` instead of an `IntegrityError`

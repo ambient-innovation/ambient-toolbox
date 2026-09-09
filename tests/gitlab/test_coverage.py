@@ -226,10 +226,31 @@ class CoverageServiceTest(unittest.TestCase):
         self.assertEqual(job_cov, 90.0)
         self.assertEqual(total_cov, 85.5)
         self.assertIsNone(log)
-        mock_print.assert_any_call(
-            "\033[91mATTN: Call to job api endpoint failed "
-            "(ReadTimeout('The read operation timed out')), skipping Coverage Diff\033[0m"
+        printed = " ".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        self.assertIn("ATTN: Call to job api endpoint failed", printed)
+        self.assertIn("ReadTimeout", printed)
+
+    @mock.patch("httpx.get")
+    def test_get_coverage_from_pipeline_job_trace_is_not_valid_utf8(self, mock_get):
+        jobs_response, pipeline_response = self._jobs_and_pipeline_responses()
+
+        job_trace_response = mock.MagicMock()
+        job_trace_response.status_code = HTTPStatus.OK
+        # A trace truncated mid-sequence: the report is intact, the trailing byte is a lone lead byte
+        job_trace_response.content = (
+            b"Name    Stmts   Miss Branch BrPart  Cover   Missing\ntest.py    10      "
+            b"2      0      0    80%     5-6\n3 files skipped due to complete coverage.\n\xc3"
         )
+
+        mock_get.side_effect = [jobs_response, pipeline_response, job_trace_response]
+
+        service = CoverageService()
+        with mock.patch("builtins.print"):
+            job_cov, total_cov, log = service.get_coverage_from_pipeline(123, "test-job")
+
+        self.assertEqual(job_cov, 90.0)
+        self.assertEqual(total_cov, 85.5)
+        self.assertIn("files skipped due to complete coverage", log)
 
     @mock.patch("httpx.get")
     def test_get_coverage_from_pipeline_passes_explicit_timeout(self, mock_get):

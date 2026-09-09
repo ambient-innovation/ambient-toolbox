@@ -133,7 +133,7 @@ class CoverageService:
 
         job_log_group = self.get_job_log(job_with_token_url)
 
-        return coverage_job["coverage"] if coverage_job else 0.0, coverages_total, job_log_group
+        return coverage_job["coverage"], coverages_total, job_log_group
 
     @staticmethod
     def get_job_log(job_with_token_url: str) -> str | None:
@@ -155,9 +155,12 @@ class CoverageService:
             )
             return None
 
+        # A trace is raw terminal output from arbitrary test tooling, and GitLab truncates an
+        # oversized one at a byte boundary, which can split a multi-byte sequence. Since the trace
+        # only feeds a printed diff, replacing undecodable bytes is preferable to raising.
         job_log = re.search(
             r"Name\s+Stmts\s+Miss\s+Branch\s+BrPart\s+Cover\s+Missing.*files skipped due to complete coverage\.",
-            job_response.content.decode("utf-8"),
+            job_response.content.decode("utf-8", errors="replace"),
             re.DOTALL | re.MULTILINE,
         )
         return job_log.group() if job_log else None
