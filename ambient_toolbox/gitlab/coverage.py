@@ -8,6 +8,11 @@ from http import HTTPStatus
 
 import httpx
 
+# A job trace can be several megabytes and GitLab assembles the whole log server-side before sending
+# the first byte, so waiting for it needs a read budget far beyond httpx's five second default. The
+# connect budget stays short so an unreachable host still fails fast.
+HTTP_TIMEOUT = httpx.Timeout(60.0, connect=5.0)
+
 
 class CoverageService:
     """
@@ -57,7 +62,7 @@ class CoverageService:
 
     def get_pipeline_id_by_commit_sha(self, sha: str) -> int | None:
         pipeline_url = f"{self.pipelines_url_with_token}&sha={sha}"
-        response = httpx.get(pipeline_url)
+        response = httpx.get(pipeline_url, timeout=HTTP_TIMEOUT)
         status_code = response.status_code
 
         if status_code == HTTPStatus.OK:
@@ -78,7 +83,7 @@ class CoverageService:
         jobs_with_token_url = f"{jobs_url}?private_token={self.token}"
 
         print(f"Jobs-API-URL: {jobs_url}")
-        jobs_response = httpx.get(jobs_with_token_url)
+        jobs_response = httpx.get(jobs_with_token_url, timeout=HTTP_TIMEOUT)
         jobs_status_code = jobs_response.status_code
 
         if jobs_status_code != HTTPStatus.OK:
@@ -93,7 +98,7 @@ class CoverageService:
 
         pipeline_url = f"{self.base_api_url}/projects/{self.project_id}/pipelines/{pipeline_id}"
         pipeline_with_token_url = f"{pipeline_url}?private_token={self.token}"
-        pipeline_response = httpx.get(pipeline_with_token_url)
+        pipeline_response = httpx.get(pipeline_with_token_url, timeout=HTTP_TIMEOUT)
         pipeline_status_code = pipeline_response.status_code
 
         if pipeline_status_code != HTTPStatus.OK:
@@ -120,24 +125,42 @@ class CoverageService:
 
         print(f"Job-URL: {coverage_job['web_url']}")
 
+        # Both coverage figures are already known at this point. The trace is needed only for the
+        # pretty diff, so a failure to fetch it must not be able to fail the pipeline.
         job_url = f"{self.base_api_url}/projects/{self.project_id}/jobs/{coverage_job['id']}/trace"
         job_with_token_url = f"{job_url}?private_token={self.token}"
-        job_response = httpx.get(job_with_token_url)
-        job_status_code = job_response.status_code
-
-        if job_status_code != HTTPStatus.OK:
-            raise ConnectionError(f"Call to job api endpoint failed with status code {job_status_code}")
-
         print(f"Job-Log-URL: {job_url}")
+
+        job_log_group = self.get_job_log(job_with_token_url)
+
+        return coverage_job["coverage"] if coverage_job else 0.0, coverages_total, job_log_group
+
+    @staticmethod
+    def get_job_log(job_with_token_url: str) -> str | None:
+        """
+        Fetch the coverage report out of the job trace. Returns `None` if the trace is unavailable,
+        which routes the caller into the "skipping diff" path.
+        """
+        try:
+            job_response = httpx.get(job_with_token_url, timeout=HTTP_TIMEOUT)
+        except httpx.HTTPError as e:
+            print(f"\033[91mATTN: Call to job api endpoint failed ({e!r}), skipping Coverage Diff\033[0m")
+            return None
+
+        job_status_code = job_response.status_code
+        if job_status_code != HTTPStatus.OK:
+            print(
+                f"\033[91mATTN: Call to job api endpoint failed with status code {job_status_code}, "
+                f"skipping Coverage Diff\033[0m"
+            )
+            return None
 
         job_log = re.search(
             r"Name\s+Stmts\s+Miss\s+Branch\s+BrPart\s+Cover\s+Missing.*files skipped due to complete coverage\.",
             job_response.content.decode("utf-8"),
             re.DOTALL | re.MULTILINE,
         )
-        job_log_group = job_log.group() if job_log else None
-
-        return coverage_job["coverage"] if coverage_job else 0.0, coverages_total, job_log_group
+        return job_log.group() if job_log else None
 
     @staticmethod
     def color_text(sign: int, prefix: str, target: float, current: float, diff: float):
@@ -238,7 +261,7 @@ class CoverageService:
         # Get target pipeline id (from develop branch) if we were not successful the first time
         if not target_pipeline_id:
             print("Didn't work. Using default branch for comparison.")
-            response = httpx.get(self.pipelines_url_with_token)
+            response = httpx.get(self.pipelines_url_with_token, timeout=HTTP_TIMEOUT)
             status_code = response.status_code
             print(f"Pipelines-API-URL: {self.pipelines_url}")
 
