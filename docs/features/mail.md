@@ -15,8 +15,8 @@ Example:
 
 ```python
 EMAIL_BACKEND = "ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend"
-EMAIL_BACKEND_DOMAIN_ALLOWLIST = ["ambient.digital"]
-EMAIL_BACKEND_REDIRECT_ADDRESS = "%s@testuser.ambient.digital"
+EMAIL_BACKEND_DOMAIN_ALLOWLIST = ["beyonder.de"]
+EMAIL_BACKEND_REDIRECT_ADDRESS = "%s@testuser.beyonder.de"
 ```
 
 If the legacy `EMAIL_BACKEND_DOMAIN_WHITELIST` setting is still configured, the backend reads it while emitting a
@@ -24,4 +24,4 @@ If the legacy `EMAIL_BACKEND_DOMAIN_WHITELIST` setting is still configured, the 
 that delegates to `AllowlistEmailBackend` and warns about the rename.
 
 If EMAIL_BACKEND_REDIRECT_ADDRESS is configured, an email to 'albertus.magnus@example.com' will be redirected to:
-albertus.magnus_example.com@testuser.ambient.digital
+albertus.magnus_example.com@testuser.beyonder.de

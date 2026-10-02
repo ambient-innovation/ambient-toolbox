@@ -77,7 +77,7 @@ class BaseViewSetTestMixin:
             force_authenticate(request, user=user)
 
         # Check if we want to override the view class for this single call
-        view_class = view_class if view_class else self.view_class
+        view_class = view_class or self.view_class
 
         # Add viewset kwargs if we have a viewset here
         if isinstance(view_class(), GenericViewSet):

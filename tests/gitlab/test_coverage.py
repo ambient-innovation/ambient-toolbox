@@ -4,7 +4,9 @@ import unittest
 from http import HTTPStatus
 from unittest import mock
 
-from ambient_toolbox.gitlab.coverage import CoverageService
+import httpx
+
+from ambient_toolbox.gitlab.coverage import HTTP_TIMEOUT, CoverageService
 
 
 @mock.patch.dict("os.environ", {"CI_PIPELINE_ID": "17", "CI_PROJECT_ID": "27"})
@@ -173,8 +175,8 @@ class CoverageServiceTest(unittest.TestCase):
             "\033[91mATTN: Failed to get coverage by job name, using Total Coverage and skipping Coverage Diff\033[0m"
         )
 
-    @mock.patch("httpx.get")
-    def test_get_coverage_from_pipeline_job_trace_error(self, mock_get):
+    @staticmethod
+    def _jobs_and_pipeline_responses():
         jobs_response = mock.MagicMock()
         jobs_response.status_code = HTTPStatus.OK
         jobs_response.content = json.dumps(
@@ -185,16 +187,92 @@ class CoverageServiceTest(unittest.TestCase):
         pipeline_response.status_code = HTTPStatus.OK
         pipeline_response.content = json.dumps({"coverage": 85.5, "web_url": "http://example.com"}).encode()
 
+        return jobs_response, pipeline_response
+
+    @mock.patch("httpx.get")
+    def test_get_coverage_from_pipeline_job_trace_error(self, mock_get):
+        jobs_response, pipeline_response = self._jobs_and_pipeline_responses()
+
         job_trace_response = mock.MagicMock()
         job_trace_response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
 
         mock_get.side_effect = [jobs_response, pipeline_response, job_trace_response]
 
         service = CoverageService()
-        with self.assertRaises(ConnectionError) as cm:
+        with mock.patch("builtins.print") as mock_print:
+            job_cov, total_cov, log = service.get_coverage_from_pipeline(123, "test-job")
+
+        self.assertEqual(job_cov, 90.0)
+        self.assertEqual(total_cov, 85.5)
+        self.assertIsNone(log)
+        mock_print.assert_any_call(
+            "\033[91mATTN: Call to job api endpoint failed with status code 500, skipping Coverage Diff\033[0m"
+        )
+
+    @mock.patch("httpx.get")
+    def test_get_coverage_from_pipeline_job_trace_timeout(self, mock_get):
+        jobs_response, pipeline_response = self._jobs_and_pipeline_responses()
+
+        mock_get.side_effect = [
+            jobs_response,
+            pipeline_response,
+            httpx.ReadTimeout("The read operation timed out"),
+        ]
+
+        service = CoverageService()
+        with mock.patch("builtins.print") as mock_print:
+            job_cov, total_cov, log = service.get_coverage_from_pipeline(123, "test-job")
+
+        self.assertEqual(job_cov, 90.0)
+        self.assertEqual(total_cov, 85.5)
+        self.assertIsNone(log)
+        printed = " ".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        self.assertIn("ATTN: Call to job api endpoint failed", printed)
+        self.assertIn("ReadTimeout", printed)
+
+    @mock.patch("httpx.get")
+    def test_get_coverage_from_pipeline_job_trace_is_not_valid_utf8(self, mock_get):
+        jobs_response, pipeline_response = self._jobs_and_pipeline_responses()
+
+        job_trace_response = mock.MagicMock()
+        job_trace_response.status_code = HTTPStatus.OK
+        # A trace truncated mid-sequence: the report is intact, the trailing byte is a lone lead byte
+        job_trace_response.content = (
+            b"Name    Stmts   Miss Branch BrPart  Cover   Missing\ntest.py    10      "
+            b"2      0      0    80%     5-6\n3 files skipped due to complete coverage.\n\xc3"
+        )
+
+        mock_get.side_effect = [jobs_response, pipeline_response, job_trace_response]
+
+        service = CoverageService()
+        with mock.patch("builtins.print"):
+            job_cov, total_cov, log = service.get_coverage_from_pipeline(123, "test-job")
+
+        self.assertEqual(job_cov, 90.0)
+        self.assertEqual(total_cov, 85.5)
+        self.assertIn("files skipped due to complete coverage", log)
+
+    @mock.patch("httpx.get")
+    def test_get_coverage_from_pipeline_passes_explicit_timeout(self, mock_get):
+        jobs_response, pipeline_response = self._jobs_and_pipeline_responses()
+
+        job_trace_response = mock.MagicMock()
+        job_trace_response.status_code = HTTPStatus.OK
+        job_trace_response.content = b"no coverage report here"
+
+        mock_get.side_effect = [jobs_response, pipeline_response, job_trace_response]
+
+        service = CoverageService()
+        with mock.patch("builtins.print"):
             service.get_coverage_from_pipeline(123, "test-job")
 
-        self.assertIn("Call to job api endpoint failed with status code 500", str(cm.exception))
+        self.assertEqual(len(mock_get.call_args_list), 3)
+        for call in mock_get.call_args_list:
+            self.assertEqual(call.kwargs["timeout"], HTTP_TIMEOUT)
+
+    def test_http_timeout_is_generous_for_reads_but_not_for_connects(self):
+        self.assertEqual(HTTP_TIMEOUT.read, 60.0)
+        self.assertEqual(HTTP_TIMEOUT.connect, 5.0)
 
     @mock.patch("httpx.get")
     def test_get_coverage_from_pipeline_success_with_log(self, mock_get):

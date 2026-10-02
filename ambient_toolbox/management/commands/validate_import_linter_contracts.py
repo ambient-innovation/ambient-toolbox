@@ -7,8 +7,11 @@ from ambient_toolbox.import_linter.services import ImportLinterContractService
 
 class Command(BaseCommand):
     """
-    Command to validate the currently set import linter contracts as still up to date.
+    Checks whether the import-linter contract file is still in sync with the current settings
+    configuration and exits with a non-zero status when it is outdated.
     """
+
+    help = "Validates that import-linter contracts are up to date."
 
     def handle(self, *args, **options):
         service = ImportLinterContractService()

@@ -24,7 +24,7 @@ def object_to_dict(
             blocklisted_fields = blacklisted_fields
 
     # Default blocklist
-    blocklisted_fields = blocklisted_fields if blocklisted_fields else []
+    blocklisted_fields = blocklisted_fields or []
 
     # Add default django primary key to blocklist
     if not include_id:

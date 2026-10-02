@@ -36,8 +36,8 @@ from ambient_toolbox import __version__  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = "ambient-toolbox"
-copyright = "2025, Ambient Innovation: GmbH"  # noqa: A001
-author = "Ambient Digital <hello@ambient.digital>"
+copyright = "2026, Beyonder Deutschland"  # noqa: A001
+author = "Beyonder Deutschland <hello@beyonder.de>"
 version = __version__
 release = __version__
 
@@ -49,10 +49,10 @@ release = __version__
 extensions = [
     "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
-    "m2r2",
+    "sphinx_mdinclude",
 ]
 
-source_suffix = [".rst", ".md"]
+source_suffix = [".rst"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

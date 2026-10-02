@@ -1,8 +1,81 @@
 # Changelog
 
-**12.7.3** (2026-02-05)
-  * Replaced legacy whitelist/blacklist terminology with Allowlist/Blocklist for the email backend,
-  * test structure validator, and `object_to_dict`, while keeping the old settings/paths as deprecated shims that emit warnings.
+**12.14.0** (unreleased)
+* Renamed whitelist/blacklist terminology to allowlist/blocklist. The old names keep working but emit a
+  `DeprecationWarning`:
+  * Added `ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend`, replacing `WhitelistEmailBackend`
+  * Renamed setting `EMAIL_BACKEND_DOMAIN_WHITELIST` to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
+  * Renamed settings `TEST_STRUCTURE_VALIDATOR_*_WHITELIST` to `TEST_STRUCTURE_VALIDATOR_*_ALLOWLIST`
+  * Renamed `AllowlistEmailBackend` methods `get_domain_whitelist()`, `get_email_regex()` and
+    `whitify_mail_addresses()` to `get_domain_allowlist()`, `get_email_allowlist_regex()` and
+    `allowlist_mail_addresses()`
+  * Renamed `StructureTestValidator` methods `_get_file_whitelist()` and `_get_misplaced_test_file_whitelist()` to
+    `_get_file_allowlist()` and `_get_misplaced_test_file_allowlist()`
+  * Renamed `object_to_dict(blacklisted_fields=...)` to `object_to_dict(blocklisted_fields=...)`
+
+**12.13.1** (2026-09-09)
+* Fixed `CoverageService` failing the pipeline when fetching the job trace times out: all GitLab API requests now use
+  an explicit timeout (60s read, 5s connect) instead of httpx's five second default, and a failed trace fetch degrades
+  into the existing "skipping diff" path instead of raising
+* Made `CoverageService` tolerate a job trace that is not valid UTF-8, which happens when GitLab truncates an oversized
+  trace at a byte boundary
+
+**12.13.0** (2026-08-27)
+* Added `ValidateConstraintsOnSaveMixin`, which validates the models `Meta.constraints` on save and raises a `ValidationError` instead of an `IntegrityError`
+
+**12.12.0** (2026-08-27)
+* Added support for Django 6.1
+* **Breaking change:** Dropped support for Django 4.2, whose extended support ended in April 2026
+* Updated the linting and CI setup to the current ambient-package-update template
+
+**12.11.1** (2026-07-03)
+* Updated company and maintainer information to "Beyonder Deutschland"
+
+**12.11.0** (2026-07-03)
+* **Breaking change:** Dropped support for Python 3.10 (nearing end-of-life in October 2026)
+* Added support for Python 3.14
+* Added native uv support to the rendered Read the Docs configuration
+* Replaced the unmaintained "m2r2" documentation dependency with "sphinx-mdinclude"
+* Added a Code of Conduct, issue templates and a pull request template to rendered packages
+* Made the single-version CI and Read the Docs jobs track the newest supported Python version
+* Bumped rendered single-version jobs to Python 3.14
+* Added a cache suffix to the uv setup step to avoid CI cache namespace conflicts
+* Excluded unsupported Python/Django combinations (Python 3.14 with Django 4.2 and 5.2) from the rendered CI matrix
+* Fixed the rendered ruff target-version to track the minimum supported Python (matching requires-python) instead of the newest
+* Removed the stale .md source suffix from the rendered Sphinx config, since sphinx-mdinclude provides only the mdinclude directive (not a Markdown source parser)
+
+**12.10.3** (2026-05-22)
+* Fixed `validate_gitlab_coverage` management command triggering an `httpx` ImportError on command discovery when the optional `gitlab-coverage` extra was not installed
+
+**12.10.2** (2026-05-11)
+* Fixed `ContextVar` leak in `CurrentRequestMiddleware` when `get_response` raises an exception
+
+**12.10.1** (2026-04-09)
+* Improved docs for user-email admin
+
+**12.10.0** (2026-04-09)
+* Added Django admin mixins to show the user by email and not username
+
+**12.9.4** (2026-04-08)
+* No git worktree needed for checking translation file integrity
+
+**12.9.3** (2026-03-30)
+* Maintenance via ambient-package-update
+
+**12.9.2** (2026-03-30)
+  * Maintenance updates via ambient-package-update
+
+**12.9.1** (2026-03-30)
+  * Trusted publishing and releases via the CI
+
+**12.9.0** (2026-03-21)
+  * Added "backend import validation" system check to ensure ENV vars for backends are set up correctly
+
+**12.8.0** (2026-03-03)
+  * Added "atomic docs" system check to ensure all markdown files in the docs directory are linked in the README
+
+**12.7.3** (2026-02-17)
+  * Added help texts to all management commands and refined docstrings
 
 **12.7.2** (2026-02-05)
   * Fixed wrong display due to changes in GitLab for coverage checker script

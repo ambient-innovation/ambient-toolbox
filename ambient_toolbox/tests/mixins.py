@@ -20,7 +20,7 @@ class ClassBasedViewTestMixin:
 
     @staticmethod
     def _authentication(request, user):
-        request.user = user if user else AnonymousUser()
+        request.user = user or AnonymousUser()
 
     def _get_response(self, method, user, data, url_params=None, *args, **kwargs):
         """Returns response."""
@@ -76,7 +76,7 @@ class RequestProviderMixin:
         Creates and returns a django request.
         """
         # Determine URL
-        url = url if url else "/"
+        url = url or "/"
 
         # Create test request
         factory = RequestFactory()

@@ -1,3 +1,3 @@
-"""Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."""
+"""Python toolbox of Beyonder Deutschland containing an abundance of useful tools and gadgets."""
 
-__version__ = "12.7.3"
+__version__ = "12.14.0"

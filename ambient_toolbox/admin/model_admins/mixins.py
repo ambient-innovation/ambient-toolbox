@@ -1,6 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.http import HttpResponseRedirect
 from django.urls import resolve, reverse
+
+from ambient_toolbox.admin.utils import get_user_display_label
 
 
 class AdminCreateFormMixin:
@@ -150,3 +153,31 @@ class DeactivatableChangeViewAdminMixin:
                 )
             )
             return HttpResponseRedirect(url)
+
+
+class UserForeignKeyLabelAdminMixin:
+    """
+    Admin mixin that overrides the display label for ForeignKey and ManyToManyField
+    fields pointing to the User model, showing the user's full name and email
+    instead of ``__str__()``.
+
+    Place before ``admin.ModelAdmin`` in the MRO.
+
+    Override ``get_label_for_user(user)`` to customise the label format.
+    """
+
+    def get_label_for_user(self, user) -> str:
+        """Return the display label for a User instance. Override to customise."""
+        return get_user_display_label(user)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
+        if formfield is not None and issubclass(db_field.related_model, get_user_model()):
+            formfield.label_from_instance = self.get_label_for_user
+        return formfield
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_manytomany(db_field, request, **kwargs)
+        if formfield is not None and issubclass(db_field.related_model, get_user_model()):
+            formfield.label_from_instance = self.get_label_for_user
+        return formfield

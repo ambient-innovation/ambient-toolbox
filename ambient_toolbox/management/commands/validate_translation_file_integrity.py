@@ -1,5 +1,7 @@
 import os
+import shutil
 import subprocess
+import tempfile
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -7,13 +9,17 @@ from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
     """
-    Validates for all active languages (settings.LANGUAGES) the integrity of the PO translation files.
-    The following cases are covered:
-    * Fuzzy translations aren't allowed
-    * Commented-out translations aren't allowed
-    * Validate, that `manage.py makemessages` has been called before committing
-    * Validate, that all translations were actually translated
+    Validates the integrity of PO translation files for every active language in ``settings.LANGUAGES``.
+
+    The following checks are performed:
+
+    * No fuzzy translations remain
+    * No commented-out (obsolete) translations remain
+    * ``manage.py makemessages`` has been run (no uncommitted string changes)
+    * All translation strings have actually been translated
     """
+
+    help = "Validates PO translation file integrity for all active languages."
 
     OK_MESSAGE = "OK."
 
@@ -44,15 +50,27 @@ class Command(BaseCommand):
 
             # Check if "makemessages" detects new translations
             print('> Check if "makemessages" detects new translations')
-            subprocess.call(f"python manage.py create_translation_file --lang {lang}", shell=True)
-            print(self.OK_MESSAGE)
 
-            # Checking for differences in translation file
-            print("> Checking for differences in translation file")
-            output = subprocess.call(
-                r"git diff --ignore-matching-lines=POT-Creation-Date --ignore-matching-lines=# --exit-code locale/",
-                shell=True,
-            )
+            # Back up the PO file before regenerating so we can compare without requiring a git working tree
+            fd, backup_file = tempfile.mkstemp(suffix=".po")
+            os.close(fd)
+            shutil.copy2(translation_file_path, backup_file)
+            output = 0
+            try:
+                subprocess.call(f"python manage.py create_translation_file --lang {lang}", shell=True)
+                print(self.OK_MESSAGE)
+
+                # Checking for differences in translation file
+                print("> Checking for differences in translation file")
+                output = subprocess.call(
+                    f"git diff --no-index --ignore-matching-lines=POT-Creation-Date --ignore-matching-lines=#"
+                    f" --exit-code {backup_file} {translation_file_path}",
+                    shell=True,
+                )
+            finally:
+                shutil.copy2(backup_file, translation_file_path)
+                os.unlink(backup_file)
+
             if output > 0:
                 raise Exception(
                     "It seems you have forgotten to update your translation files before pushing your "

@@ -66,3 +66,9 @@ i.e.: `master` if you want to merge `develop` into `master`).
 
 Hint: If you wish to not run coverage for a specific pipeline for whatever reason, simply run the pipeline
 with `GITLAB_CI_DISABLE_COVERAGE = True` and no coverage will be collected.
+
+Hint: Besides the two coverage figures, the service fetches the job trace of your test job to print a diff between the
+target and the current coverage report. That trace can grow to several megabytes and GitLab assembles it server-side
+before sending the first byte, so the request is allowed a generous 60 second read timeout. If it fails anyway, the
+service prints "Coverage log not found. Skipping diff." and continues - the coverage comparison itself only depends on
+the pipeline and jobs endpoints, so a missing trace can never fail your pipeline.

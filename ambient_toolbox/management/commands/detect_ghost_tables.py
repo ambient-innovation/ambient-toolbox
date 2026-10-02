@@ -6,10 +6,11 @@ from django.db import connection
 
 class Command(BaseCommand):
     """
-    Script to detect ghost tables.
-    Ghost tables are tables which were probably created by Django,
-    removed in the codebase but never removed in the database.
+    Detects ghost tables in the database that were likely created by Django but whose models
+    have since been removed from the codebase without a corresponding database cleanup.
     """
+
+    help = "Detects database tables no longer referenced by any Django model."
 
     def handle(self, *args, **options):
         table_names = set(connection.introspection.table_names())

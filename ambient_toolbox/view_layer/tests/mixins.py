@@ -40,7 +40,7 @@ class BaseViewPermissionTestMixin(RequestProviderMixin):
         """
         request = self.get_request(user=user, method=method)
         view = self.view_class()
-        view.kwargs = kwargs if kwargs else self.view_kwargs
+        view.kwargs = kwargs or self.view_kwargs
         view.request = request
         return view
 

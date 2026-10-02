@@ -5,23 +5,22 @@ build-backend = "hatchling.build"
 [project]
 name = "ambient-toolbox"
 authors = [
-    {'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital'},
+    {'name' = 'Beyonder Deutschland', 'email' = 'hello@beyonder.de'},
 ]
 readme = "README.md"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.2",
     "Framework :: Django :: 6.0",
+    "Framework :: Django :: 6.1",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -29,16 +28,13 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dynamic = ["version"]
-description = "Python toolbox of Ambient Digital containing an abundance of useful tools and gadgets."
+description = "Python toolbox of Beyonder Deutschland containing an abundance of useful tools and gadgets."
 license = {"file" = "LICENSE.md"}
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-    'Django>=4.2',
+    'Django>=5.2',
     'python-dateutil>=2.5.3',
 ]
-
-[project.entry-points."djangoq.errorreporters"]
-ambient-djangoq2-sentry = "ambient_toolbox.sentry.reporter:DjangoQ2SentryReporter"
 
 [project.optional-dependencies]
 dev = [
@@ -49,8 +45,9 @@ dev = [
    'pre-commit~=4.3',
    'sphinx~=7.4',
    'sphinx-rtd-theme~=3.0',
-   'm2r2~=0.3',
+   'sphinx-mdinclude~=0.6',
    'uv~=0.9',
+   'keyring~=25.7',
    'ambient-package-update',
    'gevent~=25.1',
    'httpx~=0.28',
@@ -82,7 +79,7 @@ view-layer = [
 [project.urls]
 'Homepage' = 'https://github.com/ambient-innovation/ambient-toolbox/'
 'Documentation' = 'https://ambient-toolbox.readthedocs.io/en/latest/index.html'
-'Maintained by' = 'https://ambient.digital/'
+'Maintained by' = 'https://beyonder.de/'
 'Bugtracker' = 'https://github.com/ambient-innovation/ambient-toolbox/issues'
 'Changelog' = 'https://ambient-toolbox.readthedocs.io/en/latest/features/changelog.html'
 
@@ -195,8 +192,8 @@ line-length = 120
 # Allow unused variables when underscore-prefixed.
 lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.13
-target-version = "py313"
+# Match the minimum supported Python version (mirrors requires-python above)
+target-version = "py311"
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
@@ -239,29 +236,30 @@ line-ending = "auto"
 
 [tool.tox]
 requires = ["tox>=4", "tox-uv>=1.0.0"]
-env_list = ["django42", "django52", "django60", ]
+env_list = ["django52", "django60", "django61", ]
 
 [tool.tox.env_run_base]
 # Django deprecation overview: https://www.djangoproject.com/download/
 package = "wheel"
 wheel_build_env = ".pkg"
+# This runner syncs from the lockfile and ignores "deps", so every environment below
+# installs its matrix Django version on top of the synced environment.
 runner = "uv-venv-lock-runner"
 extras = ["dev", "drf", "graphql", "import-linter", "bleacher", "gitlab-coverage", "sentry", "view-layer", ]
 commands = [
     ["pytest", "--cov=ambient_toolbox", "--cov-report=term", "--cov-report=xml", "--ds", "settings", "tests"]
 ]
 
-[tool.tox.env.django42]
-deps = ["Django==4.2.*"]
-
 [tool.tox.env.django52]
-deps = ["Django==5.2.*"]
+commands_pre = [["uv", "pip", "install", "Django==5.2.*"]]
 
 [tool.tox.env.django60]
-deps = ["Django==6.0.*"]
+commands_pre = [["uv", "pip", "install", "Django==6.0.*"]]
+
+[tool.tox.env.django61]
+commands_pre = [["uv", "pip", "install", "Django==6.1.*"]]
 
 [tool.tox.gh_actions.python]
-"3.10" = "py310"
 "3.11" = "py311"
 "3.12" = "py312"
 "3.13" = "py313"
@@ -310,3 +308,6 @@ source = [
 
 [tool.hatch.version]
 path = "ambient_toolbox/__init__.py"
+
+[tool.uv]
+keyring-provider = "subprocess"

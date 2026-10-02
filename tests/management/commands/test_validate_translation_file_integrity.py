@@ -3,9 +3,30 @@ from unittest import mock
 from django.core.management import call_command
 from django.test import SimpleTestCase, override_settings
 
+CMD_MODULE = "ambient_toolbox.management.commands.validate_translation_file_integrity"
+
 
 class ValidateTranslationFileIntegrityCommandTest(SimpleTestCase):
     """Test cases for validate_translation_file_integrity management command."""
+
+    def setUp(self):
+        super().setUp()
+        # Mock file backup/restore operations used by the --no-index diff approach
+        self.mkstemp_patcher = mock.patch(f"{CMD_MODULE}.tempfile.mkstemp", return_value=(99, "/tmp/backup.po"))
+        self.os_close_patcher = mock.patch(f"{CMD_MODULE}.os.close")
+        self.copy2_patcher = mock.patch(f"{CMD_MODULE}.shutil.copy2")
+        self.unlink_patcher = mock.patch(f"{CMD_MODULE}.os.unlink")
+        self.mock_mkstemp = self.mkstemp_patcher.start()
+        self.mock_os_close = self.os_close_patcher.start()
+        self.mock_copy2 = self.copy2_patcher.start()
+        self.mock_unlink = self.unlink_patcher.start()
+
+    def tearDown(self):
+        self.mkstemp_patcher.stop()
+        self.os_close_patcher.stop()
+        self.copy2_patcher.stop()
+        self.unlink_patcher.stop()
+        super().tearDown()
 
     @override_settings(LANGUAGES=[("en", "English"), ("de", "German")])
     @mock.patch(
@@ -171,8 +192,10 @@ class ValidateTranslationFileIntegrityCommandTest(SimpleTestCase):
 
             # Check git diff command
             self.assertIn("git diff", calls[3][0][0])
+            self.assertIn("--no-index", calls[3][0][0])
             self.assertIn("--ignore-matching-lines=POT-Creation-Date", calls[3][0][0])
-            self.assertIn("locale/", calls[3][0][0])
+            self.assertIn("/tmp/backup.po", calls[3][0][0])
+            self.assertIn("./locale/it/LC_MESSAGES/django.po", calls[3][0][0])
 
             # Check untranslated strings command
             self.assertIn("msgattrib --untranslated", calls[4][0][0])
@@ -290,3 +313,19 @@ class ValidateTranslationFileIntegrityCommandTest(SimpleTestCase):
             # Verify all calls use shell=True
             for call in mock_subprocess.call_args_list:
                 self.assertEqual(call[1].get("shell"), True)
+
+    @override_settings(LANGUAGES=[("en", "English")])
+    @mock.patch(f"{CMD_MODULE}.os.path.isfile", return_value=True)
+    @mock.patch("builtins.print")
+    def test_backup_restored_on_subprocess_exception(self, mock_print, mock_isfile):
+        """Test that the PO file backup is restored and temp file cleaned up even when subprocess raises."""
+        with mock.patch(f"{CMD_MODULE}.subprocess.call") as mock_subprocess:
+            # First two calls pass (fuzzy, commented-out), third call raises
+            mock_subprocess.side_effect = [1, 1, OSError("command not found")]
+
+            with self.assertRaises(OSError):
+                call_command("validate_translation_file_integrity")
+
+        # Verify backup was restored and temp file cleaned up
+        self.mock_copy2.assert_any_call("/tmp/backup.po", "./locale/en/LC_MESSAGES/django.po")
+        self.mock_unlink.assert_called_once_with("/tmp/backup.po")

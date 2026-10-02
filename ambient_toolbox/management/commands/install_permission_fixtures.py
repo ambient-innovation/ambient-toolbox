@@ -8,7 +8,13 @@ from ambient_toolbox.permissions.fixtures.services import PermissionSetupService
 
 
 class Command(BaseCommand):
-    help = "Installs Ambient toolbox improved group permission fixtures"
+    """
+    Reads group permission declarations from the ``GROUP_PERMISSION_FIXTURES`` setting and
+    synchronises the declared permissions into the database, adding missing and removing
+    obsolete entries.
+    """
+
+    help = "Installs group permission fixtures declared in settings."
 
     def add_arguments(self, parser):
         parser.add_argument(

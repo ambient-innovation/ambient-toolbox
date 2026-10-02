@@ -11,6 +11,8 @@ class Command(BaseCommand):
     Wrapper command for "makemessages" to remove "POT-Creation-Date:" which will cause countless merge conflicts.
     """
 
+    help = "Creates translation files without merge-conflict-prone POT-Creation-Date headers."
+
     def add_arguments(self, parser):
         parser.add_argument("--lang", type=str)
 

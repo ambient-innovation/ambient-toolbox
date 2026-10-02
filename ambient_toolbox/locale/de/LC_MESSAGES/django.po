@@ -1,5 +1,5 @@
 # Translations for ambient-toolbox package
-# Copyright (C) 2021 Ambient Innovation: GmbH
+# Copyright (C) 2021 Beyonder Deutschland GmbH
 # This file is distributed under the same license as the PACKAGE package.
 # Ronny Vedrilla, 2021
 #

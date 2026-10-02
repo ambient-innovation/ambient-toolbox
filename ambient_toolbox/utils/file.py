@@ -8,7 +8,7 @@ def get_filename_without_ending(file_path: str) -> str:
     """
     # if filename has file_path parts
     if "/" in file_path:
-        filename = file_path.rsplit("/")[-1]
+        filename = file_path.rsplit("/", maxsplit=1)[-1]
     else:
         filename = file_path
 
