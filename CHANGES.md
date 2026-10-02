@@ -7,8 +7,10 @@
   * Renamed setting `EMAIL_BACKEND_DOMAIN_WHITELIST` to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
   * Renamed settings `TEST_STRUCTURE_VALIDATOR_*_WHITELIST` to `TEST_STRUCTURE_VALIDATOR_*_ALLOWLIST`
   * Renamed email backend methods `get_domain_whitelist()`, `get_email_regex()` and `whitify_mail_addresses()` to
-    `get_domain_allowlist()`, `get_email_allowlist_regex()` and `allowlist_mail_addresses()`. Subclasses of
-    `WhitelistEmailBackend` overriding (or tests patching) the old methods keep working
+    `get_domain_allowlist()`, `get_email_allowlist_regex()` and `allowlist_mail_addresses()`
+    (`get_backend_redirect_address()` keeps its name). `WhitelistEmailBackend` behaves exactly as before: overrides
+    of `whitify_mail_addresses()` and patches of all four old methods on `WhitelistEmailBackend` keep working,
+    subclass overrides of the other three are still not used
   * Renamed `StructureTestValidator` methods `_get_file_whitelist()` and `_get_misplaced_test_file_whitelist()` to
     `_get_file_allowlist()` and `_get_misplaced_test_file_allowlist()`, and attribute `file_whitelist` to
     `file_allowlist`. Overrides of the old methods and attribute keep working

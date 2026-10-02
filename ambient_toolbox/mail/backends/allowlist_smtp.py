@@ -1,80 +1,84 @@
 import re
-import types
 import warnings
+from collections.abc import Callable
 
 from django.conf import settings
 from django.core.mail.backends.smtp import EmailBackend as SMTPEmailBackend
 
 
-class Hook:
+def build_email_regex(domains: list[str]) -> str:
+    """Builds a regex pattern that matches email addresses on the given domains."""
+    return r"^[\w\-\.]+@(%s)$" % "|".join(domains).replace(".", r"\.")
+
+
+def filter_recipients(
+    mail_address_list: list[str],
+    get_email_regex: Callable[[], str],
+    get_redirect_address: Callable[[], str],
+) -> list[str]:
     """
-    Binds to the instance when accessed on one, otherwise to the class (so `self` may be the class).
-
-    Lets the recipient hooks be called on the class (legacy static API) while overrides written as
-    instance methods are still used on the regular send path, which always calls them on the instance.
+    Keeps recipients matching the regex. Others are rewritten to the redirect address or dropped if it is empty.
+    The getters are called lazily, so a missing redirect address only raises if a recipient needs redirecting.
     """
-
-    def __init__(self, func):
-        self.func = func
-
-    def __get__(self, obj, objtype=None):
-        return types.MethodType(self.func, objtype if obj is None else obj)
+    allowed_recipients = []
+    for to in mail_address_list:
+        if re.search(get_email_regex(), to):
+            allowed_recipients.append(to)
+        elif get_redirect_address():
+            # Send not allowed emails to the configured redirect address (with CATCHALL)
+            allowed_recipients.append(get_redirect_address() % to.replace("@", "_"))
+    return allowed_recipients
 
 
 class AllowlistEmailBackend(SMTPEmailBackend):
-    """Email backend that allows sending only to a configured set of domains."""
+    """
+    Email backend that allows sending only to a configured set of domains.
 
-    DOMAIN_ALLOWLIST_SETTING = "EMAIL_BACKEND_DOMAIN_ALLOWLIST"
-    DOMAIN_WHITELIST_SETTING = "EMAIL_BACKEND_DOMAIN_WHITELIST"
+    The getters call each other via the class name, so they can be patched on this class. To customise
+    the filtering in a subclass, override `allowlist_mail_addresses()` or `_process_recipients()`.
+    """
 
-    @classmethod
-    def _get_domain_allowlist_setting(cls) -> list[str]:
-        allowlist = getattr(settings, cls.DOMAIN_ALLOWLIST_SETTING, None)
+    @staticmethod
+    def get_domain_allowlist() -> list[str]:
+        """Returns the configured allowlist of email domains."""
+        allowlist = getattr(settings, "EMAIL_BACKEND_DOMAIN_ALLOWLIST", None)
         if allowlist is not None:
             return allowlist
 
-        legacy = getattr(settings, cls.DOMAIN_WHITELIST_SETTING, None)
+        legacy = getattr(settings, "EMAIL_BACKEND_DOMAIN_WHITELIST", None)
         if legacy is not None:
             # FutureWarning instead of DeprecationWarning: settings deprecations must be visible by default
             warnings.warn(
-                f"{cls.DOMAIN_WHITELIST_SETTING} is deprecated and will be removed in 13.0.0, "
-                f"use {cls.DOMAIN_ALLOWLIST_SETTING}",
+                "EMAIL_BACKEND_DOMAIN_WHITELIST is deprecated and will be removed in 13.0.0, "
+                "use EMAIL_BACKEND_DOMAIN_ALLOWLIST",
                 FutureWarning,
-                stacklevel=3,
+                stacklevel=2,
             )
             return legacy
 
         return []
 
-    @Hook
-    def get_domain_allowlist(self) -> list[str]:
-        """Returns the configured allowlist of email domains."""
-        return self._get_domain_allowlist_setting()
-
-    @Hook
-    def get_email_allowlist_regex(self) -> str:
+    @staticmethod
+    def get_email_allowlist_regex() -> str:
         """Builds a regex pattern that matches allowed domains."""
-        pattern = r"|".join(self.get_domain_allowlist()).replace(".", r"\.")
-        return r"^[\w\-\.]+@(%s)$" % pattern
+        return build_email_regex(AllowlistEmailBackend.get_domain_allowlist())
 
     @staticmethod
     def get_backend_redirect_address() -> str:
         """Returns the redirect catcher address. Raises AttributeError if it is not configured."""
         return settings.EMAIL_BACKEND_REDIRECT_ADDRESS
 
-    @Hook
-    def allowlist_mail_addresses(self, mail_address_list: list[str]) -> list[str]:
+    @staticmethod
+    def allowlist_mail_addresses(mail_address_list: list[str]) -> list[str]:
         """
         Keeps recipients on allowed domains. Others are rewritten to the configured redirect address
-        or dropped if no redirect address is set.
+        or dropped if the redirect address is empty.
         """
-        allowed_recipients: list[str] = []
-        for to in mail_address_list:
-            if re.search(self.get_email_allowlist_regex(), to):
-                allowed_recipients.append(to)
-            elif self.get_backend_redirect_address():
-                allowed_recipients.append(self.get_backend_redirect_address() % to.replace("@", "_"))
-        return allowed_recipients
+        return filter_recipients(
+            mail_address_list,
+            AllowlistEmailBackend.get_email_allowlist_regex,
+            AllowlistEmailBackend.get_backend_redirect_address,
+        )
 
     def _process_recipients(self, email_messages):
         for email in email_messages:

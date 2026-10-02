@@ -121,68 +121,87 @@ class MailBackendWhitelistShimTest(TestCase):
                 pass
 
     def test_overridden_whitify_mail_addresses_is_used(self):
+        """Like on master, sending calls `self.whitify_mail_addresses()`, so any kind of override is used."""
         with self.assertWarns(DeprecationWarning):
 
-            class CustomBackend(WhitelistEmailBackend):
+            class StaticBackend(WhitelistEmailBackend):
                 @staticmethod
                 def whitify_mail_addresses(mail_address_list):
-                    return ["custom@valid.domain"]
+                    return ["static@valid.domain"]
 
-        with self.assertWarns(DeprecationWarning):
-            backend = CustomBackend()
-        mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["to@example.com"])
-
-        self.assertEqual(backend._process_recipients([mail])[0].to, ["custom@valid.domain"])
-
-    def test_overridden_get_domain_whitelist_with_super_is_used(self):
-        with self.assertWarns(DeprecationWarning):
-
-            class CustomBackend(WhitelistEmailBackend):
-                @classmethod
-                def get_domain_whitelist(cls):
-                    return [*super().get_domain_whitelist(), "extra.domain"]
-
-        self.assertEqual(CustomBackend.allowlist_mail_addresses(["a@extra.domain"]), ["a@extra.domain"])
-
-    def test_instance_method_overrides_of_legacy_hooks_are_used(self):
-        """Overrides written as plain instance methods worked on master via `self` and must not crash."""
-        with self.assertWarns(DeprecationWarning):
-
-            class WhitifyBackend(WhitelistEmailBackend):
+            class InstanceBackend(WhitelistEmailBackend):
                 def whitify_mail_addresses(self, mail_address_list):
                     return [*super().whitify_mail_addresses(mail_address_list), "bcc@valid.domain"]
 
-            class DomainBackend(WhitelistEmailBackend):
-                def get_domain_whitelist(self):
-                    return [*super().get_domain_whitelist(), "extra.domain"]
-
-            class RegexBackend(WhitelistEmailBackend):
-                def get_email_regex(self):
-                    return r"^never$"
-
-            class RedirectBackend(WhitelistEmailBackend):
-                def get_backend_redirect_address(self):
-                    return "%s@custom.redirect"
-
         cases = [
-            (WhitifyBackend, ["platon@valid.domain"], ["platon@valid.domain", "bcc@valid.domain"]),
-            (DomainBackend, ["a@extra.domain"], ["a@extra.domain"]),
-            (RegexBackend, ["a@valid.domain"], ["a_valid.domain@testuser.valid.domain"]),
-            (RedirectBackend, ["a@example.com"], ["a_example.com@custom.redirect"]),
+            (StaticBackend, ["static@valid.domain"]),
+            (InstanceBackend, ["platon@valid.domain", "bcc@valid.domain"]),
         ]
-        for backend_class, recipients, expected in cases:
+        for backend_class, expected in cases:
             with self.subTest(backend_class=backend_class.__name__):
                 with self.assertWarns(DeprecationWarning):
                     backend = backend_class()
-                mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", recipients)
+                mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["platon@valid.domain"])
 
                 self.assertEqual(backend._process_recipients([mail])[0].to, expected)
 
-    def test_patched_legacy_hooks_are_used(self):
-        with mock.patch.object(WhitelistEmailBackend, "get_domain_whitelist", return_value=["patched.domain"]):
-            self.assertEqual(self.backend.allowlist_mail_addresses(["a@patched.domain"]), ["a@patched.domain"])
+    def test_overrides_of_inner_legacy_hooks_are_ignored_like_on_master(self):
+        """Master called these hooks via the class name, so subclass overrides never changed the recipients."""
+        with self.assertWarns(DeprecationWarning):
 
-        with mock.patch.object(WhitelistEmailBackend, "get_email_regex", return_value=r"^never$"):
-            self.assertEqual(
-                self.backend.allowlist_mail_addresses(["a@valid.domain"]), ["a_valid.domain@testuser.valid.domain"]
-            )
+            class CustomBackend(WhitelistEmailBackend):
+                def get_domain_whitelist(self):
+                    return ["extra.domain"]
+
+                def get_email_regex(self):
+                    return r"^never$"
+
+                def get_backend_redirect_address(self):
+                    return "%s@custom.redirect"
+
+        with self.assertWarns(DeprecationWarning):
+            backend = CustomBackend()
+        mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["a@valid.domain", "b@extra.domain"])
+
+        self.assertEqual(
+            backend._process_recipients([mail])[0].to, ["a@valid.domain", "b_extra.domain@testuser.valid.domain"]
+        )
+        # Calling the old static API on such a subclass must not crash either
+        self.assertEqual(CustomBackend.whitify_mail_addresses(["a@valid.domain"]), ["a@valid.domain"])
+
+    def test_patched_legacy_hooks_are_used(self):
+        mail_to = ["a@patched.domain", "b@valid.domain"]
+        cases = [
+            ("get_domain_whitelist", ["patched.domain"], ["a@patched.domain", "b_valid.domain@testuser.valid.domain"]),
+            (
+                "get_email_regex",
+                r"^never$",
+                ["a_patched.domain@testuser.valid.domain", "b_valid.domain@testuser.valid.domain"],
+            ),
+            (
+                "get_backend_redirect_address",
+                "%s@patched.redirect",
+                ["a_patched.domain@patched.redirect", "b@valid.domain"],
+            ),
+        ]
+        for name, return_value, expected in cases:
+            with self.subTest(name=name), mock.patch.object(WhitelistEmailBackend, name, return_value=return_value):
+                self.assertEqual(self.backend.whitify_mail_addresses(mail_to), expected)
+
+    def test_autospec_patching_works(self):
+        """Plain staticmethods keep `mock.patch.object(..., autospec=True)` working, as on master."""
+        mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["a@valid.domain"])
+        cases = [
+            (AllowlistEmailBackend, "allowlist_mail_addresses", AllowlistEmailBackend()),
+            (AllowlistEmailBackend, "get_domain_allowlist", AllowlistEmailBackend()),
+            (WhitelistEmailBackend, "whitify_mail_addresses", self.backend),
+            (WhitelistEmailBackend, "get_domain_whitelist", self.backend),
+        ]
+        for backend_class, name, backend in cases:
+            with (
+                self.subTest(name=name),
+                mock.patch.object(backend_class, name, autospec=True, return_value=["valid.domain"]) as mocked,
+            ):
+                backend._process_recipients([mail])
+
+                mocked.assert_called_once()

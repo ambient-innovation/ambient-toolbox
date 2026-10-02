@@ -1,6 +1,6 @@
 import warnings
 
-from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend, Hook
+from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend, build_email_regex, filter_recipients
 
 DEPRECATION_MESSAGE = (
     "ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend is deprecated and will be removed in 13.0.0, "
@@ -10,12 +10,12 @@ DEPRECATION_MESSAGE = (
 
 class WhitelistEmailBackend(AllowlistEmailBackend):
     """
-    Deprecated shim keeping the old import path and hook names intact.
+    Deprecated shim keeping the old import path and method names intact. Behaves exactly like before the rename:
 
-    The new method names delegate to the legacy ones, so subclasses overriding (or tests patching)
-    `get_domain_whitelist()`, `get_email_regex()`, `whitify_mail_addresses()` or `get_backend_redirect_address()`
-    keep working, whether the override is a static, class or instance method. The legacy methods call the
-    `AllowlistEmailBackend` implementation, so `super()` calls in overrides are safe.
+    - Sending calls `self.whitify_mail_addresses()`, so subclasses overriding it keep working.
+    - The old methods call each other via the class name `WhitelistEmailBackend`, so patching
+      `get_domain_whitelist()`, `get_email_regex()` or `get_backend_redirect_address()` on this class
+      keeps working. Subclass overrides of these three are not used, just like before.
     """
 
     def __init_subclass__(cls, **kwargs):
@@ -26,28 +26,23 @@ class WhitelistEmailBackend(AllowlistEmailBackend):
         warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=2)
         super().__init__(*args, **kwargs)
 
-    # Legacy hooks -> new implementation
-    @Hook
-    def get_domain_whitelist(self) -> list[str]:
-        return super().get_domain_allowlist()
+    @staticmethod
+    def get_domain_whitelist() -> list[str]:
+        return AllowlistEmailBackend.get_domain_allowlist()
 
-    @Hook
-    def get_email_regex(self) -> str:
-        return super().get_email_allowlist_regex()
+    @staticmethod
+    def get_email_regex() -> str:
+        return build_email_regex(WhitelistEmailBackend.get_domain_whitelist())
 
-    @Hook
-    def whitify_mail_addresses(self, mail_address_list: list[str]) -> list[str]:
-        return super().allowlist_mail_addresses(mail_address_list)
+    @staticmethod
+    def whitify_mail_addresses(mail_address_list: list[str]) -> list[str]:
+        return filter_recipients(
+            mail_address_list,
+            WhitelistEmailBackend.get_email_regex,
+            WhitelistEmailBackend.get_backend_redirect_address,
+        )
 
-    # New names -> legacy hooks, so overrides of the legacy hooks take effect
-    @Hook
-    def get_domain_allowlist(self) -> list[str]:
-        return self.get_domain_whitelist()
-
-    @Hook
-    def get_email_allowlist_regex(self) -> str:
-        return self.get_email_regex()
-
-    @Hook
-    def allowlist_mail_addresses(self, mail_address_list: list[str]) -> list[str]:
-        return self.whitify_mail_addresses(mail_address_list)
+    def _process_recipients(self, email_messages):
+        for email in email_messages:
+            email.to = self.whitify_mail_addresses(email.to)
+        return email_messages
