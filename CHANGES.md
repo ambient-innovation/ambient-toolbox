@@ -1,16 +1,17 @@
 # Changelog
 
 **12.14.0** (unreleased)
-* Renamed whitelist/blacklist terminology to allowlist/blocklist. The old names keep working but emit a
-  `DeprecationWarning`:
+* Renamed whitelist/blacklist terminology to allowlist/blocklist. The old names keep working until they are removed in
+  13.0.0. Deprecated settings emit a `FutureWarning`, everything else a `DeprecationWarning`:
   * Added `ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend`, replacing `WhitelistEmailBackend`
   * Renamed setting `EMAIL_BACKEND_DOMAIN_WHITELIST` to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
   * Renamed settings `TEST_STRUCTURE_VALIDATOR_*_WHITELIST` to `TEST_STRUCTURE_VALIDATOR_*_ALLOWLIST`
-  * Renamed `AllowlistEmailBackend` methods `get_domain_whitelist()`, `get_email_regex()` and
-    `whitify_mail_addresses()` to `get_domain_allowlist()`, `get_email_allowlist_regex()` and
-    `allowlist_mail_addresses()`
+  * Renamed email backend methods `get_domain_whitelist()`, `get_email_regex()` and `whitify_mail_addresses()` to
+    `get_domain_allowlist()`, `get_email_allowlist_regex()` and `allowlist_mail_addresses()`. Subclasses of
+    `WhitelistEmailBackend` overriding (or tests patching) the old methods keep working
   * Renamed `StructureTestValidator` methods `_get_file_whitelist()` and `_get_misplaced_test_file_whitelist()` to
-    `_get_file_allowlist()` and `_get_misplaced_test_file_allowlist()`
+    `_get_file_allowlist()` and `_get_misplaced_test_file_allowlist()`, and attribute `file_whitelist` to
+    `file_allowlist`. Overrides of the old methods and attribute keep working
   * Renamed `object_to_dict(blacklisted_fields=...)` to `object_to_dict(blocklisted_fields=...)`
 
 **12.13.1** (2026-09-09)

@@ -7,16 +7,49 @@ from django.conf import settings
 
 from ambient_toolbox.tests.structure_validator import settings as toolbox_settings
 
+REMOVAL_NOTE = "will be removed in 13.0.0"
+
 
 class StructureTestValidator:
     file_allowlist: list
-    file_whitelist: list
     issue_list: list
 
     def __init__(self):
-        self.file_allowlist = self._get_file_allowlist()
-        self.file_whitelist = self.file_allowlist
+        self.file_allowlist = self._call_hook("_get_file_allowlist", legacy_name="_get_file_whitelist")
         self.issue_list = []
+
+    @property
+    def file_whitelist(self) -> list:
+        warnings.warn(
+            f"StructureTestValidator.file_whitelist is deprecated and {REMOVAL_NOTE}, use file_allowlist",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.file_allowlist
+
+    @file_whitelist.setter
+    def file_whitelist(self, value: list) -> None:
+        warnings.warn(
+            f"StructureTestValidator.file_whitelist is deprecated and {REMOVAL_NOTE}, use file_allowlist",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.file_allowlist = value
+
+    def _call_hook(self, name: str, *, legacy_name: str) -> list:
+        """
+        Calls the hook `name`, unless a subclass or mock replaced the deprecated hook `legacy_name`.
+        Then the legacy hook is called, so existing customisations keep working.
+        """
+        if getattr(type(self), legacy_name) is not _ORIGINAL_LEGACY_HOOKS[legacy_name]:
+            warnings.warn(
+                f"Overriding StructureTestValidator.{legacy_name}() is deprecated and {REMOVAL_NOTE}, "
+                f"override {name}() instead",
+                DeprecationWarning,
+                stacklevel=3,
+            )
+            return getattr(self, legacy_name)()
+        return getattr(self, name)()
 
     @staticmethod
     def _resolve_allowlist_setting(
@@ -28,8 +61,8 @@ class StructureTestValidator:
             return getattr(settings, allowlist_name)
         if hasattr(settings, whitelist_name):
             warnings.warn(
-                f"{whitelist_name} is deprecated, use {allowlist_name}",
-                DeprecationWarning,
+                f"{whitelist_name} is deprecated and {REMOVAL_NOTE}, use {allowlist_name}",
+                FutureWarning,
                 stacklevel=3,
             )
             return getattr(settings, whitelist_name)
@@ -38,8 +71,8 @@ class StructureTestValidator:
             return getattr(toolbox_settings, allowlist_name)
         if hasattr(toolbox_settings, whitelist_name):
             warnings.warn(
-                f"{whitelist_name} is deprecated, use {allowlist_name}",
-                DeprecationWarning,
+                f"{whitelist_name} is deprecated and {REMOVAL_NOTE}, use {allowlist_name}",
+                FutureWarning,
                 stacklevel=3,
             )
             return getattr(toolbox_settings, whitelist_name)
@@ -59,7 +92,7 @@ class StructureTestValidator:
     @staticmethod
     def _get_file_whitelist() -> list:
         warnings.warn(
-            "StructureTestValidator._get_file_whitelist() is deprecated, use _get_file_allowlist()",
+            f"StructureTestValidator._get_file_whitelist() is deprecated and {REMOVAL_NOTE}, use _get_file_allowlist()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -81,7 +114,7 @@ class StructureTestValidator:
 
     @staticmethod
     def _get_ignored_directory_list() -> list:
-        default_dir_list = ["__pycache__", ".venv", "venv", "env"]
+        default_dir_list = ["__pycache__"]
         try:
             return default_dir_list + settings.TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST
         except AttributeError:
@@ -105,7 +138,7 @@ class StructureTestValidator:
     @staticmethod
     def _get_misplaced_test_file_whitelist() -> list:
         warnings.warn(
-            "StructureTestValidator._get_misplaced_test_file_whitelist() is deprecated, "
+            f"StructureTestValidator._get_misplaced_test_file_whitelist() is deprecated and {REMOVAL_NOTE}, "
             "use _get_misplaced_test_file_allowlist()",
             DeprecationWarning,
             stacklevel=2,
@@ -129,7 +162,9 @@ class StructureTestValidator:
     def _check_misplaced_test_files(self) -> None:
         """Check for files starting with 'test_' that are not in or under a 'tests/' directory."""
         base_dir = self._get_base_dir()
-        allowlist = self._get_misplaced_test_file_allowlist()
+        allowlist = self._call_hook(
+            "_get_misplaced_test_file_allowlist", legacy_name="_get_misplaced_test_file_whitelist"
+        )
 
         for root, dirs, files in os.walk(base_dir):
             # Skip directories in the ignored list
@@ -212,3 +247,10 @@ class StructureTestValidator:
             sys.exit(1)
         else:
             print("0 issues detected. Yeah!")
+
+
+# Captured at import time to detect subclasses or mocks replacing a deprecated hook
+_ORIGINAL_LEGACY_HOOKS = {
+    name: getattr(StructureTestValidator, name)
+    for name in ("_get_file_whitelist", "_get_misplaced_test_file_whitelist")
+}

@@ -16,7 +16,7 @@ def object_to_dict(
     """
     if blacklisted_fields is not None:
         warnings.warn(
-            "blacklisted_fields is deprecated, use blocklisted_fields",
+            "blacklisted_fields is deprecated and will be removed in 13.0.0, use blocklisted_fields",
             DeprecationWarning,
             stacklevel=2,
         )

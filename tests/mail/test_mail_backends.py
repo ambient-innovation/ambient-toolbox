@@ -1,5 +1,6 @@
 from unittest import mock
 
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.smtp import EmailBackend
 from django.test import TestCase, override_settings
@@ -73,38 +74,81 @@ class MailBackendAllowlistBackendTest(TestCase):
             EMAIL_BACKEND_DOMAIN_ALLOWLIST=None,
             EMAIL_BACKEND_DOMAIN_WHITELIST=["legacy.domain"],
         ):
-            with self.assertWarns(DeprecationWarning) as cm:
+            with self.assertWarns(FutureWarning) as cm:
                 self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), ["legacy.domain"])
 
+        self.assertIn("will be removed in 13.0.0", str(cm.warning))
         # stacklevel must point past the internal helper to the caller of the getter
         self.assertEqual(cm.filename, __file__)
 
-    def test_get_domain_whitelist_alias_warns(self):
-        with self.assertWarns(DeprecationWarning):
-            self.assertEqual(AllowlistEmailBackend.get_domain_whitelist(), ["valid.domain"])
+    @override_settings()
+    def test_missing_redirect_address_raises(self):
+        del settings.EMAIL_BACKEND_REDIRECT_ADDRESS
 
-    def test_get_email_regex_alias_warns(self):
-        with self.assertWarns(DeprecationWarning):
-            regex = AllowlistEmailBackend.get_email_regex()
-
-        self.assertIn(r"valid\.domain", regex)
-
-    def test_whitify_alias_warns(self):
-        with self.assertWarns(DeprecationWarning):
-            processed = AllowlistEmailBackend.whitify_mail_addresses(["platon@valid.domain"])
-        self.assertEqual(processed, ["platon@valid.domain"])
+        with self.assertRaises(AttributeError):
+            AllowlistEmailBackend.allowlist_mail_addresses(["sokrates@example.com"])
 
 
+@override_settings(
+    EMAIL_BACKEND_DOMAIN_ALLOWLIST=["valid.domain"],
+    EMAIL_BACKEND_REDIRECT_ADDRESS="%s@testuser.valid.domain",
+)
 class MailBackendWhitelistShimTest(TestCase):
+    def setUp(self):
+        with self.assertWarns(DeprecationWarning):
+            self.backend = WhitelistEmailBackend()
+
     @override_settings(
+        EMAIL_BACKEND_DOMAIN_ALLOWLIST=None,
         EMAIL_BACKEND_DOMAIN_WHITELIST=["legacy.domain"],
         EMAIL_BACKEND_REDIRECT_ADDRESS="%s@testuser.legacy.domain",
     )
-    def test_shim_warns_and_redirects(self):
+    def test_shim_redirects_with_legacy_setting(self):
+        with self.assertWarns(FutureWarning):
+            processed = self.backend.allowlist_mail_addresses(["user@legacy.domain", "other@example.com"])
+
+        self.assertEqual(processed, ["user@legacy.domain", "other_example.com@testuser.legacy.domain"])
+
+    def test_legacy_methods_delegate_to_new_implementation(self):
+        self.assertEqual(WhitelistEmailBackend.get_domain_whitelist(), ["valid.domain"])
+        self.assertEqual(WhitelistEmailBackend.get_email_regex(), AllowlistEmailBackend.get_email_allowlist_regex())
+        self.assertEqual(WhitelistEmailBackend.whitify_mail_addresses(["platon@valid.domain"]), ["platon@valid.domain"])
+
+    def test_subclassing_warns(self):
         with self.assertWarns(DeprecationWarning):
-            backend = WhitelistEmailBackend()
+
+            class CustomBackend(WhitelistEmailBackend):
+                pass
+
+    def test_overridden_whitify_mail_addresses_is_used(self):
+        with self.assertWarns(DeprecationWarning):
+
+            class CustomBackend(WhitelistEmailBackend):
+                @staticmethod
+                def whitify_mail_addresses(mail_address_list):
+                    return ["custom@valid.domain"]
 
         with self.assertWarns(DeprecationWarning):
-            processed = backend.allowlist_mail_addresses(["user@legacy.domain", "other@example.com"])
-        self.assertIn("user@legacy.domain", processed)
-        self.assertIn("other_example.com@testuser.legacy.domain", processed)
+            backend = CustomBackend()
+        mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["to@example.com"])
+
+        self.assertEqual(backend._process_recipients([mail])[0].to, ["custom@valid.domain"])
+
+    def test_overridden_get_domain_whitelist_with_super_is_used(self):
+        with self.assertWarns(DeprecationWarning):
+
+            class CustomBackend(WhitelistEmailBackend):
+                @classmethod
+                def get_domain_whitelist(cls):
+                    return [*super().get_domain_whitelist(), "extra.domain"]
+
+        self.assertEqual(CustomBackend.allowlist_mail_addresses(["a@extra.domain"]), ["a@extra.domain"])
+
+    def test_patched_legacy_hooks_are_used(self):
+        with mock.patch.object(WhitelistEmailBackend, "get_domain_whitelist", return_value=["patched.domain"]):
+            self.assertEqual(self.backend.allowlist_mail_addresses(["a@patched.domain"]), ["a@patched.domain"])
+
+        with mock.patch.object(WhitelistEmailBackend, "get_email_regex", return_value=r"^never$"):
+            self.assertEqual(
+                self.backend.allowlist_mail_addresses(["a@valid.domain"]), ["a_valid.domain@testuser.valid.domain"]
+            )

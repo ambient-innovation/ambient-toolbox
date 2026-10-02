@@ -208,4 +208,4 @@ You can define all of those settings variables in your main Django settings file
 | TEST_STRUCTURE_VALIDATOR_IGNORED_DIRECTORY_LIST        | list | []                      | Directories which will be ignored, will always ignore `__pycache__`      |
 | TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST | list | []                      | Test files which will be ignored even though they don't live in `tests/` (legacy `*_WHITELIST` names still accepted, but deprecated) |
 
-Legacy names like `TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST` or `TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST` are still accepted for now but trigger a `DeprecationWarning` via the structure validator helper.
+Legacy names like `TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST` or `TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST` are still accepted until 13.0.0 but trigger a `FutureWarning`.

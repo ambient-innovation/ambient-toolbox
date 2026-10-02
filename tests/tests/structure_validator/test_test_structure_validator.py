@@ -32,7 +32,6 @@ class TestStructureValidatorTest(TestCase):
         service = StructureTestValidator()
 
         self.assertEqual(service.file_allowlist, ["__init__"])
-        self.assertEqual(service.file_whitelist, ["__init__"])
         self.assertEqual(service.issue_list, [])
 
     # ============================================================================
@@ -52,12 +51,13 @@ class TestStructureValidatorTest(TestCase):
         """Test that deprecated whitelist settings warn when allowlist is absent."""
         del settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
 
-        with self.assertWarns(DeprecationWarning):
+        with self.assertWarns(FutureWarning):
             service = StructureTestValidator()
 
-        with self.assertWarns(DeprecationWarning) as cm:
+        with self.assertWarns(FutureWarning) as cm:
             file_allowlist = service._get_file_allowlist()
 
+        self.assertIn("will be removed in 13.0.0", str(cm.warning))
         # stacklevel must point past the internal helper to the caller of the getter
         self.assertEqual(cm.filename, __file__)
 
@@ -104,7 +104,7 @@ class TestStructureValidatorTest(TestCase):
         with mock.patch(
             "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
         ):
-            with self.assertWarns(DeprecationWarning):
+            with self.assertWarns(FutureWarning):
                 file_allowlist = StructureTestValidator._resolve_allowlist_setting(
                     allowlist_name="TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST",
                     whitelist_name="TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST",
@@ -193,7 +193,7 @@ class TestStructureValidatorTest(TestCase):
         service = StructureTestValidator()
         dir_list = service._get_ignored_directory_list()
 
-        self.assertEqual(dir_list, ["__pycache__", ".venv", "venv", "env", "my_dir", "other_dir"])
+        self.assertEqual(dir_list, ["__pycache__", "my_dir", "other_dir"])
 
     def test_get_ignored_directory_list_fallback(self):
         """Test ignored directory list fallback to toolbox settings."""
@@ -241,7 +241,7 @@ class TestStructureValidatorTest(TestCase):
         with mock.patch(
             "ambient_toolbox.tests.structure_validator.test_structure_validator.toolbox_settings", dummy_settings
         ):
-            with self.assertWarns(DeprecationWarning):
+            with self.assertWarns(FutureWarning):
                 allowlist = StructureTestValidator._resolve_allowlist_setting(
                     allowlist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST",
                     whitelist_name="TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST",
@@ -249,6 +249,59 @@ class TestStructureValidatorTest(TestCase):
                 )
 
         self.assertIn("handlers/toolbox", allowlist)
+
+    def test_file_whitelist_attribute_is_deprecated_alias(self):
+        """Test that reading or setting the deprecated file_whitelist attribute warns and mirrors file_allowlist."""
+        service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(service.file_whitelist, ["__init__"])
+
+        with self.assertWarns(DeprecationWarning):
+            service.file_whitelist = ["__init__", "custom_file"]
+
+        self.assertEqual(service.file_allowlist, ["__init__", "custom_file"])
+
+    def test_overridden_get_file_whitelist_is_used(self):
+        """Test that subclasses overriding the deprecated file hook keep working and get warned."""
+
+        class CustomValidator(StructureTestValidator):
+            @staticmethod
+            def _get_file_whitelist():
+                return ["custom_file"]
+
+        with self.assertWarns(DeprecationWarning):
+            service = CustomValidator()
+
+        self.assertEqual(service.file_allowlist, ["custom_file"])
+
+    def test_overridden_get_file_whitelist_with_super_is_used(self):
+        """Test that super() calls in an override of the deprecated file hook don't recurse."""
+
+        class CustomValidator(StructureTestValidator):
+            def _get_file_whitelist(self):
+                return [*super()._get_file_whitelist(), "custom_file"]
+
+        with self.assertWarns(DeprecationWarning):
+            service = CustomValidator()
+
+        self.assertEqual(service.file_allowlist, ["__init__", "custom_file"])
+
+    @mock.patch.object(StructureTestValidator, "_get_misplaced_test_file_whitelist", return_value=["handlers"])
+    def test_patched_get_misplaced_test_file_whitelist_is_used(self, mocked_hook):
+        """Test that mocking the deprecated misplaced hook still takes effect."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            handlers_dir = Path(tmpdir) / "handlers"
+            handlers_dir.mkdir()
+            (handlers_dir / "test_handler.py").write_text("# Handler test")
+
+            with override_settings(TEST_STRUCTURE_VALIDATOR_BASE_DIR=Path(tmpdir)):
+                service = StructureTestValidator()
+                with self.assertWarns(DeprecationWarning):
+                    service._check_misplaced_test_files()
+
+        mocked_hook.assert_called_once_with()
+        self.assertEqual(service.issue_list, [])
 
     def test_get_misplaced_test_file_whitelist_alias_warns(self):
         """Test that calling the deprecated misplaced whitelist getter warns and mirrors allowlist."""
