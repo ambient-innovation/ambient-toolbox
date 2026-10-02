@@ -50,10 +50,16 @@ class TestStructureValidatorTest(TestCase):
     @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["legacy_file"])
     def test_get_file_allowlist_warns_for_deprecated_setting(self):
         """Test that deprecated whitelist settings warn when allowlist is absent."""
-        service = StructureTestValidator()
+        del settings.TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST
 
         with self.assertWarns(DeprecationWarning):
+            service = StructureTestValidator()
+
+        with self.assertWarns(DeprecationWarning) as cm:
             file_allowlist = service._get_file_allowlist()
+
+        # stacklevel must point past the internal helper to the caller of the getter
+        self.assertEqual(cm.filename, __file__)
 
         self.assertIn("legacy_file", file_allowlist)
 
@@ -270,7 +276,7 @@ class TestStructureValidatorTest(TestCase):
         self.assertTrue(result)
         self.assertEqual(len(service.issue_list), 0)
 
-    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_WHITELIST=["my_file"])
+    @override_settings(TEST_STRUCTURE_VALIDATOR_FILE_ALLOWLIST=["my_file"])
     def test_check_missing_test_prefix_allowlisted_file(self):
         """Test that allowlisted files without 'test_' prefix pass validation."""
         service = StructureTestValidator()
@@ -408,7 +414,7 @@ class TestStructureValidatorTest(TestCase):
 
             with override_settings(
                 TEST_STRUCTURE_VALIDATOR_BASE_DIR=Path(tmpdir),
-                TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers"],
+                TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers"],
             ):
                 service = StructureTestValidator()
                 service._check_misplaced_test_files()
@@ -552,7 +558,7 @@ class TestStructureValidatorTest(TestCase):
         TEST_STRUCTURE_VALIDATOR_BASE_DIR=settings.BASE_PATH,
         TEST_STRUCTURE_VALIDATOR_APP_LIST=["testapp"],
         TEST_STRUCTURE_VALIDATOR_BASE_APP_NAME="",
-        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_WHITELIST=["handlers/commands"],
+        TEST_STRUCTURE_VALIDATOR_MISPLACED_TEST_FILE_ALLOWLIST=["handlers/commands"],
     )
     def test_process_with_allowlist(self):
         """Test that allowlisted paths are not reported as issues."""

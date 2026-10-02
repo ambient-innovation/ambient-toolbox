@@ -73,8 +73,11 @@ class MailBackendAllowlistBackendTest(TestCase):
             EMAIL_BACKEND_DOMAIN_ALLOWLIST=None,
             EMAIL_BACKEND_DOMAIN_WHITELIST=["legacy.domain"],
         ):
-            with self.assertWarns(DeprecationWarning):
+            with self.assertWarns(DeprecationWarning) as cm:
                 self.assertEqual(AllowlistEmailBackend.get_domain_allowlist(), ["legacy.domain"])
+
+        # stacklevel must point past the internal helper to the caller of the getter
+        self.assertEqual(cm.filename, __file__)
 
     def test_get_domain_whitelist_alias_warns(self):
         with self.assertWarns(DeprecationWarning):
@@ -101,6 +104,7 @@ class MailBackendWhitelistShimTest(TestCase):
         with self.assertWarns(DeprecationWarning):
             backend = WhitelistEmailBackend()
 
-        processed = backend.allowlist_mail_addresses(["user@legacy.domain", "other@example.com"])
+        with self.assertWarns(DeprecationWarning):
+            processed = backend.allowlist_mail_addresses(["user@legacy.domain", "other@example.com"])
         self.assertIn("user@legacy.domain", processed)
         self.assertIn("other_example.com@testuser.legacy.domain", processed)

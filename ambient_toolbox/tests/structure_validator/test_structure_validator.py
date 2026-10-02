@@ -9,6 +9,7 @@ from ambient_toolbox.tests.structure_validator import settings as toolbox_settin
 
 
 class StructureTestValidator:
+    file_allowlist: list
     file_whitelist: list
     issue_list: list
 
@@ -29,7 +30,7 @@ class StructureTestValidator:
             warnings.warn(
                 f"{whitelist_name} is deprecated, use {allowlist_name}",
                 DeprecationWarning,
-                stacklevel=2,
+                stacklevel=3,
             )
             return getattr(settings, whitelist_name)
 
@@ -39,7 +40,7 @@ class StructureTestValidator:
             warnings.warn(
                 f"{whitelist_name} is deprecated, use {allowlist_name}",
                 DeprecationWarning,
-                stacklevel=2,
+                stacklevel=3,
             )
             return getattr(toolbox_settings, whitelist_name)
 
@@ -104,7 +105,7 @@ class StructureTestValidator:
     @staticmethod
     def _get_misplaced_test_file_whitelist() -> list:
         warnings.warn(
-            "StructureTestValidator._get_misplaced_test_file_whitelist() is deprecated,"
+            "StructureTestValidator._get_misplaced_test_file_whitelist() is deprecated, "
             "use _get_misplaced_test_file_allowlist()",
             DeprecationWarning,
             stacklevel=2,
@@ -112,7 +113,7 @@ class StructureTestValidator:
         return StructureTestValidator._get_misplaced_test_file_allowlist()
 
     def _check_missing_test_prefix(self, *, root: str, file: str, filename: str, extension: str) -> bool:
-        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_whitelist:
+        if extension == ".py" and not filename[0:5] == "test_" and filename not in self.file_allowlist:
             file_path = f"{root}\\{file}".replace("\\", "/")
             self.issue_list.append(f'Python file without "test_" prefix found: {file_path!r}.')
             return False

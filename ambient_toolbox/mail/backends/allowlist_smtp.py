@@ -23,7 +23,7 @@ class AllowlistEmailBackend(SMTPEmailBackend):
             warnings.warn(
                 f"{cls.DOMAIN_WHITELIST_SETTING} is deprecated, use {cls.DOMAIN_ALLOWLIST_SETTING}",
                 DeprecationWarning,
-                stacklevel=2,
+                stacklevel=3,
             )
             return legacy
 
