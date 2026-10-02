@@ -1,6 +1,6 @@
 import warnings
 
-from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend
+from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend, Hook
 
 DEPRECATION_MESSAGE = (
     "ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend is deprecated and will be removed in 13.0.0, "
@@ -13,8 +13,9 @@ class WhitelistEmailBackend(AllowlistEmailBackend):
     Deprecated shim keeping the old import path and hook names intact.
 
     The new method names delegate to the legacy ones, so subclasses overriding (or tests patching)
-    `get_domain_whitelist()`, `get_email_regex()` or `whitify_mail_addresses()` keep working.
-    The legacy methods call the `AllowlistEmailBackend` implementation, so `super()` calls in overrides are safe.
+    `get_domain_whitelist()`, `get_email_regex()`, `whitify_mail_addresses()` or `get_backend_redirect_address()`
+    keep working, whether the override is a static, class or instance method. The legacy methods call the
+    `AllowlistEmailBackend` implementation, so `super()` calls in overrides are safe.
     """
 
     def __init_subclass__(cls, **kwargs):
@@ -26,27 +27,27 @@ class WhitelistEmailBackend(AllowlistEmailBackend):
         super().__init__(*args, **kwargs)
 
     # Legacy hooks -> new implementation
-    @classmethod
-    def get_domain_whitelist(cls) -> list[str]:
+    @Hook
+    def get_domain_whitelist(self) -> list[str]:
         return super().get_domain_allowlist()
 
-    @classmethod
-    def get_email_regex(cls) -> str:
+    @Hook
+    def get_email_regex(self) -> str:
         return super().get_email_allowlist_regex()
 
-    @classmethod
-    def whitify_mail_addresses(cls, mail_address_list: list[str]) -> list[str]:
+    @Hook
+    def whitify_mail_addresses(self, mail_address_list: list[str]) -> list[str]:
         return super().allowlist_mail_addresses(mail_address_list)
 
     # New names -> legacy hooks, so overrides of the legacy hooks take effect
-    @classmethod
-    def get_domain_allowlist(cls) -> list[str]:
-        return cls.get_domain_whitelist()
+    @Hook
+    def get_domain_allowlist(self) -> list[str]:
+        return self.get_domain_whitelist()
 
-    @classmethod
-    def get_email_allowlist_regex(cls) -> str:
-        return cls.get_email_regex()
+    @Hook
+    def get_email_allowlist_regex(self) -> str:
+        return self.get_email_regex()
 
-    @classmethod
-    def allowlist_mail_addresses(cls, mail_address_list: list[str]) -> list[str]:
-        return cls.whitify_mail_addresses(mail_address_list)
+    @Hook
+    def allowlist_mail_addresses(self, mail_address_list: list[str]) -> list[str]:
+        return self.whitify_mail_addresses(mail_address_list)

@@ -144,6 +144,40 @@ class MailBackendWhitelistShimTest(TestCase):
 
         self.assertEqual(CustomBackend.allowlist_mail_addresses(["a@extra.domain"]), ["a@extra.domain"])
 
+    def test_instance_method_overrides_of_legacy_hooks_are_used(self):
+        """Overrides written as plain instance methods worked on master via `self` and must not crash."""
+        with self.assertWarns(DeprecationWarning):
+
+            class WhitifyBackend(WhitelistEmailBackend):
+                def whitify_mail_addresses(self, mail_address_list):
+                    return [*super().whitify_mail_addresses(mail_address_list), "bcc@valid.domain"]
+
+            class DomainBackend(WhitelistEmailBackend):
+                def get_domain_whitelist(self):
+                    return [*super().get_domain_whitelist(), "extra.domain"]
+
+            class RegexBackend(WhitelistEmailBackend):
+                def get_email_regex(self):
+                    return r"^never$"
+
+            class RedirectBackend(WhitelistEmailBackend):
+                def get_backend_redirect_address(self):
+                    return "%s@custom.redirect"
+
+        cases = [
+            (WhitifyBackend, ["platon@valid.domain"], ["platon@valid.domain", "bcc@valid.domain"]),
+            (DomainBackend, ["a@extra.domain"], ["a@extra.domain"]),
+            (RegexBackend, ["a@valid.domain"], ["a_valid.domain@testuser.valid.domain"]),
+            (RedirectBackend, ["a@example.com"], ["a_example.com@custom.redirect"]),
+        ]
+        for backend_class, recipients, expected in cases:
+            with self.subTest(backend_class=backend_class.__name__):
+                with self.assertWarns(DeprecationWarning):
+                    backend = backend_class()
+                mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", recipients)
+
+                self.assertEqual(backend._process_recipients([mail])[0].to, expected)
+
     def test_patched_legacy_hooks_are_used(self):
         with mock.patch.object(WhitelistEmailBackend, "get_domain_whitelist", return_value=["patched.domain"]):
             self.assertEqual(self.backend.allowlist_mail_addresses(["a@patched.domain"]), ["a@patched.domain"])
