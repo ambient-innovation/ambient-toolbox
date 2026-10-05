@@ -1,6 +1,6 @@
 # Changelog
 
-**12.14.0** (unreleased)
+**12.14.0** (2026-10-05)
 * Renamed whitelist/blacklist terminology to allowlist/blocklist. The old names keep working until they are removed in
   13.0.0. Deprecated settings and using `WhitelistEmailBackend` (e.g. in `EMAIL_BACKEND`) emit a `FutureWarning`,
   everything else a `DeprecationWarning`:
