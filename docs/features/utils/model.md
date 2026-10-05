@@ -4,7 +4,7 @@
 
 ### Convert object to dictionary
 
-The function ``object_to_dict(obj, blacklisted_fields, include_id)`` takes an instance of a django model and
+The function ``object_to_dict(obj, blocklisted_fields, include_id)`` takes an instance of a django model and
 extracts all attributes into a dictionary:
 
 ````python
@@ -20,8 +20,9 @@ result = object_to_dict(obj)
 # result = {'value_1': 19, 'value_2': 9}
 ````
 
-Optionally, fields can be excluded with the parameter ``blacklisted_fields``.
-Passing a list of field names as string will prevent them from ending up in the result dictionary.
+Optionally, fields can be excluded with the parameter ``blocklisted_fields`` (the legacy ``blacklisted_fields`` name is
+still accepted for now). Passing a list of field names as string will prevent them from ending up in the result
+dictionary.
 
 ````python
 obj = MyModel.objects.create(value_1=19, value_2=9)

@@ -1,77 +1,50 @@
-import re
+import warnings
 
-from django.conf import settings
-from django.core.mail.backends.smtp import EmailBackend as SMTPEmailBackend
+from ambient_toolbox.mail.backends.allowlist_smtp import AllowlistEmailBackend, build_email_regex, filter_recipients
+
+DEPRECATION_MESSAGE = (
+    "ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend is deprecated and will be removed in 13.0.0, "
+    "use ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend instead."
+)
 
 
-class WhitelistEmailBackend(SMTPEmailBackend):
+class WhitelistEmailBackend(AllowlistEmailBackend):
     """
-    Via the following settings it is possible to configure if mails are sent to all domains.
-    If not, you can configure a redirect to an inbox via CATCHALL.
+    Deprecated shim keeping the old import path and method names intact. Behaves exactly like before the rename:
 
-    EMAIL_BACKEND = 'ambient_toolbox.mail.backends.whitelist_smtp.WhitelistEmailBackend'
-    EMAIL_BACKEND_DOMAIN_WHITELIST = ['beyonder.de']
-    EMAIL_BACKEND_REDIRECT_ADDRESS = '%s@testuser.beyonder.de'
-
-    If `EMAIL_BACKEND_REDIRECT_ADDRESS` is set, a mail to `john.doe@example.com` will be redirected to
-    `john.doe_example.com@testuser.beyonder.de`
+    - Sending calls `self.whitify_mail_addresses()`, so subclasses overriding it keep working.
+    - The old methods call each other via the class name `WhitelistEmailBackend`, so patching
+      `get_domain_whitelist()`, `get_email_regex()` or `get_backend_redirect_address()` on this class
+      keeps working. Subclass overrides of these three are not used, just like before.
     """
+
+    def __init_subclass__(cls, **kwargs):
+        warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=2)
+        super().__init_subclass__(**kwargs)
+
+    def __init__(self, *args, **kwargs):
+        # FutureWarning: most projects only reference this class in the EMAIL_BACKEND setting, so Django instantiates
+        # it and a DeprecationWarning attributed to Django's code would be hidden by default
+        warnings.warn(DEPRECATION_MESSAGE, FutureWarning, stacklevel=2)
+        super().__init__(*args, **kwargs)
 
     @staticmethod
-    def get_domain_whitelist() -> list:
-        """
-        Getter for configuration variable from the settings.
-        Will return a list of domains: ['beyonder.de', 'beyonder.de']
-        """
-        return getattr(settings, "EMAIL_BACKEND_DOMAIN_WHITELIST", [])
+    def get_domain_whitelist() -> list[str]:
+        return AllowlistEmailBackend.get_domain_allowlist()
 
     @staticmethod
-    def get_email_regex():
-        """
-        Getter for configuration variable from the settings.
-        Will return a RegEX to match email whitelisted domains.
-        """
-        return r"^[\w\-\.]+@(%s)$" % "|".join(x for x in WhitelistEmailBackend.get_domain_whitelist()).replace(
-            ".", r"\."
+    def get_email_regex() -> str:
+        return build_email_regex(WhitelistEmailBackend.get_domain_whitelist())
+
+    @staticmethod
+    def whitify_mail_addresses(mail_address_list: list[str]) -> list[str]:
+        return filter_recipients(
+            mail_address_list,
+            WhitelistEmailBackend.get_email_regex,
+            WhitelistEmailBackend.get_backend_redirect_address,
         )
 
-    @staticmethod
-    def get_backend_redirect_address() -> str:
-        """
-        Getter for configuration variable from the settings.
-        Will return a string with a placeholder for redirecting non-whitelisted domains.
-        """
-        return settings.EMAIL_BACKEND_REDIRECT_ADDRESS
-
-    @staticmethod
-    def whitify_mail_addresses(mail_address_list: list) -> list:
-        """
-        Check for every recipient in the list if its domain is included in the whitelist.
-        If not, and we have a redirect address configured, we change the original mail address to something new,
-        according to our configuration.
-        """
-        allowed_recipients = []
-        for to in mail_address_list:
-            if re.search(WhitelistEmailBackend.get_email_regex(), to):
-                allowed_recipients.append(to)
-            elif WhitelistEmailBackend.get_backend_redirect_address():
-                # Send not allowed emails to the configured redirect address (with CATCHALL)
-                allowed_recipients.append(WhitelistEmailBackend.get_backend_redirect_address() % to.replace("@", "_"))
-        return allowed_recipients
-
     def _process_recipients(self, email_messages):
-        """
-        Helper method to wrap custom logic of this backend. Required to make it testable.
-        """
         for email in email_messages:
-            allowed_recipients = self.whitify_mail_addresses(email.to)
-            email.to = allowed_recipients
+            email.to = self.whitify_mail_addresses(email.to)
         return email_messages
-
-    def send_messages(self, email_messages):
-        """
-        Checks if email-recipients are in allowed domains and cancels if not.
-        Uses regular smtp-sending afterward.
-        """
-        email_messages = self._process_recipients(email_messages)
-        return super().send_messages(email_messages)

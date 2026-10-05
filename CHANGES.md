@@ -1,5 +1,22 @@
 # Changelog
 
+**12.14.0** (unreleased)
+* Renamed whitelist/blacklist terminology to allowlist/blocklist. The old names keep working until they are removed in
+  13.0.0. Deprecated settings and using `WhitelistEmailBackend` (e.g. in `EMAIL_BACKEND`) emit a `FutureWarning`,
+  everything else a `DeprecationWarning`:
+  * Added `ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend`, replacing `WhitelistEmailBackend`
+  * Renamed setting `EMAIL_BACKEND_DOMAIN_WHITELIST` to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
+  * Renamed settings `TEST_STRUCTURE_VALIDATOR_*_WHITELIST` to `TEST_STRUCTURE_VALIDATOR_*_ALLOWLIST`
+  * Renamed email backend methods `get_domain_whitelist()`, `get_email_regex()` and `whitify_mail_addresses()` to
+    `get_domain_allowlist()`, `get_email_allowlist_regex()` and `allowlist_mail_addresses()`
+    (`get_backend_redirect_address()` keeps its name). `WhitelistEmailBackend` behaves exactly as before: overrides
+    of `whitify_mail_addresses()` and patches of all four old methods on `WhitelistEmailBackend` keep working,
+    subclass overrides of the other three are still not used
+  * Renamed `StructureTestValidator` methods `_get_file_whitelist()` and `_get_misplaced_test_file_whitelist()` to
+    `_get_file_allowlist()` and `_get_misplaced_test_file_allowlist()`, and attribute `file_whitelist` to
+    `file_allowlist`. Overrides of the old methods and attribute keep working
+  * Renamed `object_to_dict(blacklisted_fields=...)` to `object_to_dict(blocklisted_fields=...)`
+
 **12.13.1** (2026-09-09)
 * Fixed `CoverageService` failing the pipeline when fetching the job trace times out: all GitLab API requests now use
   an explicit timeout (60s read, 5s connect) instead of httpx's five second default, and a failed trace fetch degrades
