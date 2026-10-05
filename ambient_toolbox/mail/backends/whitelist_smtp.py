@@ -23,7 +23,9 @@ class WhitelistEmailBackend(AllowlistEmailBackend):
         super().__init_subclass__(**kwargs)
 
     def __init__(self, *args, **kwargs):
-        warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=2)
+        # FutureWarning: most projects only reference this class in the EMAIL_BACKEND setting, so Django instantiates
+        # it and a DeprecationWarning attributed to Django's code would be hidden by default
+        warnings.warn(DEPRECATION_MESSAGE, FutureWarning, stacklevel=2)
         super().__init__(*args, **kwargs)
 
     @staticmethod

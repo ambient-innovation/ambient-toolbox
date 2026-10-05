@@ -2,7 +2,8 @@
 
 **12.14.0** (unreleased)
 * Renamed whitelist/blacklist terminology to allowlist/blocklist. The old names keep working until they are removed in
-  13.0.0. Deprecated settings emit a `FutureWarning`, everything else a `DeprecationWarning`:
+  13.0.0. Deprecated settings and using `WhitelistEmailBackend` (e.g. in `EMAIL_BACKEND`) emit a `FutureWarning`,
+  everything else a `DeprecationWarning`:
   * Added `ambient_toolbox.mail.backends.allowlist_smtp.AllowlistEmailBackend`, replacing `WhitelistEmailBackend`
   * Renamed setting `EMAIL_BACKEND_DOMAIN_WHITELIST` to `EMAIL_BACKEND_DOMAIN_ALLOWLIST`
   * Renamed settings `TEST_STRUCTURE_VALIDATOR_*_WHITELIST` to `TEST_STRUCTURE_VALIDATOR_*_ALLOWLIST`

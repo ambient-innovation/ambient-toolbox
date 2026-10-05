@@ -95,7 +95,7 @@ class MailBackendAllowlistBackendTest(TestCase):
 )
 class MailBackendWhitelistShimTest(TestCase):
     def setUp(self):
-        with self.assertWarns(DeprecationWarning):
+        with self.assertWarns(FutureWarning):
             self.backend = WhitelistEmailBackend()
 
     @override_settings(
@@ -139,7 +139,7 @@ class MailBackendWhitelistShimTest(TestCase):
         ]
         for backend_class, expected in cases:
             with self.subTest(backend_class=backend_class.__name__):
-                with self.assertWarns(DeprecationWarning):
+                with self.assertWarns(FutureWarning):
                     backend = backend_class()
                 mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["platon@valid.domain"])
 
@@ -159,7 +159,7 @@ class MailBackendWhitelistShimTest(TestCase):
                 def get_backend_redirect_address(self):
                     return "%s@custom.redirect"
 
-        with self.assertWarns(DeprecationWarning):
+        with self.assertWarns(FutureWarning):
             backend = CustomBackend()
         mail = EmailMultiAlternatives("Subject", "Body", "from@example.com", ["a@valid.domain", "b@extra.domain"])
 
