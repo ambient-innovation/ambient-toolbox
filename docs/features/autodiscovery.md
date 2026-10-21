@@ -36,9 +36,7 @@ And that's how you retrieve a group:
 ```python
 from ambient_toolbox.autodiscover import decorator_based_registry
 
-registered_callables = decorator_based_registry.get_registered_callables(
-    registry_group="my_group"
-)
+registered_callables = decorator_based_registry.get_registered_callables(registry_group="my_group")
 
 # Execute registered callable
 result = registered_callables[0]()

@@ -114,14 +114,14 @@ without the timezone is used:
 
 ````python
 # settings.py
-TIME_ZONE = 'Europe/Berlin'
+TIME_ZONE = "Europe/Berlin"
 
 # my_code.py
 import datetime
 from ambient_toolbox.utils.date import datetime_format
 
 source_date = datetime.datetime(year=2020, month=6, day=26, hour=8, tzinfo=datetime.UTC)
-datetime_str = datetime_format(source_date, '%d.%m.%Y %H:%M')  # will return '26.06.2020 10:00'
+datetime_str = datetime_format(source_date, "%d.%m.%Y %H:%M")  # will return '26.06.2020 10:00'
 ````
 
 ### Get start and end dates from calendar week
@@ -212,7 +212,7 @@ from ambient_toolbox.utils.date import tz_today
 current_date = tz_today()
 
 # Here we'll get a string
-current_date = tz_today('%d.%m.%Y')
+current_date = tz_today("%d.%m.%Y")
 ````
 
 ### Get current year
@@ -270,6 +270,7 @@ which is derived from ``CommonInfo``:
 
 ````python
 from ambient_toolbox.models import CommonInfo
+
 
 class MyModel(CommonInfo):
     pass

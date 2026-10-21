@@ -15,8 +15,7 @@ you can use the abstract class `CommonInfo` like this:
 from ambient_toolbox.models import CommonInfo
 
 
-class MyFancyModel(CommonInfo):
-    ...
+class MyFancyModel(CommonInfo): ...
 ````
 
 You then get four fields: `created_by`, `created_at`, `lastmodified_by`, `lastmodified_at`.
@@ -55,6 +54,7 @@ and ensures that on saving the current object, the creator and/or the last edito
 
 ````python
 from ambient_toolbox.admin.model_admins.mixins import CommonInfoAdminMixin
+
 
 @admin.register(MyModel)
 class MyModelAdmin(CommonInfoAdminMixin, admin.ModelAdmin):

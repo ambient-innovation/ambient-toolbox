@@ -127,11 +127,10 @@ clean place to start from.
 from django.db import models
 from ambient_toolbox.mixins.models import PermissionModelMixin
 
+
 class ComparisonMyModelAndOtherModelPermission(PermissionModelMixin, models.Model):
     class Meta:
-        permissions = (
-            ('view_comparison', 'Can view the comparison'),
-        )
+        permissions = (("view_comparison", "Can view the comparison"),)
 ````
 
 Note that you still have to create a migration so your newly created permissions will be inserted in your database.
@@ -183,6 +182,7 @@ on every save. Note that it won't be called on bulk operations not targeting mod
 from django.db import models
 from ambient_toolbox.mixins.validation import CleanOnSaveMixin
 
+
 class ModelWithCleanMixin(CleanOnSaveMixin, models.Model):
     def clean(self):
         # to your magic here
@@ -201,6 +201,7 @@ violation is raised as a `ValidationError` containing the constraints `violation
 ````python
 from django.db import models
 from ambient_toolbox.mixins.validation import ValidateConstraintsOnSaveMixin
+
 
 class Booking(ValidateConstraintsOnSaveMixin, models.Model):
     guest_count = models.PositiveIntegerField()

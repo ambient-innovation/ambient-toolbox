@@ -12,6 +12,7 @@ Image you have this setup:
 from django.db import models
 from django.db.models.signals import pre_save
 
+
 class MyModel(models.Model):
     value = models.IntegerField()
     factor = models.IntegerField()
@@ -30,9 +31,9 @@ with all parameters describing your signal:
 from django.db.models import signals
 
 signal_kwargs = {
-    'signal': signals.pre_save,
-    'receiver': calculate_product,
-    'sender': MyModel,
+    "signal": signals.pre_save,
+    "receiver": calculate_product,
+    "sender": MyModel,
 }
 ````
 
@@ -57,10 +58,11 @@ class MyModel(models.Model):
     @staticmethod
     def get_calculate_product_kwargs():
         return {
-            'signal': signals.pre_save,
-            'receiver': calculate_product,
-            'sender': MyModel,
+            "signal": signals.pre_save,
+            "receiver": calculate_product,
+            "sender": MyModel,
         }
+
 
 ...
 with TempDisconnectSignal(**MyModel.get_calculate_product_kwargs()):

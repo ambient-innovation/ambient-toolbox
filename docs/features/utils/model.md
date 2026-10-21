@@ -26,7 +26,7 @@ dictionary.
 
 ````python
 obj = MyModel.objects.create(value_1=19, value_2=9)
-result = object_to_dict(obj, ['value_2'])
+result = object_to_dict(obj, ["value_2"])
 # result = {'value_1': 19}
 ````
 
