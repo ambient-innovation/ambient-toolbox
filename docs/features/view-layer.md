@@ -45,7 +45,6 @@ of deleted or to-be-deleted children. Have a look at the example use-case below:
 
 ````python
 class DataFieldFormset(CountChildrenFormsetMixin, BaseInlineFormSet):
-
     def clean(self):
         cleaned_data = super().clean()
 
@@ -72,16 +71,14 @@ Here is an example for a create view:
 ````python
 class MyModelCreateView(FormsetCreateViewMixin, generic.CreateView):
     model = MyModel
-    template_name = 'my_app/my_model_edit.html'
+    template_name = "my_app/my_model_edit.html"
     form_class = MyModelEditForm
-    formset_class = inlineformset_factory(MyModel, MyModelChild,
-                                          form=MyModelChildForm,
-                                          formset=MyModelChildFormset)
+    formset_class = inlineformset_factory(MyModel, MyModelChild, form=MyModelChildForm, formset=MyModelChildFormset)
 
     def get_formset_kwargs(self):
         # this is optional!
         kwargs = super().get_formset_kwargs()
-        kwargs['request'] = self.request
+        kwargs["request"] = self.request
         return kwargs
 ````
 
@@ -94,16 +91,14 @@ If you want to update a model and its children, here is an example for the edit-
 ````python
 class MyModelEditView(FormsetUpdateViewMixin, generic.UpdateView):
     model = MyModel
-    template_name = 'my_app/my_model_edit.html'
+    template_name = "my_app/my_model_edit.html"
     form_class = MyModelEditForm
-    formset_class = inlineformset_factory(MyModel, MyModelChild,
-                                          form=MyModelChildForm,
-                                          formset=MyModelChildFormset)
+    formset_class = inlineformset_factory(MyModel, MyModelChild, form=MyModelChildForm, formset=MyModelChildFormset)
 
     def get_formset_kwargs(self):
         # this is optional!
         kwargs = super().get_formset_kwargs()
-        kwargs['request'] = self.request
+        kwargs["request"] = self.request
         return kwargs
 ````
 
@@ -152,7 +147,7 @@ from django.views import generic
 
 
 class MyView(HtmxResponseMixin, generic.View):
-    hx_redirect_url = reverse_lazy('myapp:mymodel-view')
+    hx_redirect_url = reverse_lazy("myapp:mymodel-view")
     ...
 ````
 
@@ -169,9 +164,8 @@ from django.views import generic
 
 
 class MyView(HtmxResponseMixin, generic.View):
-
-   def get_hx_redirect_url(self):
-      return reverse('myapp:mymodel-view', kwargs={...})
+    def get_hx_redirect_url(self):
+        return reverse("myapp:mymodel-view", kwargs={...})
 ````
 
 #### HX-Trigger
@@ -195,7 +189,7 @@ from django.views import generic
 
 
 class MyView(HtmxResponseMixin, generic.View):
-    hx_trigger = 'updateNotificationMenu'
+    hx_trigger = "updateNotificationMenu"
     ...
 ````
 
@@ -211,7 +205,7 @@ from django.views import generic
 
 
 class MyView(HtmxResponseMixin, generic.View):
-    hx_trigger = {'userNotification': 'Stuff happened!'}
+    hx_trigger = {"userNotification": "Stuff happened!"}
     ...
 ````
 
@@ -239,8 +233,8 @@ from django.views import generic
 
 
 class MyView(HtmxResponseMixin, generic.View):
-   hx_trigger = {'updateNotificationMenu': None, 'updateOtherComponent': None}
-   ...
+    hx_trigger = {"updateNotificationMenu": None, "updateOtherComponent": None}
+    ...
 ````
 
 If you need a more elaborate way to set up your triggers, you can overwrite the getter.
@@ -252,9 +246,8 @@ from django.views import generic
 
 
 class MyView(HtmxResponseMixin, generic.View):
-
-   def get_hx_trigger(self):
-      return {'my_event': None}
+    def get_hx_trigger(self):
+        return {"my_event": None}
 ````
 
 
@@ -283,10 +276,9 @@ class MyModelCreateView(RequestInFormKwargsMixin, generic.CreateView):
 
 # forms.py
 class MyModelForm(forms.Form):
-
     def __init__(self, *args, **kwargs):
         # Get request from kwargs
-        self.request = kwargs.pop('request')
+        self.request = kwargs.pop("request")
 ````
 
 ### UserInFormKwargsMixin
@@ -311,10 +303,9 @@ class MyModelCreateView(UserInFormKwargsMixin, generic.CreateView):
 
 # forms.py
 class MyModelForm(forms.Form):
-
     def __init__(self, *args, **kwargs):
         # Get request from kwargs
-        self.user = kwargs.pop('user')
+        self.user = kwargs.pop("user")
 ````
 
 Make sure that you overwrite the ``__init__`` method of your form and move the `request` to the class. Otherwise
@@ -325,10 +316,9 @@ from django.forms.models import ModelForm
 
 
 class MyModelForm(ModelForm):
-
     def __init__(self, *args, **kwargs):
         # Get request from kwargs
-        self.request = kwargs.pop('request', None)
+        self.request = kwargs.pop("request", None)
 
         # Call the parent method
         super().__init__(*args, **kwargs)
@@ -351,7 +341,7 @@ from django.views import generic
 
 class MyModelListView(DjangoPermissionRequiredMixin, generic.ListView):
     model = MyModel
-    permission_list = ('account.view_my_model',)
+    permission_list = ("account.view_my_model",)
     ...
 ````
 
@@ -367,10 +357,10 @@ from django.views import generic
 
 class MyModelListView(DjangoPermissionRequiredMixin, generic.ListView):
     model = MyModel
-    permission_list = ('account.view_my_model',)
+    permission_list = ("account.view_my_model",)
 
     def get_login_url(self):
-        return reverse('my-login-view')
+        return reverse("my-login-view")
 ````
 
 Alternatively, you can configure your login endpoint, just set the class attribute `login_view_name`. This is the name of your login URL you
@@ -423,7 +413,7 @@ from my_project.my_app import views
 
 class MyModelListViewTest(BaseViewPermissionTestMixin, TestCase):
     view_class = views.MyModelListView
-    permission_list = ['account.view_my_model']
+    permission_list = ["account.view_my_model"]
 ````
 
 Note, that the permissions are defined redundantly. This approach reduces the risk that you make a copy/paste error when
@@ -442,9 +432,8 @@ from django.views.decorators.cache import cache_page
 from django.views import generic
 
 
-@method_decorator(cache_page(60 * 10), name='dispatch')
-class MyModelListView(generic.ListView):
-    ...
+@method_decorator(cache_page(60 * 10), name="dispatch")
+class MyModelListView(generic.ListView): ...
 ````
 
 ## Generic views

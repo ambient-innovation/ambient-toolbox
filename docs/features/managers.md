@@ -39,7 +39,6 @@ If you derive your managers from ``AbstractUserSpecificManager``, you will expos
 ```python
 # managers.py
 class ProjectManager(AbstractUserSpecificManager):
-
     def visible_for(self, user):
         return self.get_queryset().filter(company=user.company)
 
@@ -83,7 +82,6 @@ queryset class to handle the permissions.
 ```python
 # managers.py
 class ProjectQuerySet(AbstractUserSpecificQuerySet):
-
     def visible_for(self, user):
         return self.filter(company=user.company)
 
@@ -95,7 +93,6 @@ class ProjectQuerySet(AbstractUserSpecificQuerySet):
 
 
 class ProjectManager(models.Manager):
-
     def get_queryset(self):
         return ProjectQuerySet(self.model, using=self._db)
 ```
@@ -126,7 +123,6 @@ At first, use a custom queryset class like this:
 ```python
 # managers.py
 class ProjectQuerySet(AbstractUserSpecificQuerySet):
-
     def visible_for(self, user):
         return self.filter(company=user.company)
 

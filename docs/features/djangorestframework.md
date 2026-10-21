@@ -82,8 +82,7 @@ general test setup. So create a new base api test class like this:
 ````python
 class BaseApiTest(BaseViewSetTestMixin, BaseTest):
     def get_default_api_user(self) -> AbstractUser:
-        return baker.make_recipe('apps.account.tests.user')
-
+        return baker.make_recipe("apps.account.tests.user")
 ````
 
 Note that the content of `get_default_api_user()` is just a suggestion. You have to provide the method, but it is
@@ -104,9 +103,9 @@ are able to test what you require without thinking about how to test it.
 class MyFancyViewsetApiTest(BaseApiTest):
     def test_list_authentication_required(self):
         self.validate_authentication_required(
-            url=reverse('my-fancy-viewset-list'),
-            method='get',
-            view='list',
+            url=reverse("my-fancy-viewset-list"),
+            method="get",
+            view="list",
         )
 ````
 
@@ -122,9 +121,9 @@ in the wrong direction at first.
 class MyFancyViewsetApiTest(BaseApiTest):
     def test_list_regular(self):
         response = self.execute_request(
-            method='get',
-            url=reverse('my-fancy-viewset-list'),
-            viewset_kwargs={'get': 'list'},
+            method="get",
+            url=reverse("my-fancy-viewset-list"),
+            viewset_kwargs={"get": "list"},
             user=self.user,
         )
 
@@ -163,9 +162,9 @@ class MyFancyViewsetApiTest(BaseApiTest):
     def test_create_not_activated(self):
         with self.assertRaises(AttributeError):
             self.execute_request(
-                method='post',
-                url=reverse('my-fancy-viewset-list'),
-                viewset_kwargs={'post': 'create'},
+                method="post",
+                url=reverse("my-fancy-viewset-list"),
+                viewset_kwargs={"post": "create"},
                 user=self.user,
             )
 ````
@@ -177,18 +176,19 @@ Here is an example of how to test file uploads. Feel free to adjust the `data` k
 ````python
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+
 class MyFancyViewsetApiTest(BaseApiTest):
     view_class = views.MyFancyViewset
     ...
 
     def test_file_upload_action(self):
         response = self.execute_request(
-            method='post',
-            url=reverse('my-fancy-viewset-list'),
-            viewset_kwargs={'post': 'my-custom-action'},
+            method="post",
+            url=reverse("my-fancy-viewset-list"),
+            viewset_kwargs={"post": "my-custom-action"},
             user=self.user,
-            data={'file': SimpleUploadedFile("file.txt", b"some fancy content")},
-            data_format='multipart',
+            data={"file": SimpleUploadedFile("file.txt", b"some fancy content")},
+            data_format="multipart",
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -34,16 +34,16 @@ from ambient_toolbox.permissions.fixtures.declarations import GroupPermissionDec
 
 @dataclasses.dataclass
 class GroupEditor(GroupPermissionDeclaration):
-    name = 'editor'
+    name = "editor"
     permission_list = [
         PermissionModelDeclaration(
-            app_label='content_management',
+            app_label="content_management",
             codename_list=[
-                'add_article',
-                'change_article',
-                'view_article',
+                "add_article",
+                "change_article",
+                "view_article",
             ],
-            model='article',
+            model="article",
         ),
     ]
 ````
@@ -57,10 +57,7 @@ When you've declared all your groups as described, you have to register them wit
 
 ````python
 # Improved fixtures (provided by "ambient-toolbox")
-GROUP_PERMISSION_FIXTURES = (
-    'account.permissions.editor.GroupEditor',
-    ...
-)
+GROUP_PERMISSION_FIXTURES = ("account.permissions.editor.GroupEditor", ...)
 ````
 
 ### Separating your apps
@@ -78,23 +75,22 @@ from ambient_toolbox.permissions.fixtures.declarations import PermissionModelDec
 
 CONTENT_MANAGEMENT_PERMISSIONS = [
     PermissionModelDeclaration(
-        app_label='content_management',
+        app_label="content_management",
         codename_list=[
-            'add_article',
-            'change_article',
-            'view_article',
+            "add_article",
+            "change_article",
+            "view_article",
         ],
-        model='article',
+        model="article",
     ),
     PermissionModelDeclaration(
-        app_label='content_management',
+        app_label="content_management",
         codename_list=[
-            'add_employee',
-            'change_employee',
-            'delete_image'
-            'view_employee',
+            "add_employee",
+            "change_employee",
+            "delete_imageview_employee",
         ],
-        model='image',
+        model="image",
     ),
 ]
 ````
@@ -112,7 +108,7 @@ from content_management.permissions.groups.editor import CONTENT_MANAGEMENT_PERM
 
 @dataclasses.dataclass
 class GroupEditor(GroupPermissionDeclaration):
-    name = 'editor'
+    name = "editor"
     permission_list = [
         *CONTENT_MANAGEMENT_PERMISSIONS,
     ]
@@ -135,15 +131,15 @@ from ambient_toolbox.permissions.fixtures.helpers import generate_default_permis
 
 @dataclasses.dataclass
 class GroupEditor(GroupPermissionDeclaration):
-    name = 'editor'
+    name = "editor"
     permission_list = [
         PermissionModelDeclaration(
-            app_label='content_management',
+            app_label="content_management",
             codename_list=[
-                *generate_default_permissions('article'),
-                'my_custom_permission_for_article',
+                *generate_default_permissions("article"),
+                "my_custom_permission_for_article",
             ],
-            model='article',
+            model="article",
         ),
     ]
 ````
@@ -178,9 +174,8 @@ from django.test import TestCase
 
 
 class PermissionFixturesIntegrationTest(TestCase):
-
     def test_integration_regular(self):
-        call_command('install_permission_fixtures', '--dry-run')
+        call_command("install_permission_fixtures", "--dry-run")
 ````
 
 ### Limitations

@@ -95,19 +95,19 @@ class MyViewTestCase(ClassBasedViewTestMixin, TestCase):
     view_class = views.MyView
 
     def test_get_call_authenticated(self):
-        response = self.get(user=self.user, url_params={'pk': 17})
+        response = self.get(user=self.user, url_params={"pk": 17})
         self.assertEqual(response.status_code, 200)
 
     def test_get_call_not_authenticated(self):
-        response = self.get(user=None, url_params={'pk': 17})
+        response = self.get(user=None, url_params={"pk": 17})
         self.assertEqual(response.status_code, 403)
 
     def test_post_call(self):
-        response = self.post(user=self.user, data={'foo': 'bar'}, url_params={'pk': 17})
+        response = self.post(user=self.user, data={"foo": "bar"}, url_params={"pk": 17})
         self.assertEqual(response.status_code, 200)
 
     def test_delete_call(self):
-        response = self.delete(user=self.user, url_params={'pk': 17})
+        response = self.delete(user=self.user, url_params={"pk": 17})
         self.assertEqual(response.status_code, 202)
 ````
 
@@ -129,7 +129,6 @@ from ambient_toolbox.tests.mixins import RequestProviderMixin
 
 
 class MyAwesomeTest(RequestProviderMixin, TestCase):
-
     def test_something_with_a_request_without_a_user(self):
         request = self.get_request(None)
         ...
@@ -141,9 +140,8 @@ class MyAwesomeTest(RequestProviderMixin, TestCase):
 
     def test_something_with_a_request_with_set_url(self):
         ...
-        request = self.get_request(url='/path/to/something')
+        request = self.get_request(url="/path/to/something")
         ...
-
 ````
 
 ### BaseViewPermissionTestMixin
@@ -163,18 +161,15 @@ from ambient_toolbox.tests.mixins import DjangoMessagingFrameworkTestMixin
 
 
 class MyViewTest(DjangoMessagingFrameworkTestMixin, TestCase):
-
     def test_my_message_full_case(self):
         # The view creates a message: "It's sunny on Sundays."
         view = function_to_instantiate_your_view()
-        self.assert_full_message_in_request(
-            view.request, "It's sunny on Sundays.")
+        self.assert_full_message_in_request(view.request, "It's sunny on Sundays.")
 
     def test_my_message_partial_case(self):
         # The view creates a message: "I have added *n* new records" with "n" being a variable
         view = function_to_instantiate_your_view()
-        self.assert_partial_message_in_request(
-            view.request, 'I have added')
+        self.assert_partial_message_in_request(view.request, "I have added")
 ````
 
 ## Test structure validator

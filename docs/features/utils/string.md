@@ -7,7 +7,7 @@ Returns a list of unique entries from `not_distinct_list`.
 ````python
 from ambient_toolbox.utils.string import distinct
 
-not_distinct_list = ['Beer', 'Wine', 'Whiskey', 'Beer']
+not_distinct_list = ["Beer", "Wine", "Whiskey", "Beer"]
 distinct_list = distinct(not_distinct_list)
 
 # Result: ['Whiskey', 'Wine', 'Beer']
@@ -22,7 +22,7 @@ Turns a string into a nice slugified filename.
 ````python
 from ambient_toolbox.utils.string import slugify_file_name
 
-filename = 'hola and hello.txt'
+filename = "hola and hello.txt"
 slug = slugify_file_name(filename)
 # Result: "hola_and_hello.txt"
 ````
@@ -32,7 +32,7 @@ You can pass a parameter to control how many characters the slug is supposed to 
 ````python
 from ambient_toolbox.utils.string import slugify_file_name
 
-filename = 'a very long filename.txt'
+filename = "a very long filename.txt"
 slug = slugify_file_name(filename, 6)
 # Result: "a_very.txt"
 ````
@@ -45,7 +45,7 @@ default-filter `truncatechars`, you can pass the desired string length.
 ````python
 from ambient_toolbox.utils.string import smart_truncate
 
-my_sentence = 'I am a very interesting sentence.'
+my_sentence = "I am a very interesting sentence."
 truncated_str = smart_truncate(my_sentence, 10)
 # Result: "I am a..."
 ````
@@ -55,8 +55,8 @@ By default, after cutting the string, it will append "..." which can be configur
 ````python
 from ambient_toolbox.utils.string import smart_truncate
 
-my_sentence = 'I am a very interesting sentence.'
-truncated_str = smart_truncate(my_sentence, 10, '[...]')
+my_sentence = "I am a very interesting sentence."
+truncated_str = smart_truncate(my_sentence, 10, "[...]")
 # Result: "I am a[...]"
 ````
 
@@ -84,7 +84,7 @@ fallback_result = float_to_string(value)
 # Result: "0,00"
 
 # Custom fallback
-fallback_result = float_to_string(value, 'NaN')
+fallback_result = float_to_string(value, "NaN")
 # Result: "NaN"
 ````
 
@@ -101,7 +101,7 @@ date_str = date_to_string(datetime.date(2020, 9, 19))
 # Result: "19.09.1985"
 
 # Custom format
-date_str = date_to_string(datetime.date(2020, 9, 19), str_format='%Y-%m-%d')
+date_str = date_to_string(datetime.date(2020, 9, 19), str_format="%Y-%m-%d")
 # Result: "2020-09-19"
 ````
 
@@ -116,7 +116,7 @@ date_str = date_to_string(None)
 # Result: "-"
 
 # Custom fallback
-date_str = date_to_string(None, 'no date')
+date_str = date_to_string(None, "no date")
 # Result: "no date"
 ````
 
@@ -133,7 +133,7 @@ datetime_str = datetime_to_string(datetime.datetime(2020, 9, 19, 8))
 # Result: "19.09.1985"
 
 # Custom format
-datetime_str = datetime_to_string(datetime.datetime(2020, 9, 19, 8), str_format='%Y-%m-%d')
+datetime_str = datetime_to_string(datetime.datetime(2020, 9, 19, 8), str_format="%Y-%m-%d")
 # Result: "2020-09-19"
 ````
 
@@ -148,7 +148,7 @@ datetime_str = datetime_to_string(None)
 # Result: "-"
 
 # Custom fallback
-datetime_str = datetime_to_string(None, 'no datetime')
+datetime_str = datetime_to_string(None, "no datetime")
 # Result: "no datetime"
 ````
 
@@ -176,7 +176,7 @@ fallback_result = number_to_string(value)
 # Result: "0,00"
 
 # Custom fallback
-fallback_result = number_to_string(value, replacement='NaN')
+fallback_result = number_to_string(value, replacement="NaN")
 # Result: "NaN"
 ````
 
@@ -191,7 +191,7 @@ will return the fallback value otherwise.
 ````python
 from ambient_toolbox.utils.string import string_or_none_to_string
 
-value = 'I am a string.'
+value = "I am a string."
 
 # Value set
 result = string_or_none_to_string(value)
@@ -202,7 +202,7 @@ result = string_or_none_to_string(None)
 # Result: "-"
 
 # Value not set, custom fallback value
-result = string_or_none_to_string(None, replacement='empty')
+result = string_or_none_to_string(None, replacement="empty")
 # Result: "empty"
 ````
 
@@ -213,7 +213,7 @@ If you want a simple transformer from XML to HTML(-entities), you can use this h
 ````python
 from ambient_toolbox.utils.string import encode_to_xml
 
-value = '<tag>Something with an ampersand (&)</tag>'
+value = "<tag>Something with an ampersand (&)</tag>"
 result = encode_to_xml(value)
 # Result: "'&lt;tag&gt;Something with an ampersand (&amp;)&lt;/tag&gt;'"
 ````

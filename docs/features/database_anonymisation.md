@@ -35,12 +35,12 @@ Just create a new python file somewhere in your application (`apps/core/scrubbin
 ````python
 class MyScrubbingService(AbstractScrubbingService):
     pre_scrub_functions = [
-        'remove_some_data',
+        "remove_some_data",
     ]
 
     post_scrub_functions = [
-        'scrub_users',
-        'delete_logs',
+        "scrub_users",
+        "delete_logs",
     ]
 
     def remove_some_data(self):
@@ -66,7 +66,6 @@ from apps.core.services import MyScrubbingService
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
         scrubbing_service = MyScrubbingService()
         scrubbing_service.process()
@@ -158,7 +157,7 @@ Here is an example of how your configuration could look like:
 SCRUBBER_ENTRIES_PER_PROVIDER = 10000
 SCRUBBER_RANDOM_SEED = 456489135
 SCRUBBER_APPS_LIST = LOCAL_APPS
-SCRUBBER_DOMAIN = 'example.com'
+SCRUBBER_DOMAIN = "example.com"
 ````
 
 Notes:

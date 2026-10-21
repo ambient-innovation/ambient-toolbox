@@ -77,14 +77,15 @@ For this reason we implemented an abstract class called AbstractScrubbingService
 
 from ambient_toolbox.services.custom_scrubber import AbstractScrubbingService
 
+
 class MyScrubbingService(AbstractScrubbingService):
     pre_scrub_functions = [
-        'remove_some_data',
+        "remove_some_data",
     ]
 
     post_scrub_functions = [
-        'scrub_users',
-        'delete_logs',
+        "scrub_users",
+        "delete_logs",
     ]
 
     def remove_some_data(self):
@@ -112,6 +113,7 @@ Finally, you need to create a new management command called `custom_scrub`. Here
 
 from django.core.management.base import BaseCommand
 from apps.core.services import MyScrubbingService
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):

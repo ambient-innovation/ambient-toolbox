@@ -22,8 +22,7 @@ Or like this, if you want to customise it further:
 
 ````python
 @admin.register(MyModel)
-class MyModelAdmin(ReadOnlyAdmin):
-    ...
+class MyModelAdmin(ReadOnlyAdmin): ...
 ````
 
 ### EditableOnlyAdmin
@@ -42,8 +41,7 @@ Or like this, if you want to customise it further:
 
 ````python
 @admin.register(MyModel)
-class MyModelAdmin(EditableOnlyAdmin):
-    ...
+class MyModelAdmin(EditableOnlyAdmin): ...
 ````
 
 ## Inlines
@@ -57,9 +55,11 @@ in any way.
 ````python
 from django.contrib import admin
 
+
 class MyModelInline(ReadonlyTabularInline):
     model = MyModel
     ...
+
 
 @admin.register(MyParentModel)
 class MyParentModelAdmin(admin.ModelAdmin):
@@ -80,6 +80,7 @@ variables, you can now use this pattern for every admin:
 ````python
 from django.contrib import admin
 
+
 @admin.register(MyModel)
 class MyModelAdmin(AdminCreateFormMixin, admin.ModelAdmin):
     add_form = MyModelAddForm
@@ -94,6 +95,7 @@ comes in handy when your inlines have inner dependencies based on the parent mod
 ````python
 from django.contrib import admin
 
+
 @admin.register(MyModel)
 class MyModelAdmin(AdminNoInlinesForCreateMixin, admin.ModelAdmin):
     inlines = (MyFancyInline, MyOtherFancyInline)
@@ -107,9 +109,9 @@ Very useful when some data of the form is user-related.
 ````python
 from django.contrib import admin
 
+
 @admin.register(MyModel)
-class MyModelAdmin(AdminRequestInFormMixin, admin.ModelAdmin):
-    ...
+class MyModelAdmin(AdminRequestInFormMixin, admin.ModelAdmin): ...
 ````
 
 ### FetchParentObjectInlineMixin
@@ -143,6 +145,7 @@ If you need the current object, you can derive from this mixin and use the metho
 ````python
 from django.contrib import admin
 
+
 @admin.register(MyModel)
 class MyModelAdmin(FetchObjectMixin, admin.ModelAdmin):
     ...
@@ -174,7 +177,6 @@ following example only allows access to the detail page for superusers:
 ````python
 @admin.register(MyModel)
 class MyModelSuperuserDetailPageAdmin(DeactivatableChangeViewAdminMixin, admin.ModelAdmin):
-
     def can_see_change_view(self, request) -> bool:
         """
         Superusers can access the detail view, others don't.
@@ -198,8 +200,7 @@ from ambient_toolbox.admin.model_admins.mixins import UserForeignKeyLabelAdminMi
 
 
 @admin.register(MyModel)
-class MyModelAdmin(UserForeignKeyLabelAdminMixin, admin.ModelAdmin):
-    ...
+class MyModelAdmin(UserForeignKeyLabelAdminMixin, admin.ModelAdmin): ...
 ````
 
 The mixin handles both ``ForeignKey`` and ``ManyToManyField`` relations to the User model automatically.
@@ -209,7 +210,6 @@ If you want to customise the label format, override ``get_label_for_user()``:
 ````python
 @admin.register(MyModel)
 class MyModelAdmin(UserForeignKeyLabelAdminMixin, admin.ModelAdmin):
-
     def get_label_for_user(self, user) -> str:
         return f"{user.email} ({user.username})"
 ````
@@ -251,7 +251,6 @@ from ambient_toolbox.admin.views.autocomplete import UserLabelAutocompleteJsonVi
 
 
 class MyAutocompleteJsonView(UserLabelAutocompleteJsonView):
-
     def get_user_display_text(self, user) -> str:
         return f"{user.email} ({user.username})"
 ````

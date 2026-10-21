@@ -116,7 +116,6 @@ from ambient_toolbox.selectors.permission import AbstractUserSpecificSelectorMix
 
 
 class MyModelSelector(AbstractUserSpecificSelectorMixin, Selector):
-
     def visible_for(self, user): ...
 
     def editable_for(self, user): ...

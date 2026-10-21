@@ -137,7 +137,6 @@ from my_project.config.schema import schema
 
 
 class MyFancyTestCase(GraphQLTestCase):
-
     # Here you need to inject your test case's schema
     GRAPHQL_SCHEMA = schema
 
@@ -227,7 +226,7 @@ from ambient_toolbox.graphql.utils import ignore_graphene_logger
 ignore_graphene_logger()  # <-- add this line at global level
 
 # change this line:
-path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+(path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),)
 # to this:
-path("graphql", csrf_exempt(SentryGraphQLView.as_view(graphiql=True))),
+(path("graphql", csrf_exempt(SentryGraphQLView.as_view(graphiql=True))),)
 ```
