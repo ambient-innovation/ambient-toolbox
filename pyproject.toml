@@ -69,6 +69,9 @@ bleacher = [
 gitlab-coverage = [
    'httpx~=0.28',
 ]
+coverage-pragmas = [
+   'coverage>=7.10.6',
+]
 sentry = [
    'sentry-sdk>=1.19.1',
 ]
@@ -247,7 +250,7 @@ wheel_build_env = ".pkg"
 runner = "uv-venv-lock-runner"
 # uv.lock is not committed for libraries, so tox resolves fresh instead of asserting a lockfile.
 uv_sync_locked = false
-extras = ["dev", "drf", "graphql", "import-linter", "bleacher", "gitlab-coverage", "sentry", "view-layer", ]
+extras = ["dev", "drf", "graphql", "import-linter", "bleacher", "gitlab-coverage", "coverage-pragmas", "sentry", "view-layer", ]
 commands = [
     ["pytest", "--cov=ambient_toolbox", "--cov-report=term", "--cov-report=xml", "--ds", "settings", "tests"]
 ]
