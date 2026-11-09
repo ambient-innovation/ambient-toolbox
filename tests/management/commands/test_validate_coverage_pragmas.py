@@ -1,4 +1,5 @@
 import contextlib
+import os
 import sys
 from io import StringIO
 from unittest import mock
@@ -29,14 +30,37 @@ class ValidateCoveragePragmasCommandTest(SimpleTestCase):
 
     def test_fails_and_lists_unneeded_pragmas(self):
         stdout = StringIO()
-        with self.assertRaisesMessage(CommandError, "Found 3 unneeded coverage pragma(s)."):
+        with self.assertRaisesMessage(CommandError, "Found 5 unneeded coverage pragma(s)."):
             self.call_command(stdout=stdout)
 
         output = stdout.getvalue()
         self.assertIn("sample.py:2\n", output)
         self.assertIn("omitted.py:1\n", output)
         self.assertIn("sample.py:23  (23)", output)
+        self.assertIn("Skipped files", output)
+        self.assertIn("broken.py\n", output)
         self.assertNotIn("Needed pragmas", output)
+
+    def test_falls_back_to_absolute_path_without_relative_one(self):
+        stdout = StringIO()
+        with (
+            mock.patch("os.path.relpath", side_effect=ValueError),
+            self.assertRaisesMessage(CommandError, "unneeded coverage pragma(s)"),
+        ):
+            self.call_command(stdout=stdout)
+
+        listed_path = next(line for line in stdout.getvalue().splitlines() if "bom.py:1" in line).strip()
+        self.assertTrue(os.path.isabs(listed_path.removesuffix(":1")))
+
+    def test_unreadable_coverage_data_raises_command_error(self):
+        (self.project.path / "corrupt.coverage").write_text("no sqlite database", encoding="utf-8")
+
+        with self.assertRaises(CommandError):
+            self.call_command(data_file="corrupt.coverage")
+
+    def test_missing_path_raises_command_error(self):
+        with self.assertRaisesMessage(CommandError, "Path(s) not found"):
+            self.call_command("does_not_exist")
 
     def test_lists_needed_pragmas_with_higher_verbosity(self):
         output = self.call_command("never_imported.py", verbosity=2)
@@ -50,7 +74,7 @@ class ValidateCoveragePragmasCommandTest(SimpleTestCase):
 
     def test_missing_extra_raises_command_error(self):
         with (
-            mock.patch.dict(sys.modules, {"coverage": None}),
+            mock.patch.dict(sys.modules, {"coverage": None, "coverage.exceptions": None}),
             self.assertRaisesMessage(CommandError, "requires the optional 'coverage-pragmas' extra"),
         ):
             call_command("validate_coverage_pragmas")

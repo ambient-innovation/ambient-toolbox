@@ -2,14 +2,13 @@ import os
 
 from django.core.management.base import BaseCommand, CommandError
 
-SECTIONS = (
-    ("unneeded", "Unneeded pragmas - everything they exclude was executed, remove them:"),
-    ("ineffective", "Ineffective pragmas - the file is omitted from coverage, remove them:"),
-    ("branch_missing", "Lines executed, but removing the pragma leaves a partial branch (see lines):"),
-    ("partial", "Partially executed - the pragma excludes more than necessary (missing lines):"),
-    ("not_measured", "No coverage data - the file was never imported during the tests:"),
-    ("needed", "Needed pragmas:"),
-)
+
+def _display_path(filename: str) -> str:
+    try:
+        return os.path.relpath(filename)
+    except ValueError:
+        # On Windows, a file on another drive than the working directory has no relative path.
+        return filename
 
 
 class Command(BaseCommand):
@@ -31,39 +30,60 @@ class Command(BaseCommand):
         parser.add_argument(
             "--data-file",
             default=None,
-            help='Path to the coverage data file (default: ".coverage").',
+            help="Path to the coverage data file (default: taken from the coverage configuration).",
         )
 
     def handle(self, *args, **options):
         # Imports are deferred so projects without the optional `coverage-pragmas` extra
         # can load the management command list without an ImportError.
         try:
-            import coverage  # noqa: F401, PLC0415
+            from coverage.exceptions import CoverageException  # noqa: PLC0415
         except ImportError as e:
             raise CommandError(
                 "The 'validate_coverage_pragmas' command requires the optional 'coverage-pragmas' extra. "
                 "Install it with: pip install ambient-toolbox[coverage-pragmas]"
             ) from e
 
-        from ambient_toolbox.coverage_pragmas.services import UnneededCoveragePragmaService  # noqa: PLC0415
+        from ambient_toolbox.coverage_pragmas.services import (  # noqa: PLC0415
+            PragmaStatus,
+            UnneededCoveragePragmaService,
+        )
 
-        service = UnneededCoveragePragmaService(paths=options["paths"] or None, data_file=options["data_file"])
         try:
+            service = UnneededCoveragePragmaService(paths=options["paths"] or None, data_file=options["data_file"])
             findings = service.get_findings()
-        except ValueError as e:
+        except (ValueError, CoverageException) as e:
             raise CommandError(str(e)) from e
 
-        for status_value, title in SECTIONS:
-            if status_value == "needed" and options["verbosity"] < 2:  # noqa: PLR2004
+        sections = (
+            (PragmaStatus.UNNEEDED, "Unneeded pragmas - removing them does not change the coverage report:"),
+            (PragmaStatus.INEFFECTIVE, "Ineffective pragmas - the file is omitted from coverage, remove them:"),
+            (
+                PragmaStatus.BRANCH_MISSING,
+                "Lines executed, but removing the pragma leaves a partial branch (see lines):",
+            ),
+            (
+                PragmaStatus.PARTIAL,
+                "Partially executed - the pragma excludes more than necessary (missing lines):",
+            ),
+            (PragmaStatus.NOT_MEASURED, "No coverage data - the file was never imported during the tests:"),
+            (PragmaStatus.NEEDED, "Needed pragmas:"),
+        )
+        for status, title in sections:
+            if status == PragmaStatus.NEEDED and options["verbosity"] < 2:  # noqa: PLR2004
                 continue
-            section_findings = [finding for finding in findings if finding.status.value == status_value]
+            section_findings = [finding for finding in findings if finding.status == status]
             if not section_findings:
                 continue
             self.stdout.write(self.style.MIGRATE_HEADING(f"\n{title}"))
             for finding in section_findings:
-                location = f"{os.path.relpath(finding.filename)}:{finding.line}"
                 details = f"  ({', '.join(map(str, finding.missing_lines))})" if finding.missing_lines else ""
-                self.stdout.write(f"  {location}{details}")
+                self.stdout.write(f"  {_display_path(finding.filename)}:{finding.line}{details}")
+
+        if service.skipped_files:
+            self.stdout.write(self.style.WARNING("\nSkipped files - they could not be read or parsed:"))
+            for filename in service.skipped_files:
+                self.stdout.write(f"  {_display_path(filename)}")
 
         failing = [finding for finding in findings if finding.status in service.FAILING_STATUSES]
         if failing:

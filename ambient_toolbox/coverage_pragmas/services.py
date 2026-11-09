@@ -9,7 +9,9 @@ from pathlib import Path
 
 from coverage import Coverage
 from coverage.config import DEFAULT_EXCLUDE
+from coverage.exceptions import CoverageException
 from coverage.files import GlobMatcher, prep_patterns
+from coverage.misc import join_regex
 from coverage.parser import PythonParser
 
 # The pattern coverage.py itself uses to recognise the "no cover" pragma in all its spellings.
@@ -55,6 +57,12 @@ class _ParsedFile:
     text: str
     pragma_spans: list[tuple[int, int, int]]
 
+    @property
+    def lines(self) -> list[str]:
+        # Splitting on "\n" only (instead of using `splitlines()`) keeps the numbering identical to the tokenizer and
+        # coverage.py, which do not treat characters like form feeds as line breaks.
+        return self.text.split("\n")
+
 
 class UnneededCoveragePragmaService:
     """
@@ -68,13 +76,23 @@ class UnneededCoveragePragmaService:
     FAILING_STATUSES = (PragmaStatus.UNNEEDED, PragmaStatus.INEFFECTIVE)
 
     def __init__(self, *, paths: list[str] | None = None, data_file: str | None = None) -> None:
+        """
+        Raises a `ValueError` for a path that does not exist and a `CoverageException` for unreadable coverage data.
+        Without `data_file`, the data file from the coverage configuration (or COVERAGE_FILE) is used.
+        """
         self.paths = [Path(path).resolve() for path in (paths or ["."])]
-        self.coverage = Coverage(data_file=data_file or ".coverage")
+        missing_paths = [str(path) for path in self.paths if not path.exists()]
+        if missing_paths:
+            raise ValueError(f"Path(s) not found: {', '.join(missing_paths)}")
+
+        self.coverage = Coverage(data_file=data_file) if data_file else Coverage()
         self.coverage.load()
         self.data = self.coverage.get_data()
+        # Files containing pragmas which could not be read or parsed and therefore were not checked.
+        self.skipped_files: list[str] = []
 
         config = self.coverage.config
-        self.exclude_regex = "|".join(f"(?:{pattern})" for pattern in config.exclude_list)
+        self.exclude_regex = join_regex(config.exclude_list)
         omit_patterns = [*config.run_omit, *(config.report_omit or [])]
         self.omit_matcher = GlobMatcher(prep_patterns(omit_patterns), "omit") if omit_patterns else None
 
@@ -115,11 +133,10 @@ class UnneededCoveragePragmaService:
         Returns the source and the position of every pragma inside a real comment as (line, start, end) tuples.
         Using the tokenizer ensures that a pragma inside a string literal is not mistaken for one.
         """
-        try:
-            text = Path(filename).read_text(encoding="utf-8")
-            tokens = list(tokenize.generate_tokens(io.StringIO(text).readline))
-        except (OSError, UnicodeDecodeError, SyntaxError, tokenize.TokenError):
-            return None
+        # `tokenize.open()` respects encoding declarations and strips a byte-order mark, just like Python does.
+        with tokenize.open(filename) as file:
+            text = file.read()
+        tokens = list(tokenize.generate_tokens(io.StringIO(text).readline))
 
         pragma_spans = []
         for token in tokens:
@@ -137,11 +154,11 @@ class UnneededCoveragePragmaService:
         Replaces the given pragmas with spaces. Line and column numbers stay unchanged, so the result can be compared
         line by line with the coverage data of the original file.
         """
-        lines = text.splitlines(keepends=True)
+        lines = text.split("\n")
         for line, start, end in spans:
             source_line = lines[line - 1]
             lines[line - 1] = source_line[:start] + " " * (end - start) + source_line[end:]
-        return "".join(lines)
+        return "\n".join(lines)
 
     def _build_parser(self, text: str, filename: str) -> PythonParser:
         parser = PythonParser(text=text, filename=filename, exclude=self.exclude_regex)
@@ -154,37 +171,41 @@ class UnneededCoveragePragmaService:
         return len(source_line) - len(source_line.lstrip())
 
     @staticmethod
-    def _get_definition_lines(text: str, parser: PythonParser) -> set[int]:
+    def _get_class_body_lines(text: str, parser: PythonParser) -> set[int]:
         """
-        Returns the lines which run when a module or class is loaded, even if no function defined there is ever called:
-        decorators and "def"/"class" lines, as well as all statements directly inside a class body.
+        Returns the statements directly inside a class body. They run as soon as the class is created, even if none of
+        its methods is ever called.
         """
         lines = set()
         for node in ast.walk(ast.parse(text)):
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                lines.update(decorator.lineno for decorator in node.decorator_list)
-                lines.add(node.lineno)
             if isinstance(node, ast.ClassDef):
                 lines.update(statement.lineno for statement in node.body)
         return parser.first_lines(lines)
 
-    def _get_unexecuted_arcs(
-        self, *, block: set[int], base_parser: PythonParser, executed_arcs: set[tuple[int, int]]
+    @staticmethod
+    def _get_possible_exits(base_parser: PythonParser) -> dict[int, set[tuple[int, int]]]:
+        """
+        Returns the possible arcs of every branch point, i.e. every line with more than one exit, grouped by line.
+        """
+        exit_counts = base_parser.exit_counts()
+        possible_exits: dict[int, set[tuple[int, int]]] = {}
+        for start, end in base_parser.arcs():
+            if exit_counts.get(start, 0) > 1 and end not in base_parser.excluded:
+                possible_exits.setdefault(start, set()).add((start, end))
+        return possible_exits
+
+    @staticmethod
+    def _get_unexecuted_branches(
+        *, block: set[int], possible_exits: dict[int, set[tuple[int, int]]], executed_arcs: set[tuple[int, int]]
     ) -> list[int]:
         """
         Returns the lines which would become partial branches if the pragma was removed. These are branch points inside
         the block and branch points leading into it, since arcs into excluded lines are not counted as exits.
         """
-        possible_arcs = {
-            (start, end) for start, end in base_parser.arcs() if start > 0 and end not in base_parser.excluded
-        }
-        affected_lines = {start for start, end in possible_arcs if start in block or end in block}
-        exit_counts = base_parser.exit_counts()
-
         return sorted(
             line
-            for line in affected_lines
-            if exit_counts.get(line, 0) > 1 and any(arc not in executed_arcs for arc in possible_arcs if arc[0] == line)
+            for line, arcs in possible_exits.items()
+            if (line in block or any(end in block for _, end in arcs)) and not arcs <= executed_arcs
         )
 
     def _analyse_file(self, filename: str, parsed_file: _ParsedFile, measured_name: str) -> list[PragmaFinding]:
@@ -193,10 +214,10 @@ class UnneededCoveragePragmaService:
         has_arcs = self.data.has_arcs()
         if has_arcs:
             # Calculating the arcs first is required, as it prepares the parser for translating the recorded arcs.
-            base_parser.arcs()
+            possible_exits = self._get_possible_exits(base_parser)
             executed_arcs = base_parser.translate_arcs(self.data.arcs(measured_name) or [])
-        text_lines = parsed_file.text.splitlines()
-        definition_lines = self._get_definition_lines(parsed_file.text, base_parser)
+        text_lines = parsed_file.lines
+        class_body_lines = self._get_class_body_lines(parsed_file.text, base_parser)
 
         findings = []
         for pragma_span in parsed_file.pragma_spans:
@@ -205,18 +226,20 @@ class UnneededCoveragePragmaService:
             pragma_parser = self._build_parser(self._blank_pragmas(parsed_file.text, other_spans), filename)
             block = (pragma_parser.excluded - base_parser.excluded) & base_parser.statements
 
-            # The header of a block (e.g. "def", "if" or a decorator) runs even if its body never does, and so do
-            # definitions nested inside it. Only the remaining statements indented deeper than the pragma's line tell
+            # The header of a block (e.g. "def", "if" or a decorator) runs even if its body never does, and so does
+            # the direct body of a class. Only the remaining statements indented deeper than the pragma's line tell
             # whether the block itself was entered.
             header_indentation = self._indentation(text_lines, base_parser.first_line(pragma_line))
             body = {
-                line for line in block - definition_lines if self._indentation(text_lines, line) > header_indentation
+                line for line in block - class_body_lines if self._indentation(text_lines, line) > header_indentation
             } or block
 
             missing_lines = sorted(block - executed_lines)
             if not missing_lines:
                 missing_branches = (
-                    self._get_unexecuted_arcs(block=block, base_parser=base_parser, executed_arcs=executed_arcs)
+                    self._get_unexecuted_branches(
+                        block=block, possible_exits=possible_exits, executed_arcs=executed_arcs
+                    )
                     if has_arcs
                     else []
                 )
@@ -243,7 +266,11 @@ class UnneededCoveragePragmaService:
 
         findings = []
         for filename in sorted(self._get_candidate_files(measured_files)):
-            parsed_file = self._parse_file(filename)
+            try:
+                parsed_file = self._parse_file(filename)
+            except (OSError, UnicodeDecodeError, SyntaxError, tokenize.TokenError):
+                self.skipped_files.append(filename)
+                continue
             if parsed_file is None:
                 continue
 
@@ -253,5 +280,8 @@ class UnneededCoveragePragmaService:
             elif filename not in measured_files:
                 findings.extend(PragmaFinding(filename, line, PragmaStatus.NOT_MEASURED) for line in pragma_lines)
             else:
-                findings.extend(self._analyse_file(filename, parsed_file, measured_files[filename]))
+                try:
+                    findings.extend(self._analyse_file(filename, parsed_file, measured_files[filename]))
+                except (CoverageException, SyntaxError):
+                    self.skipped_files.append(filename)
         return findings

@@ -1,6 +1,7 @@
 import contextlib
+import os
 from pathlib import Path
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from ambient_toolbox.coverage_pragmas.services import PragmaStatus, UnneededCoveragePragmaService
 from tests.coverage_pragmas.sample_project import SampleProject
@@ -12,10 +13,9 @@ class UnneededCoveragePragmaServiceTest(TestCase):
         super().setUpClass()
         cls.project = SampleProject()
         with contextlib.chdir(cls.project.path):
-            cls.findings = {
-                (Path(finding.filename).name, finding.line): finding
-                for finding in UnneededCoveragePragmaService().get_findings()
-            }
+            service = UnneededCoveragePragmaService()
+            cls.findings = {(Path(finding.filename).name, finding.line): finding for finding in service.get_findings()}
+        cls.skipped_files = service.skipped_files
 
     @classmethod
     def tearDownClass(cls):
@@ -60,8 +60,25 @@ class UnneededCoveragePragmaServiceTest(TestCase):
     def test_pragma_in_never_imported_file_is_not_measured(self):
         self.assert_finding("never_imported.py", 1, PragmaStatus.NOT_MEASURED)
 
-    def test_file_that_cannot_be_tokenized_is_skipped(self):
+    def test_unexecuted_block_with_only_a_definition_is_needed(self):
+        self.assert_finding("sample.py", 43, PragmaStatus.NEEDED, [44, 45])
+
+    def test_file_with_byte_order_mark_is_analysed(self):
+        self.assert_finding("bom.py", 1, PragmaStatus.UNNEEDED)
+
+    def test_file_with_encoding_declaration_is_analysed(self):
+        self.assert_finding("latin_1.py", 2, PragmaStatus.UNNEEDED)
+
+    def test_form_feed_does_not_shift_line_numbers(self):
+        self.assert_finding("form_feed.py", 3, PragmaStatus.NEEDED, [3])
+
+    def test_files_that_cannot_be_parsed_are_skipped(self):
         self.assertNotIn(("broken.py", 1), self.findings)
+        self.assertNotIn(("changed_after_run.py", 1), self.findings)
+        self.assertEqual(
+            sorted(Path(filename).name for filename in self.skipped_files),
+            ["broken.py", "changed_after_run.py"],
+        )
 
     def test_paths_limit_the_searched_files(self):
         with contextlib.chdir(self.project.path):
@@ -74,6 +91,19 @@ class UnneededCoveragePragmaServiceTest(TestCase):
     def test_missing_coverage_data_raises_error(self):
         with contextlib.chdir(self.project.path), self.assertRaisesRegex(ValueError, "No coverage data found"):
             UnneededCoveragePragmaService(data_file="missing").get_findings()
+
+    def test_data_file_defaults_to_coverage_configuration(self):
+        # The regular ".coverage" exists, so only reading COVERAGE_FILE explains the missing data.
+        with (
+            contextlib.chdir(self.project.path),
+            mock.patch.dict(os.environ, {"COVERAGE_FILE": "configured.coverage"}),
+            self.assertRaisesRegex(ValueError, "No coverage data found"),
+        ):
+            UnneededCoveragePragmaService().get_findings()
+
+    def test_missing_path_raises_error(self):
+        with contextlib.chdir(self.project.path), self.assertRaisesRegex(ValueError, "Path\\(s\\) not found"):
+            UnneededCoveragePragmaService(paths=["does_not_exist"])
 
 
 class UnneededCoveragePragmaServiceWithoutBranchDataTest(TestCase):

@@ -47,12 +47,20 @@ SAMPLE_MODULE = textwrap.dedent(
 
     TEXT = "# pragma: no cover"  # A comment without the pragma
     # pragma: no cover
+
+    if TEXT is None:  # pragma: no cover
+        def shim():
+            return 1
     """
 )
 
 SAMPLE_RUNNER = textwrap.dedent(
     """
+    import bom
+    import form_feed
+    import latin_1
     import sample
+    import changed_after_run
 
     sample.executed()
     sample.partly(1)
@@ -76,6 +84,15 @@ class SampleProject:
         (self.path / "never_imported.py").write_text("y = 2  # pragma: no cover\n", encoding="utf-8")
         # An unclosed bracket makes the file impossible to tokenize, so it has to be skipped.
         (self.path / "broken.py").write_text("z = (  # pragma: no cover\n", encoding="utf-8")
+        (self.path / "bom.py").write_text("a = 1  # pragma: no cover\n", encoding="utf-8-sig")
+        (self.path / "latin_1.py").write_text(
+            "# -*- coding: latin-1 -*-\nb = 'ä'  # pragma: no cover\n", encoding="latin-1"
+        )
+        # A form feed on its own line must not shift the line numbers of the pragma below it.
+        (self.path / "form_feed.py").write_text(
+            "def never_called():\n\f\n    return 1  # pragma: no cover\n", encoding="utf-8"
+        )
+        (self.path / "changed_after_run.py").write_text("c = 1  # pragma: no cover\n", encoding="utf-8")
         (self.path / "runner.py").write_text(SAMPLE_RUNNER, encoding="utf-8")
         (self.path / ".coveragerc").write_text(
             f"[run]\nbranch = {str(branch).lower()}\nomit = omitted.py\n", encoding="utf-8"
@@ -86,6 +103,8 @@ class SampleProject:
             check=True,
             capture_output=True,
         )
+        # Tokenizes fine but is no valid Python anymore, so coverage.py cannot parse it.
+        (self.path / "changed_after_run.py").write_text("c = 1 1  # pragma: no cover\n", encoding="utf-8")
 
     def cleanup(self) -> None:
         shutil.rmtree(self.path, ignore_errors=True)
