@@ -1,6 +1,6 @@
 # Changelog
 
-**12.15.0** (unreleased)
+**12.15.0** (2026-11-10)
   * Added management command `validate_coverage_pragmas`, which lists `# pragma: no cover` comments excluding code
     that was executed anyway, based on the data of a regular coverage run (new optional extra `coverage-pragmas`)
 
