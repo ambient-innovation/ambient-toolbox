@@ -64,6 +64,9 @@ METADATA = PackageMetadata(
         "gitlab-coverage": [
             "httpx~=0.28",
         ],
+        "coverage-pragmas": [
+            "coverage>=7.10.6",
+        ],
         "sentry": [
             "sentry-sdk>=1.19.1",
         ],

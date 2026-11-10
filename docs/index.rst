@@ -19,6 +19,7 @@ The package is published at pypi under the following link: `https://pypi.org/pro
    features/cleanup.md
    features/context_manager.md
    features/context_processors.md
+   features/coverage_pragmas.md
    features/database_anonymisation.md
    features/djangorestframework.md
    features/gitlab.md

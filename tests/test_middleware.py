@@ -80,7 +80,7 @@ def test_replaced_user_is_reflected_in_middleware():
         request.user = replaced_user
         user_from_mw = CurrentUserMiddleware.get_current_user()
         if user_from_mw is not replaced_user:
-            return HttpResponse(status=HTTPStatus.CONFLICT)  # pragma: no cover
+            return HttpResponse(status=HTTPStatus.CONFLICT)
         return HttpResponse(status=HTTPStatus.OK)
 
     middleware = CurrentUserMiddleware(get_response)
@@ -114,7 +114,7 @@ def set_current_user(user=None, current_users=None, ready_event=None, proceed_ev
         if current_users is not None:
             current_users.append(user_from_mw)
         if user_from_mw is not request.user:
-            return HttpResponse(status=HTTPStatus.CONFLICT)  # pragma: no cover
+            return HttpResponse(status=HTTPStatus.CONFLICT)
         if user_from_mw is None:
             return HttpResponse(status=HTTPStatus.NO_CONTENT)
         return HttpResponse(status=HTTPStatus.OK)

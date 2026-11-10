@@ -1,5 +1,9 @@
 # Changelog
 
+**12.15.0** (unreleased)
+  * Added management command `validate_coverage_pragmas`, which lists `# pragma: no cover` comments excluding code
+    that was executed anyway, based on the data of a regular coverage run (new optional extra `coverage-pragmas`)
+
 **12.14.1** (2026-10-21)
   * Updated the linting and CI setup to the current ambient-package-update template (ruff 0.17.1, `actions/checkout` v7, `actions/setup-python` v7)
   * Fixed the Sphinx configuration for sphinx-rtd-theme 3, removing the documentation build warnings
