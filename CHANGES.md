@@ -1,5 +1,9 @@
 # Changelog
 
+**12.16.0** (2026-11-12)
+  * Added support for Python 3.15 (with Django 6.1)
+  * Added the `coverage-pragmas` extra to the install scripts
+
 **12.15.0** (2026-11-10)
   * Added management command `validate_coverage_pragmas`, which lists `# pragma: no cover` comments excluding code
     that was executed anyway, based on the data of a regular coverage run (new optional extra `coverage-pragmas`)
