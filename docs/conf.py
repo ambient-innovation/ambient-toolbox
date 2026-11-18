@@ -36,7 +36,7 @@ from ambient_toolbox import __version__  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = "ambient-toolbox"
-copyright = "2026, Beyonder Deutschland"  # noqa: A001
+copyright = "2026, Beyonder GmbH"  # noqa: A001
 author = "Beyonder Deutschland <hello@beyonder.de>"
 version = __version__
 release = __version__
